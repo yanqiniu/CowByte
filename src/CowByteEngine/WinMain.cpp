@@ -31,7 +31,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     UNREFERENCED_PARAMETER(lpCmdLine);
     UNREFERENCED_PARAMETER(nCmdShow);
 
-#if defined (DEBUG) | (_DEBUG)
+#if defined (DEBUG) | defined (_DEBUG)
     HeapSetInformation(NULL, HeapEnableTerminationOnCorruption, NULL, 0);
 
     //Enable run-time memory leak for debug builds.
