@@ -9,6 +9,10 @@
 #include <map>
 #endif // _MAP_
 
+enum SystemType;
+class System;
+class Game;
+
 //Enumeration
 enum EngineState
 {
@@ -25,12 +29,44 @@ struct Engine
     Engine();
     ~Engine();
 
+	int Initialize();
+	int Draw();
+	int Update();
+	int ShutDown();
+	int RunLoop();
+
+	// Add a core system to the engine.
+	int AddSystem(System* sys);
+	// Retrive a core system.
+	template<typename T>
+	T* GetSystem(SystemType sysType);
+
+	// Create the game instance.
+	Game* CreateGame();
+
+	void* operator new(size_t size);
+	void operator delete(void* pDelete);
+
     static EngineState GetEngineState() { return m_EngineState; }
 
     // =================================================//
 
+	std::map<SystemType, System*> m_MapSystems;
     static EngineState m_EngineState;
 };
+
+template<typename T>
+T* GetSystem(SystemType sysType)
+{
+	T* pSys = static_cast<T*>(m_MapSystems[sysType]);
+	if (!pSys)
+	{
+		// Logger::Log("System invalid!");
+		return nullptr;
+	}
+	return pSys;
+}
+
 #endif // _ENGINE_H
 
 
