@@ -4,7 +4,7 @@
 
 Game::Game(const GameData& gameData)
 {
-	m_SystemType = SystemType::SYS_GAME;
+    m_SystemType = SystemType::SYS_GAME;
 }
 
 Game::~Game()
