@@ -7,21 +7,22 @@
 class UObject
 {
 public:
+    UObject();
     UObject(const std::tstring name);
     virtual ~UObject();
 
     //void* operator new(size_t size);
     //void operator delete(void* pDelete);
 
-    virtual bool Initialize()                 { m_bIsInitialized = true; return true; }
-    virtual bool PostInitialize()             { m_bIsPostInitialized = true; return true; }
-    virtual bool LoadContent()                { m_bIsContentLoaded = true; return true; }
-    virtual bool PostLoadContent()            { m_bIsPostContentLoaded = true; return true; }
-    virtual bool Update()                     { return true; }
-    //virtual bool LateUpdate();
-    virtual bool Draw()                       { return true; }
-    virtual bool DrawUI()                     { return true; }
-    virtual bool ShutDown()                   { return true; }
+    virtual bool Initialize()                     { m_bIsInitialized = true; return true; }
+    virtual bool PostInitialize()                 { m_bIsPostInitialized = true; return true; }
+    virtual bool LoadContent()                    { m_bIsContentLoaded = true; return true; }
+    virtual bool PostLoadContent()                { m_bIsPostContentLoaded = true; return true; }
+    virtual bool Update(Context& context)         { return true; }
+    //virtual bool LateUpdate(Context& context);  { return true; }
+    virtual bool Draw(Context& context)           { return true; }
+    virtual bool DrawUI(Context& context)         { return true; }
+    virtual bool ShutDown()                       { return true; }
 
     virtual void Reset();
 
@@ -41,11 +42,15 @@ public:
     void Destroy() { m_bIsDestroyed = true; }
     bool IsDestroyed() const { return m_bIsDestroyed; }
 
+    void Activate() { m_bIsActivated = true; }
+    void DeActivate() { m_bIsActivated = false; }
+    bool IsActivated() const { return m_bIsActivated; }
+
 protected:
 
     static int m_ObjectAmount;
-    static int m_IDCounter;
-    int m_ID;
+    static unsigned int m_IDCounter;
+    unsigned int m_ID;
 
     bool m_bIsInitialized;
     bool m_bIsPostInitialized;
@@ -56,6 +61,7 @@ protected:
     std::tstring m_Name;
 
 private:
+    bool m_bIsActivated;
     bool m_bIsDestroyed;
 
     bool m_bCanTick;
