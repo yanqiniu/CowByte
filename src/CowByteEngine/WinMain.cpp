@@ -1,12 +1,8 @@
 #include "WinMain.h"
-
-#ifndef _IOSTREAM_H_
-    #include "iostream.h"
-#endif
-
-#ifndef _STRING_H_
-    #include "string.h"
-#endif
+#include "iostream.h"
+#include "string.h"
+#include "deletemacros.h"
+#include "Engine.h"
 
 #if defined (DEBUG) | defined(_DEBUG)
 int _tmain(int argc, char* argv) 
@@ -39,14 +35,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _CrtSetBreakAlloc(0);
 #endif
 
-    //// create the engine
-    //Engine *pengine = new engine();
+    // create the engine
+    Engine *pEngine = new Engine();
 
-    ////kick of the game
-    //int result = pengine->runloop();
+    //kick of the game
+    int result = pEngine->RunLoop();
 
-    //// delete the engine
-    //delete pengine;
+    // delete the engine
+    SafeDelete(pEngine);
 
     return 0;
 }
