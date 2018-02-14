@@ -5,7 +5,7 @@
 
 struct GameData : public SystemData
 {
-
+    GameData();
 };
 
 class Game : public System
