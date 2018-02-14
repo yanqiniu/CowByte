@@ -51,21 +51,22 @@ protected:
     static int m_ObjectAmount;
     static unsigned int m_IDCounter;
     unsigned int m_ID;
-
-    bool m_bIsInitialized;
-    bool m_bIsPostInitialized;
-
-    bool m_bIsContentLoaded;
-    bool m_bIsPostContentLoaded;
-
     std::tstring m_Name;
 
-private:
-    bool m_bIsActivated;
-    bool m_bIsDestroyed;
 
-    bool m_bCanTick;
-    bool m_bCanDraw;
+    bool m_bIsInitialized : 1;
+    bool m_bIsPostInitialized : 1;
+
+    bool m_bIsContentLoaded : 1;
+    bool m_bIsPostContentLoaded : 1;
+
+
+private:
+    bool m_bIsActivated : 1;
+    bool m_bIsDestroyed : 1;
+
+    bool m_bCanTick : 1;
+    bool m_bCanDraw : 1;
 };
 
 #endif // ifndef _UOBJECT_H

@@ -34,6 +34,9 @@
     <Filter Include="Header Files\Defines\Context">
       <UniqueIdentifier>{bb0768d1-dc29-44fc-b298-a514012dedcd}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Core\Systems\Base">
+      <UniqueIdentifier>{594776e5-2fb9-407f-9194-1026e339812b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -45,23 +48,23 @@
     <ClInclude Include="iostream.h">
       <Filter>Header Files\Defines</Filter>
     </ClInclude>
-    <ClInclude Include="Engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="deletemacros.h">
       <Filter>Header Files\Defines</Filter>
     </ClInclude>
-    <ClInclude Include="UObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="System.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="context.h">
       <Filter>Header Files\Defines\Context</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Header Files\Core\Systems\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Header Files\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="UObject.h">
+      <Filter>Header Files\Core\SceneGraph\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.h">
+      <Filter>Header Files\Core\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -69,16 +72,16 @@
       <Filter>Header Files\Core\Main</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Core</Filter>
     </ClCompile>
     <ClCompile Include="UObject.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Core\SceneGraph\Base</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Core\Systems\Base</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Header Files\Core\Systems</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
