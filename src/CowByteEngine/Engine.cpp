@@ -29,7 +29,7 @@ int Engine::Initialize()
         return false;
 
     // Add Systems.
-    if (!AddSystem(new Window(WindowData(1280, 960))))
+    if (!AddSystem(new Window(WindowData(640, 480))))
         return false;
 
     // Initialize Systems.

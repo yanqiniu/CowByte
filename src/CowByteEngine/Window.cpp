@@ -88,7 +88,7 @@ bool Window::Initialize()
     wndRect.left = static_cast<long>(0);
     wndRect.right = static_cast<long>(m_Width);
     wndRect.top = static_cast<long>(0);
-    wndRect.right = static_cast<long>(m_Height);
+    wndRect.bottom = static_cast<long>(m_Height);
 
     WNDCLASS wndClass;                  // Windows Class Structure.
     std::tstring className = m_Title;   // Window title.
