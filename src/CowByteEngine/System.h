@@ -26,7 +26,11 @@ struct SystemData
 class System : public UObject
 {
     friend class Engine;
-public:
+
+public: 
+    SystemType GetType() { return m_SystemType; }
+
+protected:
     System(const SystemData& data);
     virtual ~System();
 
@@ -36,7 +40,6 @@ public:
 
     SystemType GetType() const { return m_SystemType; }
 
-protected:
     SystemType m_SystemType;
 };
 

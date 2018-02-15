@@ -66,6 +66,9 @@
     <ClInclude Include="Game.h">
       <Filter>Header Files\Core\Systems</Filter>
     </ClInclude>
+    <ClInclude Include="Window.h">
+      <Filter>Header Files\Core\Systems</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -81,6 +84,9 @@
       <Filter>Header Files\Core\Systems\Base</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
+      <Filter>Header Files\Core\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
       <Filter>Header Files\Core\Systems</Filter>
     </ClCompile>
   </ItemGroup>

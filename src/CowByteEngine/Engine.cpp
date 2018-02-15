@@ -5,6 +5,7 @@
 #include "deletemacros.h"
 #include "string.h"
 #include "context.h"
+#include "Window.h"
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
@@ -28,17 +29,30 @@ int Engine::Initialize()
         return false;
 
     // Add Systems.
+    if (!AddSystem(new Window(WindowData(1280, 960))))
+        return false;
+
+    // Initialize Systems.
+    if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
+        return false;
 
     return true;
 }
 
-int Engine::Draw(const Context& context)
+int Engine::Draw(Context& context)
 {
     return true;
 }
 
-int Engine::Update(const Context& context)
+int Engine::Update(Context& context)
 {
+    for (std::pair<SystemType, System*> pSys : m_MapSystems)
+    {
+        if(!pSys.second)
+            continue;
+
+        pSys.second->Update(context);
+    }
     return true;
 }
 
@@ -48,11 +62,11 @@ int Engine::ShutDown()
 
     for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
     {
-        //if (!pSysPair.second->ShutDown())
-        //{
-        //	 Logger::Log("Failed to shurdown system" + pSys->GetSystemType());
-        //	continue;
-        //}
+        if (!pSysPair.second->ShutDown())
+        {
+        	//Logger::Log("Failed to shurdown system" + pSys->GetSystemType());
+        	continue;
+        }
 
         SafeDelete(pSysPair.second);
     }

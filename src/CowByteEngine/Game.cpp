@@ -3,9 +3,8 @@
 
 
 Game::Game(const GameData& gameData) :
-    System(gameData)
+    System(SystemType::SYS_GAME)
 {
-    m_SystemType = SystemType::SYS_GAME;
 }
 
 Game::~Game()
@@ -13,7 +12,7 @@ Game::~Game()
 }
 
 GameData::GameData() :
-    SystemData(SystemType::SYS_GAME)
+    SystemData(SystemType::SYS_INVALID)
 {
 
 }

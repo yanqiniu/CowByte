@@ -1,0 +1,72 @@
+
+#ifndef _WINDOW_H
+#define _WINDOW_H
+
+#include <Windows.h>
+
+#include "System.h"
+#include "context.h"
+#include "string.h"
+
+
+struct WindowData : public SystemData
+{
+    WindowData();
+    WindowData(int w, int h, const std::tstring& title = _T("CowByte Engine Ver1.0  - by Roy Niu"), int b = 32, bool fullScreen = false);
+
+    int m_Width;
+    int m_Height;
+    int m_Bits;
+    std::tstring m_Title;
+    bool m_isFullScreen;
+};
+
+struct ResizeData
+{
+    ResizeData();
+    ResizeData(bool resize, int nw, int nh);
+
+    bool m_MustResize;
+    int m_NewWidth;
+    int m_NewHeight;
+};
+
+class Window : public System
+{
+    friend class Engine;
+public:
+    int GetWidth();
+    int GetHeight();
+    HWND GetWindowHandle;
+    HDC GetDeviceContext();
+    HINSTANCE GetInstance();
+
+    ResizeData& GetResizeData() { return m_ResizeData; }
+
+    LRESULT HandleEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lparam);
+
+protected:
+    Window(const WindowData& data);
+    virtual ~Window();
+
+    virtual bool Initialize();
+    virtual bool Update(Context& context);
+    virtual bool ShutDown();
+
+private:
+    bool CenterWindow();
+
+    HWND m_hWindow;
+    HDC m_hDC;
+    HINSTANCE m_hInst;
+
+    int m_Width;
+    int m_Height;
+
+    int m_Bits;
+    bool m_bFullScreen;
+    std::tstring m_Title;
+    ResizeData m_ResizeData;
+};
+
+#endif

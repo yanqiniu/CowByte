@@ -126,6 +126,7 @@
     <ClInclude Include="string.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="UObject.h" />
+    <ClInclude Include="Window.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
   <ItemGroup>
@@ -133,6 +134,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="UObject.cpp" />
+    <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
