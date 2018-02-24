@@ -1,5 +1,3 @@
-#include <wrl/client.h>
-#include <dxgi1_4.h>
 #include <exception>
 
 #include "Graphics.h"
@@ -7,7 +5,7 @@
 
 GraphicsData::GraphicsData() :
     SystemData(SystemType::SYS_GRAPHICS),
-    m_UseWarpDevice(true),
+    m_UseWarpDevice(false),
     m_BufferFormat(DXGI_FORMAT_R8G8B8A8_UNORM)
 {
 
@@ -31,6 +29,25 @@ Graphics::~Graphics()
 {
 }
 
+bool Graphics::Initialize()
+{
+    System::Initialize();
+    
+    LoadPipeline();
+
+    return true;
+}
+
+bool Graphics::Update(Context& context)
+{
+    return true;
+}
+
+bool Graphics::ShutDown()
+{
+    return true;
+}
+
 void Graphics::LoadPipeline()
 {
 #if defined(_DEBUG)
@@ -51,7 +68,7 @@ void Graphics::LoadPipeline()
     ComPtr<IDXGIFactory4> factory;
     DX::ThrowIfFailed(CreateDXGIFactory1(IID_PPV_ARGS(&factory)));
 
-    // CreaTE devices
+    // Create devices
     if (m_UseWarpDevice) // Use WARP software rasterizer?
     {
         ComPtr<IDXGIAdapter> warpAdapter;

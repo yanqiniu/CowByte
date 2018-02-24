@@ -7,6 +7,8 @@
 #include <d3d12.h>
 #pragma comment (lib, "d3d12.lib")
 #include "d3dx12.h"
+#include <wrl/client.h>
+#include <dxgi1_4.h>
 
 #include "System.h"
 #include "Window.h"
@@ -19,6 +21,8 @@ struct GraphicsData : SystemData
 
     bool m_UseWarpDevice;
     DXGI_FORMAT m_BufferFormat;
+
+
 };
 
 class Graphics : public System
@@ -26,6 +30,9 @@ class Graphics : public System
 public:
     Graphics(const GraphicsData& data, Window* window);
     virtual ~Graphics();
+    virtual bool Initialize();
+    virtual bool Update(Context& context);
+    virtual bool ShutDown();
 
 private:
     void LoadPipeline();
