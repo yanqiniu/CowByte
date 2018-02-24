@@ -90,10 +90,12 @@ bool Window::Initialize()
     wndRect.top = static_cast<long>(0);
     wndRect.bottom = static_cast<long>(m_Height);
 
-    WNDCLASS wndClass;                  // Windows Class Structure.
+    WNDCLASSEX wndClass;                  // Windows Class Structure.
     std::tstring className = m_Title;   // Window title.
 
+    ZeroMemory(&wndClass, sizeof(WNDCLASSEX));
 
+    wndClass.cbSize = sizeof(WNDCLASSEX);
     wndClass.style = CS_DBLCLKS | CS_DROPSHADOW | CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
     wndClass.lpfnWndProc = WndProc;
     wndClass.cbClsExtra = NULL;
@@ -105,7 +107,7 @@ bool Window::Initialize()
     wndClass.lpszMenuName = NULL;
     wndClass.lpszClassName = className.c_str();
 
-    if (!RegisterClass(&wndClass))
+    if (!RegisterClassEx(&wndClass))
     {
         //Logger::Log(_T("Failed to register window"), LOGTYPE_ERROR, true);
         return false;
@@ -145,8 +147,8 @@ bool Window::Initialize()
         className.c_str(),
         className.c_str(),
         dwStyle | WS_CLIPSIBLINGS | WS_CLIPCHILDREN,
-        0,
-        0,
+        10,
+        10,
         wndRect.right - wndRect.left,
         wndRect.bottom - wndRect.top,
         NULL,

@@ -35,16 +35,16 @@ class Window : public System
 {
     friend class Engine;
 public:
-    int GetWidth();
-    int GetHeight();
-    HWND GetWindowHandle;
+    int GetWidth() const { return m_Width; }
+    int GetHeight() const { return m_Height; }
+    HWND GetWindowHandle() const { return m_hWindow; }
     HDC GetDeviceContext();
     HINSTANCE GetInstance();
 
     ResizeData& GetResizeData() { return m_ResizeData; }
 
     LRESULT HandleEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lparam);
-
+    
 protected:
     Window(const WindowData& data);
     virtual ~Window();
