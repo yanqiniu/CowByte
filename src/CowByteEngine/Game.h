@@ -5,14 +5,14 @@
 
 struct GameData : public SystemData
 {
-
+    GameData();
 };
 
 class Game : public System
 {
 public:
-	Game(const GameData& gameData);
-	virtual ~Game();
+    Game(const GameData& gameData);
+    virtual ~Game();
 };
 
 #endif

@@ -5,116 +5,138 @@
 #include "deletemacros.h"
 #include "string.h"
 #include "context.h"
+#include "Window.h"
+#include "Graphics.h"
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
 Engine::Engine()
 {
-	m_EngineState = EngineState::CONSTRUCTING;
+    m_EngineState = EngineState::CONSTRUCTING;
 }
 
 
 Engine::~Engine()
 {
-	m_EngineState = EngineState::DESTROYING;
+    m_EngineState = EngineState::DESTROYING;
 }
 
 int Engine::Initialize()
 {
-	m_EngineState = EngineState::INITIALIZING;
+    m_EngineState = EngineState::INITIALIZING;
 
-	Game* pGame = CreateGame();
-	if (!pGame)
-		return false;
+    Game* pGame = CreateGame();
+    if (!pGame)
+        return false;
 
-	// Add Systems.
+    // Add Systems.
+    Window *window = new Window(WindowData(640, 480));
+    Graphics *graphics = new Graphics(GraphicsData(window));
+    if (!AddSystem(window))
+        return false;
+    if (!AddSystem(graphics))
+        return false;
 
-	return true;
+
+    // Initialize Systems.
+    if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
+        return false;
+    if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
+        return false;
+
+    return true;
 }
 
-int Engine::Draw(const Context& context)
+int Engine::Draw(Context& context)
 {
-	return true;
+    return true;
 }
 
-int Engine::Update(const Context& context)
+int Engine::Update(Context& context)
 {
-	return true;
+    for (std::pair<SystemType, System*> pSys : m_MapSystems)
+    {
+        if(!pSys.second)
+            continue;
+
+        pSys.second->Update(context);
+    }
+    return true;
 }
 
 int Engine::ShutDown()
 {
-	m_EngineState = EngineState::SHUTTINGDOWN;
+    m_EngineState = EngineState::SHUTTINGDOWN;
 
-	for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
-	{
-		//if (!pSysPair.second->ShutDown())
-		//{
-		//	 Logger::Log("Failed to shurdown system" + pSys->GetSystemType());
-		//	continue;
-		//}
+    for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
+    {
+        if (!pSysPair.second->ShutDown())
+        {
+        	//Logger::Log("Failed to shurdown system" + pSys->GetSystemType());
+        	continue;
+        }
 
-		SafeDelete(pSysPair.second);
-	}
+        SafeDelete(pSysPair.second);
+    }
 
-	return true;
+    return true;
 }
 
 int Engine::RunLoop()
 {
-	Context context;
+    Context context;
 
-	if (!this->Initialize())
-		return 0;
+    if (!this->Initialize())
+        return 0;
 
-	srand(GetTickCount());
+    srand(GetTickCount());
 
-	MSG msg = {};
+    MSG msg = {};
 
-	m_EngineState = EngineState::RUNNING;
+    m_EngineState = EngineState::RUNNING;
 
 
-	while (msg.message != WM_QUIT && m_EngineState == EngineState::RUNNING)
-	{
-		//CheckResize();
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
+    while (msg.message != WM_QUIT && m_EngineState == EngineState::RUNNING)
+    {
+        //CheckResize();
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
 
-		this->Update(context);
-		this->Draw(context);
-	}
+        this->Update(context);
+        this->Draw(context);
+    }
 
-	//Logger::Log("Ending the program...");
-	//Logger::WriteLogToFile();
+    //Logger::Log("Ending the program...");
+    //Logger::WriteLogToFile();
 
-	if (!this->ShutDown())
-		return 0;
+    if (!this->ShutDown())
+        return 0;
 
-	return msg.wParam;
+    return msg.wParam;
 }
 
 int Engine::AddSystem(System* pSys)
 {
-	auto element = m_MapSystems.insert(std::make_pair(pSys->GetType(), pSys));
-	if (element.second)
-		return true;
+    auto element = m_MapSystems.insert(std::make_pair(pSys->GetType(), pSys));
+    if (element.second)
+        return true;
 
-	return false;
+    return false;
 }
 
 Game* Engine::CreateGame()
 {
-	if (!AddSystem(new Game(GameData())))
-		return nullptr;
+    if (!AddSystem(new Game(GameData())))
+        return nullptr;
 
-	Game* game = GetSystem<Game>(SystemType::SYS_GAME);
-	if (!game)
-		return nullptr;
-	//if (!game->Initialize())
-	//	return nullptr;
+    Game* game = GetSystem<Game>(SystemType::SYS_GAME);
+    if (!game)
+        return nullptr;
+    //if (!game->Initialize())
+    //	return nullptr;
 
-	return game;
+    return game;
 }
