@@ -141,6 +141,8 @@
     <ClInclude Include="string.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="UObject.h" />
+    <ClInclude Include="Vec3.h" />
+    <ClInclude Include="Vertex.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WinMain.h" />
   </ItemGroup>
@@ -150,8 +152,13 @@
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="UObject.cpp" />
+    <ClCompile Include="Vec3.cpp" />
+    <ClCompile Include="Vertex.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.shader" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

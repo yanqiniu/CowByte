@@ -31,15 +31,18 @@ public:
     virtual bool Initialize();
     virtual bool Update(Context& context);
     virtual bool ShutDown();
+    bool OnRender();
 
 private:
     static const int NumOfBuffers = 2;
 
     D3D11_VIEWPORT m_Viewport;
-    ID3D11Device *m_Device;
-    ID3D11DeviceContext *m_DeviceContext;
-    IDXGISwapChain *m_SwapChain;
-    ID3D11RenderTargetView *m_RenderTarget;
+    ID3D11Device *m_pDevice;
+    ID3D11DeviceContext *m_pDeviceContext;
+    IDXGISwapChain *m_pSwapChain;
+    ID3D11RenderTargetView *m_pRenderTarget;
+    ID3D11Buffer *m_pVertexBuffer;
+    ID3D11InputLayout *m_pInputLayout;
     Window *m_pWindow;
 
 

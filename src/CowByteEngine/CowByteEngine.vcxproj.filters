@@ -1,108 +1,126 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Core">
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{5e6e50c8-ce94-451d-ac52-a0983c070e38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
       <UniqueIdentifier>{988dc0e5-aaf9-4fa0-8507-0d19d073aecc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\Main">
+    <Filter Include="Core\Main">
       <UniqueIdentifier>{0befe4e8-2428-4e49-89d9-04c9d56f1705}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Defines">
-      <UniqueIdentifier>{e58a4818-8b42-4f7a-bac3-15ac82d5555a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Core\Systems">
+    <Filter Include="Core\Systems">
       <UniqueIdentifier>{9d830708-167f-4a29-a5ab-9afdca311ffb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\SceneGraph">
+    <Filter Include="Core\Systems\Base">
+      <UniqueIdentifier>{594776e5-2fb9-407f-9194-1026e339812b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Systems\Graphics">
+      <UniqueIdentifier>{cb00f9a3-a453-4807-b04d-5cd73d181628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\SceneGraph">
       <UniqueIdentifier>{eb41c6c4-ed70-40f0-8c6c-ba038b25894a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\SceneGraph\Base">
+    <Filter Include="Core\SceneGraph\Base">
       <UniqueIdentifier>{a121f172-5d7f-4077-b565-c2c32569bae5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Defines\Context">
+    <Filter Include="Defines">
+      <UniqueIdentifier>{e58a4818-8b42-4f7a-bac3-15ac82d5555a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Defines\Context">
       <UniqueIdentifier>{bb0768d1-dc29-44fc-b298-a514012dedcd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Core\Systems\Base">
-      <UniqueIdentifier>{594776e5-2fb9-407f-9194-1026e339812b}</UniqueIdentifier>
+    <Filter Include="Core\Math">
+      <UniqueIdentifier>{3e90efab-68d3-4250-8f7b-99bce1d07867}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
-      <Filter>Header Files\Core\Main</Filter>
+      <Filter>Core\Main</Filter>
     </ClInclude>
     <ClInclude Include="string.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Defines</Filter>
     </ClInclude>
     <ClInclude Include="iostream.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Defines</Filter>
     </ClInclude>
     <ClInclude Include="deletemacros.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Defines</Filter>
     </ClInclude>
     <ClInclude Include="context.h">
-      <Filter>Header Files\Defines\Context</Filter>
+      <Filter>Defines\Context</Filter>
     </ClInclude>
     <ClInclude Include="System.h">
-      <Filter>Header Files\Core\Systems\Base</Filter>
+      <Filter>Core\Systems\Base</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
-      <Filter>Header Files\Core</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="UObject.h">
-      <Filter>Header Files\Core\SceneGraph\Base</Filter>
+      <Filter>Core\SceneGraph\Base</Filter>
     </ClInclude>
     <ClInclude Include="Game.h">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems</Filter>
     </ClInclude>
     <ClInclude Include="Window.h">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems</Filter>
     </ClInclude>
     <ClInclude Include="exceptions.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Defines</Filter>
     </ClInclude>
     <ClInclude Include="d3dx12.h">
-      <Filter>Header Files\Core\Systems</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics.h">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems</Filter>
     </ClInclude>
     <ClInclude Include="path.h">
-      <Filter>Header Files\Defines</Filter>
+      <Filter>Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics.h">
+      <Filter>Core\Systems\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Core\Systems\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Vec3.h">
+      <Filter>Core\Math</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
-      <Filter>Header Files\Core\Main</Filter>
+      <Filter>Core\Main</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
-      <Filter>Header Files\Core</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="UObject.cpp">
-      <Filter>Header Files\Core\SceneGraph\Base</Filter>
+      <Filter>Core\SceneGraph\Base</Filter>
     </ClCompile>
     <ClCompile Include="System.cpp">
-      <Filter>Header Files\Core\Systems\Base</Filter>
+      <Filter>Core\Systems\Base</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Window.cpp">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems</Filter>
     </ClCompile>
     <ClCompile Include="Graphics.cpp">
-      <Filter>Header Files\Core\Systems</Filter>
+      <Filter>Core\Systems\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Core\Systems\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.shader">
+      <Filter>Resource Files\Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
