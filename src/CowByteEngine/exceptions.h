@@ -1,7 +1,7 @@
 #ifndef _EXCEPTIONS_H
 #define _EXCEPTIONS_H
 
-namespace DX
+namespace DirectX
 {
     inline void ThrowIfFailed(HRESULT hr)
     {

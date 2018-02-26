@@ -30,8 +30,8 @@ int Engine::Initialize()
         return false;
 
     // Add Systems.
-    Window* window = new Window(WindowData(640, 480));
-    Graphics* graphics = new Graphics(GraphicsData(), window);
+    Window *window = new Window(WindowData(640, 480));
+    Graphics *graphics = new Graphics(GraphicsData(window));
     if (!AddSystem(window))
         return false;
     if (!AddSystem(graphics))

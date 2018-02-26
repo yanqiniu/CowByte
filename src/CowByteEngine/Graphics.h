@@ -17,13 +17,16 @@
 
 struct GraphicsData : SystemData
 {
-    explicit GraphicsData();
+    GraphicsData();
+    GraphicsData(Window *window);
+    Window* m_pWindow;
+
 };
 
 class Graphics : public System
 {
 public:
-    Graphics();
+    explicit Graphics( const GraphicsData &data);
     virtual ~Graphics();
     virtual bool Initialize();
     virtual bool Update(Context& context);
@@ -33,7 +36,7 @@ private:
     ID3D11Device *m_Device;
     ID3D11DeviceContext *m_DeviceContext;
     IDXGISwapChain *m_SwapChain;
-
+    Window *m_pWindow;
 
 
 };

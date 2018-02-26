@@ -38,6 +38,7 @@ public:
     int GetWidth() const { return m_Width; }
     int GetHeight() const { return m_Height; }
     HWND GetWindowHandle() const { return m_hWindow; }
+    bool GetIsFullScreen() const { return m_bFullScreen; }
     HDC GetDeviceContext();
     HINSTANCE GetInstance();
 
