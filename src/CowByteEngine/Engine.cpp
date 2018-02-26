@@ -6,6 +6,7 @@
 #include "string.h"
 #include "context.h"
 #include "Window.h"
+#include "Graphics.h"
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
@@ -29,11 +30,18 @@ int Engine::Initialize()
         return false;
 
     // Add Systems.
-    if (!AddSystem(new Window(WindowData(640, 480))))
+    Window *window = new Window(WindowData(640, 480));
+    Graphics *graphics = new Graphics(GraphicsData(window));
+    if (!AddSystem(window))
         return false;
+    if (!AddSystem(graphics))
+        return false;
+
 
     // Initialize Systems.
     if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
+        return false;
+    if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
         return false;
 
     return true;
