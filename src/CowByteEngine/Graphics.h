@@ -33,9 +33,13 @@ public:
     virtual bool ShutDown();
 
 private:
+    static const int NumOfBuffers = 2;
+
+    D3D11_VIEWPORT m_Viewport;
     ID3D11Device *m_Device;
     ID3D11DeviceContext *m_DeviceContext;
     IDXGISwapChain *m_SwapChain;
+    ID3D11RenderTargetView *m_RenderTarget;
     Window *m_pWindow;
 
 

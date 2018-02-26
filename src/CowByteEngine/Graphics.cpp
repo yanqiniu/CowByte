@@ -46,7 +46,7 @@ bool Graphics::Initialize()
 
     DXGI_SWAP_CHAIN_DESC swapDesc;
     ZeroMemory(&swapDesc, sizeof(swapDesc));
-    swapDesc.BufferCount = 2; // Double buffering.
+    swapDesc.BufferCount = NumOfBuffers;
     swapDesc.BufferDesc.Width = 640; // TODO: remove hard coding.
     swapDesc.BufferDesc.Height = 480; // TODO: remove hard coding.
     swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -72,11 +72,29 @@ bool Graphics::Initialize()
     ));
 
 
+    // Set render target.
+    ID3D11Texture2D *pBackBuffer;
+    m_SwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer);
+    m_Device->CreateRenderTargetView(pBackBuffer, NULL, &m_RenderTarget);
+    pBackBuffer->Release();
+    m_DeviceContext->OMSetRenderTargets(1, &m_RenderTarget, NULL);
+
+    // Set viewport.
+    ZeroMemory(&m_Viewport, sizeof(D3D11_VIEWPORT));
+    m_Viewport.TopLeftX = 0;
+    m_Viewport.TopLeftY = 0;
+    m_Viewport.Width = m_pWindow->GetWidth();
+    m_Viewport.Height = m_pWindow->GetHeight();
+    m_DeviceContext->RSSetViewports(1, &m_Viewport);
+
     return true;
 }
 
 bool Graphics::Update(Context& context)
 {
+    m_DeviceContext->ClearRenderTargetView(m_RenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+
+    m_SwapChain->Present(0, 0);
     return true;
 }
 
@@ -85,6 +103,7 @@ bool Graphics::ShutDown()
     m_SwapChain->Release();
     m_Device->Release();
     m_DeviceContext->Release();
+    m_RenderTarget->Release();
     return true;
 }
 
