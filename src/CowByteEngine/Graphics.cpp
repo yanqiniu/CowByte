@@ -115,11 +115,11 @@ bool Graphics::Initialize()
     };
 
     Vec3 offset(-0.11f, -0.1f, 0.0f);
-    offset = offset * 5.0f;
-    for (Vertex & vert : testVerts)
-    {
-        vert.m_Pos = vert.m_Pos + (offset);
-    }
+    //offset = offset * 5.0f;
+    //for (Vertex & vert : testVerts)
+    //{
+    //    vert.m_Pos = vert.m_Pos + (offset);
+    //}
 
     // Create vertex buffer.
     D3D11_BUFFER_DESC bufferDesc;

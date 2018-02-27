@@ -38,6 +38,9 @@
     <Filter Include="Core\Math">
       <UniqueIdentifier>{3e90efab-68d3-4250-8f7b-99bce1d07867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Misc">
+      <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -88,6 +91,9 @@
     <ClInclude Include="Vec3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -116,6 +122,9 @@
     </ClCompile>
     <ClCompile Include="Vec3.cpp">
       <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

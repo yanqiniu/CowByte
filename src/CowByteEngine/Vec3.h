@@ -4,7 +4,7 @@
 #include <smmintrin.h>
 #include <exception>
 
-struct Vec3
+__declspec(align(16)) struct Vec3
 {
     __m128 _data;
 
@@ -19,7 +19,7 @@ struct Vec3
     {
         _data = _mm_setr_ps(xIn, yIn, zIn, wIn);
     }
-        __forceinline Vec3(const __m128 &data)
+    __forceinline Vec3(const __m128 &data)
     {
         _data = data;
     }
@@ -35,12 +35,12 @@ struct Vec3
 
     // Common operators.
     __forceinline void operator=(const Vec3 &rhs)
-    { 
-        _data = rhs._data; 
+    {
+        _data = rhs._data;
     }
     __forceinline Vec3 operator+(const Vec3 &rhs)
-    { 
-        return Vec3(_mm_add_ps(_data, rhs._data)); 
+    {
+        return Vec3(_mm_add_ps(_data, rhs._data));
     }
     __forceinline Vec3 operator-(const Vec3 &rhs)
     {
@@ -76,7 +76,7 @@ struct Vec3
     __forceinline void operator*=(float scalar)
     {
         __m128 temp = _mm_setr_ps(scalar, scalar, scalar, 1.0f);
-        _data =  _mm_mul_ps(_data, temp);
+        _data = _mm_mul_ps(_data, temp);
     }
     __forceinline void operator/=(float divisor)
     {
@@ -91,8 +91,8 @@ struct Vec3
 
     // Common operations.
     __forceinline void Add(const Vec3 &toAdd)
-    { 
-        _data = _mm_add_ps(_data, toAdd._data); 
+    {
+        _data = _mm_add_ps(_data, toAdd._data);
     }
     __forceinline void Scale(float scalar)
     {
@@ -157,7 +157,7 @@ struct Vec3
     // Dot product.
     __forceinline float Dot(const Vec3 &toDot)
     {
-       return _mm_dp_ps(_data, toDot._data, 0b01110001).m128_f32[0];
+        return _mm_dp_ps(_data, toDot._data, 0b01110001).m128_f32[0];
     }
 
     // Return cross vector. Does not change Data.
@@ -174,5 +174,85 @@ struct Vec3
 
 };
 
-#endif // 
+// Slow version, just wondering how much speed improvement that was...
+struct Vec3Slow
+{
+    float m_X, m_Y, m_Z, m_W;
+    __forceinline Vec3Slow() : m_X(0), m_Y(0), m_Z(0), m_W(1.0) {}
 
+    // W set to 1.0f, representing a point.
+    __forceinline Vec3Slow(float xIn, float yIn, float zIn)
+        : m_X(xIn), m_Y(yIn), m_Z(zIn), m_W(1.0) {}
+    __forceinline Vec3Slow(float xIn, float yIn, float zIn, float wIn)
+        : m_X(xIn), m_Y(yIn), m_Z(zIn), m_W(wIn) {}
+
+
+    ~Vec3Slow() {};
+
+    // Common operators.
+    __forceinline void operator=(const Vec3Slow &rhs)
+    {
+        m_X = rhs.m_X;
+        m_Y = rhs.m_Y;
+        m_Z = rhs.m_Z;
+        m_W = rhs.m_W;
+    }
+
+    __forceinline void Add(const Vec3Slow &rhs)
+    {
+        m_X += rhs.m_X;
+        m_Y += rhs.m_X;
+        m_Z += rhs.m_X;
+        m_W += rhs.m_W;
+    }
+
+
+    // Squared length of the vector.
+    __forceinline float SqLen()
+    {
+        return m_X * m_X + m_Y * m_Y + m_Z * m_Z;
+    }
+
+    // length of the vector.
+    __forceinline float Len()
+    {
+        return sqrt(m_X * m_X + m_Y * m_Y + m_Z * m_Z);
+    }
+
+    // Test to see if it's a zero vector (x, y, z are zero)
+
+
+    // Normalize the vector. Notice that since only Vector
+    // can be normalized, W component gets set to 0.
+    __forceinline void Normalize()
+    {
+        float length = Len();
+        m_X /= length;
+        m_Y /= length;
+        m_Z /= length;
+    }
+    // Return a normalized version of the Vec3Slow.
+    // Notice this DOES NOT modify _data.
+    __forceinline Vec3Slow Normalized()
+    {
+        float length = Len();
+        return Vec3Slow(m_X / length, m_Y / length, m_Z / length, m_W);
+    }
+
+    // Dot product.
+    __forceinline float Dot(const Vec3Slow &toDot)
+    {
+        return m_X * toDot.m_X + m_Y * toDot.m_Y + m_Z * toDot.m_Z;
+    }
+
+    // Return cross vector. Does not change Data.
+    __forceinline Vec3Slow Cross(const Vec3Slow &toCross)
+    {
+        float newX = m_Y * toCross.m_Z - m_Z * toCross.m_Y;
+        float newY = m_Z * toCross.m_X - m_X * toCross.m_Z;
+        float newZ = m_X * toCross.m_Y - m_Y * toCross.m_X;
+
+        return Vec3Slow(newX, newY, newZ);
+    }
+};
+#endif
