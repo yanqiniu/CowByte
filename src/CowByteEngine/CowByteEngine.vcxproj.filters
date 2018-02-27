@@ -91,9 +91,6 @@
     <ClInclude Include="Vec3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
-    <ClInclude Include="Timer.h">
-      <Filter>Misc</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -122,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="Vec3.cpp">
       <Filter>Core\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="Timer.cpp">
-      <Filter>Misc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
