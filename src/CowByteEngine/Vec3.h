@@ -46,8 +46,6 @@ struct Vec3
     {
         return Vec3(_mm_sub_ps(_data, rhs._data));
     }
-    // Scalar multiplication in global section.
-    // Does not divide W.
     __forceinline Vec3 operator/(float divisor)
     {
         if (divisor == 0)
@@ -56,6 +54,15 @@ struct Vec3
         }
         __m128 temp = _mm_setr_ps(divisor, divisor, divisor, 1.0f);
         return Vec3(_mm_div_ps(_data, temp));
+    }
+    __forceinline friend Vec3 operator*(const Vec3& vec3, float scalar)
+    {
+        __m128 temp = _mm_setr_ps(scalar, scalar, scalar, 1.0f);
+        return Vec3(_mm_mul_ps(vec3._data, temp));
+    }
+    __forceinline friend Vec3 operator*(float scalar, const Vec3& vec3)
+    {
+        return vec3 * scalar;
     }
 
     __forceinline void operator+=(const Vec3 &rhs)
@@ -102,59 +109,70 @@ struct Vec3
     // length of the vector.
     __forceinline float Len()
     {
-        __m128 temp = _mm_dp_ps(_data, _data, 0b01110001);
-        return _mm_sqrt_ss(temp).m128_f32[0];
+        return _mm_sqrt_ss(_mm_dp_ps(_data, _data, 0b01110001)).m128_f32[0];
     }
 
     // Test to see if it's a zero vector (x, y, z are zero)
     __forceinline bool IsZero()
     {
-        return (x() == 0 && y() == 0 && z() == 0);
+        // Using dot product instead of checking x, y and z individually
+        // since the later one introduces around 60% more time according 
+        // to testing.
+        return _mm_dp_ps(_data, _data, 0b01110001).m128_f32[0] == 0;
+    }
+
+    // Set W to 1.
+    __forceinline void ToPoint()
+    {
+        _data = _mm_insert_ps(_data, _mm_set_ps1(1.0f), 0b11110000);
+    }
+
+    // Set W to 0.
+    __forceinline void ToDir()
+    {
+        _data = _mm_insert_ps(_data, _mm_set_ps1(0.0f), 0b11110000);
     }
 
 
 
     // Normalize the vector. Notice that since only Vector
-    // can be normalized, W component gets set to 1.
+    // can be normalized, W component gets set to 0.
     __forceinline void Normalize()
     {
-        //if (x() == 0 && y() == 0 && z() == 0) // zero vector
-        //    return;
-
-        //if(_data.m128_f32[4] == 0)
-        //    _data.m128_f32[4]
-
-        //__m128 temp = _mm_dp_ps(_data, _data, 0b01111111);
-        //if (temp.m128_f32[0] == 0) //zero vector.
-        //    return;
-
-        //temp = _mm_rsqrt_ps(temp);
-
+        __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
+        temp = _mm_rsqrt_ps(temp);
+        temp = _mm_insert_ps(temp, _mm_set_ps1(1.0f), 0b11110000); // set w of temp to 1.0f
+        _data = _mm_mul_ps(_data, temp);
+    }
+    // Return a normalized version of the Vec3.
+    // Notice this DOES NOT modify _data.
+    __forceinline Vec3 Normalized()
+    {
+        __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
+        temp = _mm_rsqrt_ps(temp);
+        temp = _mm_insert_ps(temp, _mm_set_ps1(1.0f), 0b11110000); // set w of temp to 1.0f
+        return Vec3(_mm_mul_ps(_data, temp));
     }
 
-    // Normalize
-    // Normalized
-    // Dot product
-    // Cross product
+    // Dot product.
+    __forceinline float Dot(const Vec3 &toDot)
+    {
+       return _mm_dp_ps(_data, toDot._data, 0b01110001).m128_f32[0];
+    }
 
+    // Return cross vector. Does not change Data.
+    __forceinline Vec3 Cross(const Vec3 &toCross)
+    {
+        __m128 temp0 = _mm_shuffle_ps(_data, _data, _MM_SHUFFLE(3, 0, 2, 1));
+        __m128 temp1 = _mm_shuffle_ps(toCross._data, toCross._data, _MM_SHUFFLE(3, 1, 0, 2));
+        __m128 result = _mm_mul_ps(temp0, temp1);
+
+        temp0 = _mm_shuffle_ps(_data, _data, _MM_SHUFFLE(3, 1, 0, 2));
+        temp1 = _mm_shuffle_ps(toCross._data, toCross._data, _MM_SHUFFLE(3, 0, 2, 1));
+        return Vec3(_mm_sub_ps(result, _mm_mul_ps(temp0, temp1)));
+    }
 
 };
-
-#pragma region Global Vec3 functions and operators
-
-// Does not scale W.
-__forceinline Vec3 operator*(const Vec3& vec3, float scalar)
-{
-    __m128 temp = _mm_setr_ps(scalar, scalar, scalar, 1.0f);
-    return Vec3(_mm_mul_ps(vec3._data, temp));
-}
-__forceinline Vec3 operator*(float scalar, const Vec3& vec3)
-{
-    return vec3 * scalar;
-}
-
-#pragma endregion
-
 
 #endif // 
 
