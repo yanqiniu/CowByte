@@ -110,9 +110,16 @@ bool Graphics::Initialize()
     Vertex testVerts[NumVerts] =
     {
         Vertex(0.0f,    0.5f, 0.0f, 1.0f, 0.0f, 0.0f),
-        Vertex(0.45f,  -0.5,  0.0f, 0.0f, 1.0f, 0.0f),
+        Vertex(0.45f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f),
         Vertex(-0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f)
     };
+
+    Vec3 offset(-0.11f, -0.1f, 0.0f);
+    //offset = offset * 5.0f;
+    //for (Vertex & vert : testVerts)
+    //{
+    //    vert.m_Pos = vert.m_Pos + (offset);
+    //}
 
     // Create vertex buffer.
     D3D11_BUFFER_DESC bufferDesc;
