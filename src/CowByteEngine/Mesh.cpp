@@ -17,9 +17,9 @@ Mesh::~Mesh()
 // LoadContent(), therefore before Initialize().
 bool Mesh::ConfigureMesh(const char* meshName)
 {
-    const char *newPath = Path::PathHelper::ConcatPath(Path::MeshFolder, meshName);
-    strcpy_s(m_MeshFilePath, newPath);
-    printf("Mesh path set to: [%s]", m_MeshFilePath);
+    m_MeshFilePath.Set(Path::MeshFolder);
+    m_MeshFilePath.Append(meshName);
+    printf("Mesh path set to: [%s]", m_MeshFilePath.Get());
     return true;
 }
 

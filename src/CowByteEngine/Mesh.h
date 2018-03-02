@@ -1,6 +1,7 @@
 #ifndef _MESH_H
 #define _MESH_H
 #include "UObject.h"
+#include "CowString.h"
 
 class Mesh : UObject
 {
@@ -8,7 +9,7 @@ public:
     Mesh();
     ~Mesh();
 
-    char m_MeshFilePath[64];
+    CowString<256> m_MeshFilePath;
 
     bool ConfigureMesh( const char* meshName );
     bool Initialize();
