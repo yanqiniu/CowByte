@@ -38,11 +38,11 @@
     <Filter Include="Core\Math">
       <UniqueIdentifier>{3e90efab-68d3-4250-8f7b-99bce1d07867}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Misc">
-      <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Assets\Geometry">
       <UniqueIdentifier>{7e1fe951-6987-453a-9232-5e613c74e7b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,6 +97,12 @@
     <ClInclude Include="Mesh.h">
       <Filter>Core\Systems\Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="FileReader.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CowString.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -125,6 +131,12 @@
     </ClCompile>
     <ClCompile Include="Mesh.cpp">
       <Filter>Core\Systems\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="FileReader.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CowString.cpp">
+      <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
