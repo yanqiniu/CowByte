@@ -13,6 +13,8 @@
 
 #include "System.h"
 #include "Window.h"
+#include "Mesh.h"
+
 
 
 struct GraphicsData : SystemData
@@ -44,8 +46,7 @@ private:
     ID3D11Buffer *m_pVertexBuffer;
     ID3D11InputLayout *m_pInputLayout;
     Window *m_pWindow;
-
-
+    
 };
 
 #endif

@@ -41,6 +41,9 @@
     <Filter Include="Misc">
       <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Assets\Geometry">
+      <UniqueIdentifier>{7e1fe951-6987-453a-9232-5e613c74e7b3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -91,6 +94,9 @@
     <ClInclude Include="Vec3.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Core\Systems\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
@@ -117,13 +123,16 @@
     <ClCompile Include="Vertex.cpp">
       <Filter>Core\Systems\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Vec3.cpp">
-      <Filter>Core\Math</Filter>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Core\Systems\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.shader">
       <Filter>Resource Files\Assets</Filter>
+    </None>
+    <None Include="..\..\assets\cube.mesha">
+      <Filter>Resource Files\Assets\Geometry</Filter>
     </None>
   </ItemGroup>
 </Project>

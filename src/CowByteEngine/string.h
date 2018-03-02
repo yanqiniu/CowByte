@@ -20,5 +20,12 @@
 
 #endif
 
+// For whatever reason strncpy_s doesn't work...
+// TODO: actually make is SAFE.
+inline void strcpy_safe(char* dst, const char* src)
+{
+    memcpy(dst, src, strlen(src));
+    dst[strlen(src)] = '\0';
+}
 
 #endif
