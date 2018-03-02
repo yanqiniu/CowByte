@@ -97,10 +97,11 @@
     <ClInclude Include="Mesh.h">
       <Filter>Core\Systems\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="FileReader.h">
+    <ClInclude Include="CowFile.h" />
+    <ClInclude Include="CBString.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="CowString.h">
+    <ClInclude Include="CBFile.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -132,10 +133,11 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Core\Systems\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="FileReader.cpp">
+    <ClCompile Include="CowFile.cpp" />
+    <ClCompile Include="CBString.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="CowString.cpp">
+    <ClCompile Include="CBFile.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>

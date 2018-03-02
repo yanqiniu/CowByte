@@ -1,7 +1,7 @@
 #ifndef _PATH_H
 #define _PATH_H
 
-#include "CowString.h"
+#include "CBString.h"
 #define _CRT_SECURE_NO_WARNINGS
 
 namespace Path

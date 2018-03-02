@@ -3,17 +3,16 @@
 #include <stdio.h>
 #include <cstring>
 
-// Use only for stuff long enough...like a path.
 template <size_t len>
-class CowString
+class CBString
 {
 public:
-    CowString();
-    CowString(const char* cstring);
-    virtual ~CowString();
+    CBString();
+    CBString(const char* cstring);
+    ~CBString();
 
     void Set(const char *inStr);
-    void Set(CowString &toAppend);
+    void Set(CBString &toAppend);
     char* Get();
     void Clear();
     size_t Length();
@@ -28,64 +27,64 @@ private:
 
 
 template <size_t len> 
-char CowString<len>::_s_buf[len];
+char CBString<len>::_s_buf[len];
 
 template <size_t len>
-CowString<len>::CowString()
+CBString<len>::CBString()
 {
 }
 
 template <size_t len>
-CowString<len>::CowString(const char* cstring)
+CBString<len>::CBString(const char* cstring)
 {
     Set(cstring);
 }
 
 template <size_t len>
-CowString<len>::~CowString()
+CBString<len>::~CBString()
 {
 }
 
 template <size_t len>
-inline void CowString<len>::Set(const char *inStr)
+inline void CBString<len>::Set(const char *inStr)
 {
     sprintf_s(m_Data, len, "%s", inStr);
 }
 
 template <size_t len>
-inline void CowString<len>::Set(CowString &toAppend)
+inline void CBString<len>::Set(CBString &toAppend)
 {
     Set(toAppend.Get());
 }
 
 template <size_t len>
-inline char* CowString<len>::Get()
+inline char* CBString<len>::Get()
 {
     return m_Data;
 }
 
 // Clear data and put null terminator in front.
 template <size_t len>
-inline void CowString<len>::Clear()
+inline void CBString<len>::Clear()
 {
     memset(m_Data, 0, len);
     m_Data[0] = '\0';
 }
 
 template <size_t len>
-inline size_t CowString<len>::Length()
+inline size_t CBString<len>::Length()
 {
     return strlen(m_Data);
 }
 
 template <size_t len>
-inline void CowString<len>::Append(const char *toAppend)
+inline void CBString<len>::Append(const char *toAppend)
 {
     memcpy(m_Data + Length(), toAppend, strlen(toAppend) + 1);
 }
 
 template <size_t len>
-inline void CowString<len>::operator=(const char* cstring)
+inline void CBString<len>::operator=(const char* cstring)
 {
     Set(cstring);
 }

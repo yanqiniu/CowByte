@@ -17,6 +17,7 @@ Mesh::~Mesh()
 // LoadContent(), therefore before Initialize().
 bool Mesh::ConfigureMesh(const char* meshName)
 {
+    size_t someSize = sizeof(CBString<64>);
     m_MeshFilePath.Set(Path::MeshFolder);
     m_MeshFilePath.Append(meshName);
     printf("Mesh path set to: [%s]", m_MeshFilePath.Get());
