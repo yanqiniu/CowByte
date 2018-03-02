@@ -1,5 +1,5 @@
-#ifndef _COWSTRING_H
-#define _COWSTRING_H
+#ifndef _CBSTRING_H
+#define _CBSTRING_H
 #include <stdio.h>
 #include <cstring>
 
