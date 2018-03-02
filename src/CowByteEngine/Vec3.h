@@ -174,7 +174,8 @@ __declspec(align(16)) struct Vec3
 
 };
 
-// Slow version, just wondering how much speed improvement that was...
+#if false
+// Slow version, just wondering how much  speed improvement that was...
 struct Vec3Slow
 {
     float m_X, m_Y, m_Z, m_W;
@@ -255,4 +256,5 @@ struct Vec3Slow
         return Vec3Slow(newX, newY, newZ);
     }
 };
+#endif
 #endif
