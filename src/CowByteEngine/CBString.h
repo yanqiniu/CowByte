@@ -22,7 +22,8 @@ public:
     void   Set(CBString &toAppend);
     char*  Get();
     void   Clear();
-    size_t Length();
+    size_t Capacity();
+    size_t Size();
     void   Append(const char *toAppend);
     bool   Strip(StripMode mode);
 
@@ -35,6 +36,12 @@ private:
     char m_Data[len];
     static char _s_buf[len];
 };
+
+template <size_t len>
+size_t CBString<len>::Capacity()
+{
+    return len;
+}
 
 template <size_t len>
 bool CBString<len>::Strip(StripMode mode)
@@ -89,7 +96,7 @@ inline void CBString<len>::Clear()
 }
 
 template <size_t len>
-inline size_t CBString<len>::Length()
+inline size_t CBString<len>::Size()
 {
     return strlen(m_Data);
 }
@@ -97,7 +104,7 @@ inline size_t CBString<len>::Length()
 template <size_t len>
 inline void CBString<len>::Append(const char *toAppend)
 {
-    memcpy(m_Data + Length(), toAppend, strlen(toAppend) + 1);
+    memcpy(m_Data + Size(), toAppend, strlen(toAppend) + 1);
 }
 
 

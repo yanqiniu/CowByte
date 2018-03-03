@@ -42,6 +42,15 @@ bool Mesh::LoadContent()
         printf("[%s]\n", temp.Get());
     }
 
+    CBString<16> temp1;
+    char toParse[64] = "   Why dafuq    is * ememy shippp so               op?       ";
+    char* str = toParse;
+    CBStringOps::Strip(str, StripMode::ALL);
+    while (CBStringOps::GetNextSubstring((char*&)str, temp1.Get(), temp1.Capacity(), ' '))
+    {
+        printf("sub string [%s]\n", temp1.Get());
+    }
+
     return true;
 
 }

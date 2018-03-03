@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <cstring>
+#include <assert.h>
 
 // string operations, mostly on C-strings.
 namespace CBStringOps
@@ -17,87 +18,124 @@ namespace CBStringOps
     };
 
     // Remove \n from end of line.
-    inline bool _removeNewLineSymbolFromEnd(char *cstring)
+    inline bool _removeNewLineSymbolFromEnd(char *str)
     {
-        if (strlen(cstring) == 0)
+        if (strlen(str) == 0)
             return false;
-        else if (cstring[strlen(cstring) - 1] != '\n')
+        else if (str[strlen(str) - 1] != '\n')
             return true;
         else
         {
-            cstring[strlen(cstring) - 1] = '\0';
+            str[strlen(str) - 1] = '\0';
             return true;
         }
     }
 
     // This moves the array elements so we don't 
     // run out of spaces later.
-    inline bool _removeSpacesFromFront(char *cstring)
+    inline bool _removeSpacesFromFront(char *str)
     {
-        if (strlen(cstring) == 0)
+        if (strlen(str) == 0)
             return false;
-        else if (*cstring != ' ')
+        else if (*str != ' ')
             return false;
         else
         {
             size_t numOfSpaces = 0;
             bool foundFirstNonSpace = false;
-            while (*cstring != '\0')
+            while (*str != '\0')
             {
-                if (!foundFirstNonSpace && *cstring == ' ')
+                if (!foundFirstNonSpace && *str == ' ')
                     ++numOfSpaces;
                 else
                 {
                     foundFirstNonSpace = true;
-                    *(cstring - numOfSpaces * sizeof(char)) = *cstring;
+                    *(str - numOfSpaces * sizeof(char)) = *str;
                 }
-                cstring += sizeof(char);
+                str += sizeof(char);
             }
-            *(cstring - numOfSpaces * sizeof(char)) = *cstring;
+            *(str - numOfSpaces * sizeof(char)) = *str;
             return true;
         }
     }
 
-    inline bool _removeSpacesFromEnd(char *cstring)
+    inline bool _removeSpacesFromEnd(char *str)
     {
-        if (strlen(cstring) == 0)
+        if (strlen(str) == 0)
             return false;
-        else if (cstring[strlen(cstring) - 1] != ' ')
+        else if (str[strlen(str) - 1] != ' ')
             return false;
         else
         {
-            char *start = cstring;
-            cstring = start + strlen(start);
-            cstring -= sizeof(char);
-            while (*cstring == ' ')
+            char *start = str;
+            str = start + strlen(start);
+            str -= sizeof(char);
+            while (*str == ' ')
             {
-                cstring -= sizeof(char);
+                str -= sizeof(char);
             }
-            *(cstring + sizeof(char)) = '\0';
+            *(str + sizeof(char)) = '\0';
             return true;
         }
     }
 
-    inline bool Strip(char *cstring, StripMode mode)
+    inline bool Strip(char *str, StripMode mode)
     {
         bool result = false;
 
         if (mode == StripMode::NEWLINE ||
             mode == StripMode::ALL)
-            result |= CBStringOps::_removeNewLineSymbolFromEnd(cstring);
+            result |= CBStringOps::_removeNewLineSymbolFromEnd(str);
 
         if (mode == StripMode::SPACES_FRONT ||
             mode == StripMode::SPACES ||
             mode == StripMode::ALL)
-            result |= CBStringOps::_removeSpacesFromFront(cstring);
+            result |= CBStringOps::_removeSpacesFromFront(str);
 
         if (mode == StripMode::SPACES_BACK ||
             mode == StripMode::SPACES ||
             mode == StripMode::ALL)
-            result |= CBStringOps::_removeSpacesFromEnd(cstring);
+            result |= CBStringOps::_removeSpacesFromEnd(str);
 
 
         return result;
+    }
+
+    // This assumes that string has been cleanly stripped.
+    inline bool GetNextSubstring(char *&str, char *buf, size_t bufSize, char seperators)
+    {
+        if (strlen(str) == 0)
+            return false;
+
+        bool found = false;
+        for (size_t i = 0; i < strlen(str) + 1; ++i)
+        {
+            if (str[i] == seperators || str[i] == '\0')
+            {
+                assert((i + 1) * sizeof(char) <= bufSize);
+                memcpy(buf, str, (i + 1) * sizeof(char));
+                buf[i] = '\0';
+
+                // advance str pointer
+                str = (str[i] == '\0' ? &str[i] : &str[i + 1]);
+                found = true;
+                break;
+            }
+        }
+
+        // skip extra white spaces.
+        while (*str == ' ')
+        {
+            str += sizeof(char);
+        }
+
+        return found;
+    }
+
+    inline float GetNextFloat32(char *&str, char seperator)
+    {
+        return 0;
+        // This 
     }
 }
 
