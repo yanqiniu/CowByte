@@ -141,7 +141,7 @@ __declspec(align(16)) struct Vec3
     {
         __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
         temp = _mm_rsqrt_ps(temp);
-        temp = _mm_insert_ps(temp, _mm_set_ps1(1.0f), 0b11110000); // set w of temp to 1.0f
+        temp = _mm_insert_ps(temp, _mm_set_ps1(0.0f), 0b11110000); // set w of temp to 0.0f
         _data = _mm_mul_ps(_data, temp);
     }
     // Return a normalized version of the Vec3.
@@ -150,7 +150,7 @@ __declspec(align(16)) struct Vec3
     {
         __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
         temp = _mm_rsqrt_ps(temp);
-        temp = _mm_insert_ps(temp, _mm_set_ps1(1.0f), 0b11110000); // set w of temp to 1.0f
+        temp = _mm_insert_ps(temp, _mm_set_ps1(0.0f), 0b11110000); // set w of temp to 0.0f
         return Vec3(_mm_mul_ps(_data, temp));
     }
 
@@ -174,7 +174,8 @@ __declspec(align(16)) struct Vec3
 
 };
 
-// Slow version, just wondering how much speed improvement that was...
+#if false
+// Slow version, just wondering how much  speed improvement that was...
 struct Vec3Slow
 {
     float m_X, m_Y, m_Z, m_W;
@@ -255,4 +256,5 @@ struct Vec3Slow
         return Vec3Slow(newX, newY, newZ);
     }
 };
+#endif
 #endif

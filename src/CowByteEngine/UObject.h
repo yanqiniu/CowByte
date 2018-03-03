@@ -37,7 +37,7 @@ public:
     void SetCanTick(bool canTick) { m_bCanTick = canTick; }
     bool CanTick() const { return m_bCanTick; }
     void SetCanDraw(bool canDraw) { m_bCanDraw = canDraw; }
-    bool CanDraw() const { return CanDraw(); }
+    bool CanDraw() const { return m_bCanDraw; }
 
     void Destroy() { m_bIsDestroyed = true; }
     bool IsDestroyed() const { return m_bIsDestroyed; }
