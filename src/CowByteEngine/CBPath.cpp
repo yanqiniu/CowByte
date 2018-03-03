@@ -1,5 +1,4 @@
 #include "CBPath.h"
-#include "CBStringOps.h"
 
 namespace Path
 {

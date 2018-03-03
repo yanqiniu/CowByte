@@ -19,6 +19,8 @@ public:
 private:
     Vertex * m_pVertices;
     size_t m_NumVertices;
+
+    bool ReadPosBufFile(const char *filepath);
 };
 
 #endif // 

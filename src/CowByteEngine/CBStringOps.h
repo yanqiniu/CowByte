@@ -143,6 +143,18 @@ namespace CBStringOps
         buf = static_cast<float>(atof(strbuf));
         return true;
     }
+
+    // converts the next substring into a int. Does not error check
+    // to see if it can convert to a int.
+    inline bool GetNextInt32(char *&str, int &buf, char seperator)
+    {
+        char strbuf[16];
+        if (!GetNextSubstring(str, strbuf, 16, ' '))
+            return false;
+        buf = atoi(strbuf);
+        return true;
+    }
+
 }
 
 

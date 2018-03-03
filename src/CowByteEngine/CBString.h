@@ -27,6 +27,7 @@ public:
     int    Compare(const char *rhs);
     int    Compare(CBString &rhs);
     void   Append(const char *toAppend);
+    bool   Strip();
     bool   Strip(StripMode mode);
 
     void   operator=(const char* cstring);
@@ -62,6 +63,14 @@ inline bool CBString<len>::Strip(StripMode mode)
 {
     return CBStringOps::Strip(m_Data, mode);
 }
+
+// Strip newline at end and then spaces at both ends.
+template <size_t len>
+bool CBString<len>::Strip()
+{
+    return Strip(StripMode::ALL);
+}
+
 
 template <size_t len> 
 char CBString<len>::_s_buf[len];
