@@ -150,6 +150,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="path.h" />
     <ClInclude Include="string.h" />
+    <ClInclude Include="CBStringOps.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="Vec3.h" />

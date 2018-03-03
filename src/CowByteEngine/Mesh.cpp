@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "path.h"
 #include "CBFile.h"
+#include "CBStringOps.h"
 
 
 Mesh::Mesh() :
@@ -36,7 +37,9 @@ bool Mesh::LoadContent()
     CBString<64> temp;
     while (meshFile.GetNextNonEmptyLine(temp.Get(), 64))
     {
-        printf("%s", temp.Get());
+        temp.Strip(CBStringOps::StripMode::ALL);
+        
+        printf("[%s]\n", temp.Get());
     }
 
     return true;

@@ -103,6 +103,9 @@
     <ClInclude Include="CBFile.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="CBStringOps.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">

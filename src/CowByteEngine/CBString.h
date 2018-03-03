@@ -2,29 +2,45 @@
 #define _CBSTRING_H
 #include <stdio.h>
 #include <cstring>
+#include "CBStringOps.h"
 
+using namespace CBStringOps;
+// CBE custom string object, as well as some
+// functions that operate on cstrings.
 template <size_t len>
 class CBString
 {
 public:
+
+
     CBString();
     CBString(const char* cstring);
     ~CBString();
 
-    void Set(const char *inStr);
-    void Set(CBString &toAppend);
-    char* Get();
-    void Clear();
+    // member functions.
+    void   Set(const char *inStr);
+    void   Set(CBString &toAppend);
+    char*  Get();
+    void   Clear();
     size_t Length();
+    void   Append(const char *toAppend);
+    bool   Strip(StripMode mode);
 
-    void Append(const char *toAppend);
-    void operator=(const char* cstring);
+    void   operator=(const char* cstring);
+
+    // static functions (CBString/cstring)
+
 
 private:
     char m_Data[len];
     static char _s_buf[len];
 };
 
+template <size_t len>
+bool CBString<len>::Strip(StripMode mode)
+{
+    return CBStringOps::Strip(m_Data, mode);
+}
 
 template <size_t len> 
 char CBString<len>::_s_buf[len];
@@ -83,6 +99,7 @@ inline void CBString<len>::Append(const char *toAppend)
 {
     memcpy(m_Data + Length(), toAppend, strlen(toAppend) + 1);
 }
+
 
 template <size_t len>
 inline void CBString<len>::operator=(const char* cstring)
