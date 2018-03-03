@@ -115,6 +115,7 @@ bool Graphics::Initialize()
     };
     Mesh myMesh;
     myMesh.ConfigureMesh("cube.mesha");
+    myMesh.Initialize();
 
     Vec3 offset(-0.11f, -0.1f, 0.0f);
     //offset = offset * 5.0f;

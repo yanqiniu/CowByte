@@ -97,7 +97,6 @@
     <ClInclude Include="Mesh.h">
       <Filter>Core\Systems\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="CowFile.h" />
     <ClInclude Include="CBString.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -133,7 +132,6 @@
     <ClCompile Include="Mesh.cpp">
       <Filter>Core\Systems\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="CowFile.cpp" />
     <ClCompile Include="CBString.cpp">
       <Filter>Utils</Filter>
     </ClCompile>

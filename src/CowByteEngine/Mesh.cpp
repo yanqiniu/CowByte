@@ -1,6 +1,6 @@
 #include "Mesh.h"
 #include "path.h"
-#define _CRT_SECURE_NO_WARNINGS
+#include "CBFile.h"
 
 
 Mesh::Mesh() :
@@ -32,6 +32,13 @@ bool Mesh::Initialize()
 
 bool Mesh::LoadContent()
 {
+    CBFile meshFile(m_MeshFilePath.Get());
+    CBString<64> temp;
+    while (meshFile.GetNextNonEmptyLine(temp.Get(), 64))
+    {
+        printf("%s", temp.Get());
+    }
+
     return true;
 
 }
