@@ -4,10 +4,12 @@
 #include <stdio.h>
 #include <cstring>
 #include <assert.h>
+#include <cstdlib>
 
 // string operations, mostly on C-strings.
 namespace CBStringOps
 {
+
     enum StripMode
     {
         SPACES_FRONT = 0,
@@ -104,10 +106,15 @@ namespace CBStringOps
     // This assumes that string has been cleanly stripped.
     inline bool GetNextSubstring(char *&str, char *buf, size_t bufSize, char seperators)
     {
+        // skip extra white spaces.
+        while (*str == ' ')
+        {
+            str += sizeof(char);
+        }
+
         if (strlen(str) == 0)
             return false;
 
-        bool found = false;
         for (size_t i = 0; i < strlen(str) + 1; ++i)
         {
             if (str[i] == seperators || str[i] == '\0')
@@ -118,24 +125,23 @@ namespace CBStringOps
 
                 // advance str pointer
                 str = (str[i] == '\0' ? &str[i] : &str[i + 1]);
-                found = true;
+                return true;
                 break;
             }
         }
 
-        // skip extra white spaces.
-        while (*str == ' ')
-        {
-            str += sizeof(char);
-        }
-
-        return found;
+        return false;
     }
 
-    inline float GetNextFloat32(char *&str, char seperator)
+    // converts the next substring into a float. Does not error check
+    // to see if it can convert to a float.
+    inline bool GetNextFloat32(char *&str, float &buf, char seperator)
     {
-        return 0;
-        // This 
+        char strbuf[16];
+        if (!GetNextSubstring(str, strbuf, 16, ' '))
+            return false;
+        buf = static_cast<float>(atof(strbuf));
+        return true;
     }
 }
 

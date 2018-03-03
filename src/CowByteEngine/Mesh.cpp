@@ -40,12 +40,18 @@ bool Mesh::LoadContent()
         temp.Strip(CBStringOps::StripMode::ALL);
         
         printf("[%s]\n", temp.Get());
+        float tempfloat;
+        char *marker = temp.Get();
+        while(CBStringOps::GetNextFloat32(marker, tempfloat, ' '))
+        {
+            printf("  float found [%f]\n", tempfloat);
+        }
     }
 
     CBString<16> temp1;
-    char toParse[64] = "   Why dafuq    is * ememy shippp so               op?       ";
+    char toParse[64] = "     Why dafuq    is * ememy shippp so               op?     \n";
     char* str = toParse;
-    CBStringOps::Strip(str, StripMode::ALL);
+    CBStringOps::Strip(str, StripMode::NEWLINE);
     while (CBStringOps::GetNextSubstring((char*&)str, temp1.Get(), temp1.Capacity(), ' '))
     {
         printf("sub string [%s]\n", temp1.Get());
