@@ -48,6 +48,7 @@ CBString<len>::~CBString()
 template <size_t len>
 inline void CBString<len>::Set(const char *inStr)
 {
+    Clear();
     sprintf_s(m_Data, len, "%s", inStr);
 }
 
