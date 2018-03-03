@@ -1,7 +1,6 @@
 #include "Mesh.h"
-#include "path.h"
+#include "CBPath.h"
 #include "CBFile.h"
-#include "CBStringOps.h"
 
 
 Mesh::Mesh() :

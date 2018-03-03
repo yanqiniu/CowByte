@@ -82,9 +82,6 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Core\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="path.h">
-      <Filter>Defines</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Core\Systems\Graphics</Filter>
     </ClInclude>
@@ -104,6 +101,9 @@
       <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="CBStringOps.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CBPath.h">
       <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
@@ -139,6 +139,9 @@
       <Filter>Utils</Filter>
     </ClCompile>
     <ClCompile Include="CBFile.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CBPath.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>

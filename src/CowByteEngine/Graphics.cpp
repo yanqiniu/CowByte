@@ -5,7 +5,7 @@
 #include "Vertex.h"
 #include "Vec3.h"
 #include "CBString.h"
-#include "path.h"
+#include "CBPath.h"
 
 
 using namespace DirectX;
@@ -96,8 +96,8 @@ bool Graphics::Initialize()
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
-    CBString<128> shaderPath = Path::AssetsFolder;
-    shaderPath.Append("shaders/default.shader");
+    CBString<256> shaderPath;
+    Path::GenerateAssetPath(shaderPath, "shaders", "default.shader");
     D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
     D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);
 

@@ -148,7 +148,7 @@
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="iostream.h" />
     <ClInclude Include="Mesh.h" />
-    <ClInclude Include="path.h" />
+    <ClInclude Include="CBPath.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="CBStringOps.h" />
     <ClInclude Include="System.h" />
@@ -160,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBFile.cpp" />
+    <ClCompile Include="CBPath.cpp" />
     <ClCompile Include="CBString.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Game.cpp" />
