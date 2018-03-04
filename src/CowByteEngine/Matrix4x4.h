@@ -80,17 +80,17 @@ __declspec(align(16)) struct Matrix4x4
     __forceinline static Matrix4x4 Identity()
     {
         return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 1.0f);
+                         0.0f, 1.0f, 0.0f, 0.0f,
+                         0.0f, 0.0f, 1.0f, 0.0f,
+                         0.0f, 0.0f, 0.0f, 1.0f);
     }
 
     __forceinline static Matrix4x4 Translate(float x, float y, float z)
     {
         return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 1.0f, 0.0f,
-            x, y, z, 1.0f);
+                         0.0f, 1.0f, 0.0f, 0.0f,
+                         0.0f, 0.0f, 1.0f, 0.0f,
+                         x,    y,    z,    1.0f);
     }
 
     static Matrix4x4 Translate(Vec3 *vec);
