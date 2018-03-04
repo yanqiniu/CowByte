@@ -150,6 +150,12 @@
     <ClCompile Include="CBPath.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="default.shader">
