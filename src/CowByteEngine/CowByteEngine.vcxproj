@@ -148,6 +148,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="iostream.h" />
+    <ClInclude Include="Matrix4x4.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CBPath.h" />
     <ClInclude Include="string.h" />

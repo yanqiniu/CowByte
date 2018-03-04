@@ -3,11 +3,12 @@
 #include <xmmintrin.h>
 #include <smmintrin.h>
 #include <exception>
+#include "Matrix4x4.h"
 
 __declspec(align(16)) struct Vec3
 {
     __m128 _data;
-
+#pragma region Con/destructors, Getters/Setter
     __forceinline Vec3() {}
 
     // W set to 1.0f, representing a point.
@@ -28,12 +29,18 @@ __declspec(align(16)) struct Vec3
     ~Vec3() {};
 
     // ! Access individual element from __m128, slow.
-    __forceinline float x() const { return _data.m128_f32[0]; }
-    __forceinline float y() const { return _data.m128_f32[1]; }
-    __forceinline float z() const { return _data.m128_f32[2]; }
-    __forceinline float w() const { return _data.m128_f32[3]; }
+    __forceinline float X() const { return _data.m128_f32[0]; }
+    __forceinline float Y() const { return _data.m128_f32[1]; }
+    __forceinline float Z() const { return _data.m128_f32[2]; }
+    __forceinline float W() const { return _data.m128_f32[3]; }
 
-    // Common operators.
+    __forceinline void Set(float xIn, float yIn, float zIn, float wIn)
+    {
+        _data = _mm_setr_ps(xIn, yIn, zIn, wIn);
+    }
+#pragma endregion
+
+#pragma region Common operators
     __forceinline void operator=(const Vec3 &rhs)
     {
         _data = rhs._data;
@@ -87,9 +94,9 @@ __declspec(align(16)) struct Vec3
         __m128 temp = _mm_setr_ps(divisor, divisor, divisor, 1.0f);
         _data = _mm_div_ps(_data, temp);
     }
+#pragma endregion
 
-
-    // Common operations.
+#pragma region Common operations
     __forceinline void Add(const Vec3 &toAdd)
     {
         _data = _mm_add_ps(_data, toAdd._data);
@@ -171,6 +178,25 @@ __declspec(align(16)) struct Vec3
         temp1 = _mm_shuffle_ps(toCross._data, toCross._data, _MM_SHUFFLE(3, 0, 2, 1));
         return Vec3(_mm_sub_ps(result, _mm_mul_ps(temp0, temp1)));
     }
+#pragma endregion
+
+#pragma region Matrix4x4 operators and operations
+
+    __forceinline Vec3 Mul(const Matrix4x4 &matrix)
+    {
+        __m128 temp = _mm_dp_ps(_data, matrix._data[0], 0b11110001); // x
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[1], 0b11110001), 0b00010000); // y
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[2], 0b11110001), 0b00100000); // z
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[3], 0b11110001), 0b00110000); // w
+
+        return Vec3(temp);
+    }
+    __forceinline Vec3 operator*(const Matrix4x4 &matrix)
+    {
+        return Mul(matrix);
+    }
+
+#pragma endregion
 
 };
 

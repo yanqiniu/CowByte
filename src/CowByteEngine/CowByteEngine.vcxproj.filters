@@ -109,6 +109,9 @@
     <ClInclude Include="Debug.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">
