@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "CBFile.h"
 #include "CBStringOps.h"
+#include "Debug.h"
 
 CBFile::CBFile(const char *fileName)
 {
@@ -8,7 +9,7 @@ CBFile::CBFile(const char *fileName)
 
     if (!m_pFile)
     {
-        // Logger::
+        DbgERROR("Unable to open file: %s", fileName);
     }
 
     assert(m_pFile != nullptr);

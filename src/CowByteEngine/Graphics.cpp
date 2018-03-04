@@ -6,6 +6,7 @@
 #include "Vec3.h"
 #include "CBString.h"
 #include "CBPath.h"
+#include "Debug.h"
 
 
 using namespace DirectX;
@@ -44,7 +45,7 @@ bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
     {
-        //Logger::Log("Graphics: Window pointer null!");
+        DbgERROR("Graphics: Window pointer null!");
         return false;
     }
     System::Initialize();

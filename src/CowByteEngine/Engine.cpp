@@ -7,6 +7,7 @@
 #include "context.h"
 #include "Window.h"
 #include "Graphics.h"
+#include "Debug.h"
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
@@ -72,7 +73,7 @@ int Engine::ShutDown()
     {
         if (!pSysPair.second->ShutDown())
         {
-        	//Logger::Log("Failed to shurdown system" + pSys->GetSystemType());
+        	DbgWARNING("Failed to shurdown system [%d]", pSysPair.first);
         	continue;
         }
 
@@ -109,7 +110,7 @@ int Engine::RunLoop()
         this->Draw(context);
     }
 
-    //Logger::Log("Ending the program...");
+    DbgINFO("Ending the program...");
     //Logger::WriteLogToFile();
 
     if (!this->ShutDown())

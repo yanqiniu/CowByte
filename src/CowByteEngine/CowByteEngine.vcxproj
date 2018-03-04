@@ -141,6 +141,7 @@
     <ClInclude Include="CBString.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="deletemacros.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="exceptions.h" />

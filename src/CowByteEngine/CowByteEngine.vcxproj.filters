@@ -106,6 +106,9 @@
     <ClInclude Include="CBPath.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WinMain.cpp">

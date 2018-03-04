@@ -1,5 +1,5 @@
 #include "Window.h"
-
+#include "Debug.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -109,7 +109,7 @@ bool Window::Initialize()
 
     if (!RegisterClassEx(&wndClass))
     {
-        //Logger::Log(_T("Failed to register window"), LOGTYPE_ERROR, true);
+        DbgERROR("Failed to register window");
         return false;
     }
 
@@ -127,7 +127,7 @@ bool Window::Initialize()
         if (ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN) != DISP_CHANGE_SUCCESSFUL)
         {
             // If the mode fails, use windowed mode.
-            //Logger::Log(_T("The requested fullscreen mode is not suppoorted by your video card."), LOGTYPE_WARNING, true);
+            DbgWARNING("The requested fullscreen mode is not suppoorted by your video card.");
 
             dwExStyle = WS_EX_APPWINDOW;
             dwStyle = WS_POPUP;
@@ -157,7 +157,7 @@ bool Window::Initialize()
         this
     )))
     {
-        //Logger::Log(_T("Failed to window handle == NULL."), LOGTYPE_ERROR, true);
+        DbgERROR("Failed to window handle == NULL.");
         return false;
     }
 
@@ -186,19 +186,19 @@ bool Window::Initialize()
 
     if (!(m_hDC = GetDC(m_hWindow)))          // Did we get a device context?
     {
-        //Logger::Log(_T("Can't create device context."), LOGTYPE_ERROR, true);
+        DbgERROR("Can't create device context.");
         return false;
     }
 
     if (!(pixelFormat = ChoosePixelFormat(m_hDC, &pfd)))
     {
-        //Logger::Log(_T("Can't find a suitable pixel format."), LOGTYPE_ERROR, true);
+        DbgERROR("Can't find a suitable pixel format.");
         return false;
     }
 
     if (!SetPixelFormat(m_hDC, pixelFormat, &pfd))
     {
-        //Logger::Log(_T("Can't set the pixel format."), LOGTYPE_ERROR, true);
+        DbgERROR("Can't set the pixel format.");
         return false;
     }
 
@@ -212,7 +212,7 @@ bool Window::Initialize()
 
     if (!this->CenterWindow())
     {
-        //Logger::Log(_T("Failed to center window."), LOGTYPE_ERROR, true);
+        DbgERROR("Failed to center window.");
         return false;
     }
 
@@ -226,13 +226,13 @@ bool Window::Initialize()
             BOOL bRet = RemoveMenu(hConsoleMenu, SC_CLOSE, MF_BYCOMMAND);
             if (!bRet)
             {
-                //Logger::Log(_T("Failed to remove close button."), LOGTYPE_ERROR, true);
+                DbgERROR("Failed to remove close button.");
                 return false;
             }
         }
     }
 
-    //Logger::Log(_T("Window is initialized"), LOGTYPE_INFO, false);
+    DbgINFO("Window is initialized.");
 
     // Success:
     return true;
@@ -256,21 +256,21 @@ bool Window::ShutDown()
 
     if (m_hDC && !ReleaseDC(m_hWindow, m_hDC))
     {
-        //Logger::Log(_T("Release DC failed."), LOGTYPE_ERROR, true);
+        DbgERROR("Release DC failed.");
         m_hDC = NULL;
         return false;
     }
 
     if (m_hWindow && !DestroyWindow(m_hWindow))
     {
-        //Logger::Log(_T("Failed to destroy window."), LOGTYPE_ERROR, true);
+        DbgERROR("Failed to destroy window.");
         m_hWindow = NULL;
         return false;
     }
 
     if (!UnregisterClass(m_Title.c_str(), m_hInst))
     {
-        //Logger::Log(_T("Could not unregister class."), LOGTYPE_ERROR, true);
+        DbgERROR("Could not unregister class.");
         m_hInst = NULL;
         return false;
     }

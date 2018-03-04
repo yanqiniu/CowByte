@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "CBPath.h"
 #include "CBFile.h"
+#include "Debug.h"
 
 
 Mesh::Mesh() :
@@ -18,7 +19,7 @@ Mesh::~Mesh()
 bool Mesh::ConfigureMesh(const char* meshName)
 {
     Path::GenerateAssetPath(m_MeshFilePath, "meshes", meshName);
-    printf("Mesh path set to: [%s]", m_MeshFilePath.Get());
+    DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
     return true;
 }
 
@@ -36,13 +37,13 @@ bool Mesh::LoadContent()
     // Check if it's a Mesh file
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        //Logger::
+        DbgERROR("Failed getting file type [%s]", m_MeshFilePath.Get());
         return false;
     }
     temp.Strip(StripMode::ALL);
     if (temp.Compare("MESH") != 0)
     {
-        printf("Not a mesh file!\n");
+        printf("Not a mesh file! [s]\n", m_MeshFilePath.Get());
         return false;
     }
 
@@ -51,22 +52,18 @@ bool Mesh::LoadContent()
     temp.Clear();
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        //Logger::
+        DbgERROR("Failed getting pos buf file in [%s].", m_MeshFilePath.Get());
         return false;
     }
     temp.Strip(StripMode::ALL);
-    ReadPosBufFile(temp.Get());
-
-
-
-    CBString<16> temp1;
-    char toParse[64] = "     Why dafuq    is * ememy shippp so               op?     \n";
-    char* str = toParse;
-    CBStringOps::Strip(str, StripMode::NEWLINE);
-    while (CBStringOps::GetNextSubstring((char*&)str, temp1.Get(), temp1.Capacity(), ' '))
+    if (!ReadPosBufFile(temp.Get()))
     {
-        printf("sub string [%s]\n", temp1.Get());
+        DbgERROR("Failed reading in pos buffer [%s].", temp.Get());
+        return false;
     }
+
+
+
 
     return true;
 
@@ -81,13 +78,13 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     CBString<64> temp;
     if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        //Logger::
+        DbgERROR("Failed getting file type [%s]", filepath);
         return false;
     }
     temp.Strip(StripMode::ALL);
     if (temp.Compare("POS_BUF") != 0)
     {
-        printf("Not a pos_buf file!\n");
+        DbgERROR("Not a pos_buf file! [%s]\n", filepath);
         return false;
     }
 
@@ -95,7 +92,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     temp.Clear();
     if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        //Logger::
+        DbgERROR("Failed getting num of vertices [%s]", filepath);
         return false;
     }
     temp.Strip(StripMode::ALL);
@@ -111,7 +108,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         temp.Clear();
         if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
         {
-            // Logger::
+            DbgERROR("Not enough vertices in [%s].", filepath);
             return false;
         }
         temp.Strip();
@@ -120,7 +117,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         {
             if (!CBStringOps::GetNextFloat32(marker, tempFloat, ' '))
             {
-                // Logger::
+                DbgERROR("Not enough values for vertex[%d] in [%s].", i, filepath);
                 return false;
             }
 
@@ -135,10 +132,9 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         m_pVertices[i].m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
-    printf("\n");
     for (size_t i = 0; i < m_NumVertices; ++i)
     {
-        printf("Vertex %d [%f, %f, %f]\n", i, m_pVertices[i].m_Pos.x(), m_pVertices[i].m_Pos.y(), m_pVertices[i].m_Pos.z());
+        DbgINFO ("Vertex %d [%f, %f, %f]\n", i, m_pVertices[i].m_Pos.x(), m_pVertices[i].m_Pos.y(), m_pVertices[i].m_Pos.z());
     }
 
     return true;
