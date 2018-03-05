@@ -3,7 +3,6 @@
 #include "CBFile.h"
 #include "Debug.h"
 
-
 Mesh::Mesh() :
     UObject()
 {

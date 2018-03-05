@@ -150,7 +150,7 @@
     <ClInclude Include="CBPoolAllocator.h" />
     <ClInclude Include="iostream.h" />
     <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="memory.h" />
+    <ClInclude Include="memory.cpp" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CBPath.h" />
     <ClInclude Include="string.h" />

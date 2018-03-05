@@ -118,7 +118,7 @@
     <ClInclude Include="CBPoolAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="memory.h">
+    <ClInclude Include="memory.cpp">
       <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
