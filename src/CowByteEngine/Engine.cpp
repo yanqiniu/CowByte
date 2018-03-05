@@ -9,6 +9,8 @@
 #include "Graphics.h"
 #include "Debug.h"
 
+#include <new.h>
+
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
 Engine::Engine()

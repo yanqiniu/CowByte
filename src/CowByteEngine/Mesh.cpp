@@ -133,7 +133,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
 
     for (size_t i = 0; i < m_NumVertices; ++i)
     {
-        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_pVertices[i].m_Pos.X(), m_pVertices[i].m_Pos.y(), m_pVertices[i].m_Pos.z());
+        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_pVertices[i].m_Pos.X(), m_pVertices[i].m_Pos.Y(), m_pVertices[i].m_Pos.Z());
     }
 
     return true;

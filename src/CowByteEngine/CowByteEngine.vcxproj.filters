@@ -44,6 +44,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c2bb38a-841a-4938-a476-5f328354a775}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -111,6 +114,12 @@
     </ClInclude>
     <ClInclude Include="Matrix4x4.h">
       <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CBPoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

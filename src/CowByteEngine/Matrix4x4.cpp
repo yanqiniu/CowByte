@@ -1,7 +1,7 @@
 #include "Matrix4x4.h"
 #include "Vec3.h"
 
-
+// Is not inline. Prefer Translate (float, float, float).
 Matrix4x4 Matrix4x4::Translate(Vec3 *vec)
 {
     return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
