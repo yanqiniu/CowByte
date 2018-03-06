@@ -118,7 +118,10 @@
     <ClInclude Include="CBPoolAllocator.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="memory.cpp">
+    <ClInclude Include="CBMemArena.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="memory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>

@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CBFile.h" />
+    <ClInclude Include="CBMemArena.h" />
     <ClInclude Include="CBString.h" />
     <ClInclude Include="context.h" />
     <ClInclude Include="d3dx12.h" />
@@ -150,7 +151,7 @@
     <ClInclude Include="CBPoolAllocator.h" />
     <ClInclude Include="iostream.h" />
     <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="memory.cpp" />
+    <ClInclude Include="memory.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CBPath.h" />
     <ClInclude Include="string.h" />

@@ -51,11 +51,14 @@ public:
     // Free memory and add block back to free list.
     void Free(void* ptr);
 
+    size_t Capacity();
+
 
 private:
     PoolBlock<blockByteSize> *m_pBlocks; // pointer to all blocks in the pool.
     PoolBlock<blockByteSize> *m_pFreeList; // head of the free block list.
     unsigned int m_NumFreeBlocks;
+    int _padding;
 };
 
 template <size_t blockByteSize, unsigned int numBlocks>
@@ -100,11 +103,13 @@ void FSPoolAllocator<blockByteSize, numBlocks>::Shutdown()
 template <size_t blockByteSize, unsigned int numBlocks>
 inline void* FSPoolAllocator<blockByteSize, numBlocks>::Allocate(size_t size)
 {
+    size_t t = blockByteSize;
     assert(size <= blockByteSize && "Cannot allocate larger than pool size!");
     assert(m_NumFreeBlocks > 0 && "No more free blocks in arena!");
     
     void* toRet = (void*)m_pFreeList->_data._mem;
     m_pFreeList = m_pFreeList->_data._next;
+    memset(toRet, 0, blockByteSize);
     --m_NumFreeBlocks;
     return toRet;
 }
@@ -118,11 +123,21 @@ inline void FSPoolAllocator<blockByteSize, numBlocks>::Free(void* ptr)
     // CAUTION: casting to to block pointer.
     PoolBlock<blockByteSize> *blockPtr = reinterpret_cast<PoolBlock<blockByteSize>*>(ptr);
 
-    // Reset data.
-    memset(blockPtr, 0, blockByteSize);
+    // No need to reset the data, data block is wiped
+    // during allocation.
+    //memset(blockPtr, 0, blockByteSize);
     blockPtr->_data._next = m_pFreeList;
+    m_pFreeList = blockPtr;
 
     ++m_NumFreeBlocks;
 }
+
+
+template <size_t blockByteSize, unsigned int numBlocks>
+inline size_t FSPoolAllocator<blockByteSize, numBlocks>::Capacity()
+{
+    return blockByteSize * numBlocks;
+}
+
 
 #endif

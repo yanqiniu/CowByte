@@ -60,7 +60,8 @@ bool Mesh::LoadContent()
         return false;
     }
 
-
+    
+    extern MemArena.Free(m_pVertices, sizeof(Vertex) * m_NumVertices);
 
 
     return true;
