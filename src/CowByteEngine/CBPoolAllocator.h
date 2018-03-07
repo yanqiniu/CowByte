@@ -2,10 +2,9 @@
 #define _CBPOOLALLOCATOR_H
 #include <assert.h>
 #include <cstring>
+#include "typedefs.h"
 
-// ! size must be divisible by 16!
-template <size_t size>
-struct PoolBlock
+struct CBPoolBlock
 {
     
     union PoolBlockData 
@@ -15,34 +14,32 @@ struct PoolBlock
         // This helps reduce block size and prevent ruining 
         // alignment.
 
-        char _mem[size]; // make sure this sits at top of PoolBlock struct cuz it will be cast.
-        PoolBlock<size> *_next;
+        //void* _mem; // make sure this sits at top of PoolBlock struct cuz it will be cast.
+        CBPoolBlock *_next;
     };
 
     PoolBlockData _data;
 
     // Ensure the array allocated is 16-byte aligned
-    void* operator new[](size_t size) { return _aligned_malloc(size, 16); }
-    void operator delete[](void* ptr) { _aligned_free(ptr); }
+    //void* operator new[](size_t size) { return _aligned_malloc(size, 16); }
+    //void operator delete[](void* ptr) { _aligned_free(ptr); }
 private:
     // prevent allocation of single block.
-    void* operator new(size_t size) {}
-    void operator delete(void *ptr) {}
+    //void* operator new(size_t size) {}
+    //void operator delete(void *ptr) {}
 };
 
 // Stands for: Fixed sized pool allocator / arena.
 // Essentially we are gonna have a set of these with 
 // varying sizes.
 // ! blockByteSize must be divisible by 16!
-template <size_t blockByteSize, unsigned int numBlocks>
-class FSPoolAllocator
+struct CBMemPool
 {
-public:
-    FSPoolAllocator();
-    ~FSPoolAllocator();
+    explicit CBMemPool(UINT32 blockSize, UINT32 nBlocks);
+    ~CBMemPool();
 
     //Allocate the pool on the heap, setup free list.
-    void Initialize();
+    void Initialize(void *startPtr);
     // Free memory used by the arena.
     void Shutdown();
 
@@ -53,90 +50,102 @@ public:
 
     size_t Capacity();
 
-
-private:
-    PoolBlock<blockByteSize> *m_pBlocks; // pointer to all blocks in the pool.
-    PoolBlock<blockByteSize> *m_pFreeList; // head of the free block list.
-    unsigned int m_NumFreeBlocks;
+    CBPoolBlock *m_pBlocks; // pointer to all blocks in the pool.
+    CBPoolBlock *m_pFreeList; // head of the free block list.
+    UINT32 m_blockSize;// technically should prob use size_t for this but unlikely the size will be that large.
+    UINT32 m_nFreeBlocks;
+    UINT32 m_nTotalBlocks;
+    
+// To make is 16 byte aligned.
+#ifdef _WIN64
     int _padding;
+#else
+    int _padding[3];
+#endif
 };
 
-template <size_t blockByteSize, unsigned int numBlocks>
-FSPoolAllocator<blockByteSize, numBlocks>::FSPoolAllocator()
+CBMemPool::CBMemPool(UINT32 blockSize, UINT32 nBlocks) :
+    m_pBlocks(nullptr),
+    m_pFreeList(nullptr),
+    m_blockSize(blockSize),
+    m_nTotalBlocks(nBlocks),
+    m_nFreeBlocks(nBlocks)
 {
-    Initialize();
+
 }
 
-template <size_t blockByteSize, unsigned int numBlocks>
-FSPoolAllocator<blockByteSize, numBlocks>::~FSPoolAllocator()
+CBMemPool::~CBMemPool()
 {
     Shutdown();
 }
 
-template <size_t blockByteSize, unsigned int numBlocks>
-void FSPoolAllocator<blockByteSize, numBlocks>::Initialize()
-{
-    assert(blockByteSize % 16 == 0 && "Block size must be divisible by 16!");
 
-    // Allocate the blocks on the heap.
-    m_pBlocks = new PoolBlock<blockByteSize>[numBlocks];
-    
+void CBMemPool::Initialize(void *startPtr)
+{
+    m_pBlocks = static_cast<CBPoolBlock*>(startPtr);
+    byte* pMarker = reinterpret_cast<byte*>(m_pBlocks);
+    // Place blocks in mem arena.
+    for (int i = 0; i < m_nTotalBlocks; ++i)
+    {
+        new (reinterpret_cast<CBPoolBlock*>(pMarker)) CBPoolBlock();
+        //reinterpret_cast<CBPoolBlock*>(pMarker)->_data._mem = static_cast<void*>(pMarker);
+        pMarker += (size_t)m_blockSize;
+    }
+
     // Setup the free list.
     m_pFreeList = m_pBlocks;
-    for (unsigned int i = 0; i < numBlocks - 1; ++i)
+    pMarker = reinterpret_cast<byte*>(m_pFreeList);
+    for (UINT32 i = 0; i < m_nTotalBlocks - 1; ++i)
     {
-        m_pFreeList[i]._data._next = &m_pFreeList[i + 1];
+        reinterpret_cast<CBPoolBlock*>(pMarker + i * m_blockSize)->_data._next = 
+        reinterpret_cast<CBPoolBlock*>(pMarker + (i + 1) * m_blockSize);
+        //m_pFreeList[i]._data._next = &m_pFreeList[i + 1];
     }
-    m_pFreeList[numBlocks - 1]._data._next = nullptr;
-    m_NumFreeBlocks = numBlocks;
+    reinterpret_cast<CBPoolBlock*>(pMarker +(m_nTotalBlocks - 1) * m_blockSize)->_data._next = nullptr;
 }
 
 
-template <size_t blockByteSize, unsigned int numBlocks>
-void FSPoolAllocator<blockByteSize, numBlocks>::Shutdown()
+
+void CBMemPool::Shutdown()
 {
     delete[] m_pBlocks;
     m_pFreeList = nullptr;
 }
 
 
-template <size_t blockByteSize, unsigned int numBlocks>
-inline void* FSPoolAllocator<blockByteSize, numBlocks>::Allocate(size_t size)
+
+inline void* CBMemPool::Allocate(size_t size)
 {
-    size_t t = blockByteSize;
-    assert(size <= blockByteSize && "Cannot allocate larger than pool size!");
-    assert(m_NumFreeBlocks > 0 && "No more free blocks in arena!");
+    assert(size <= m_blockSize && "Cannot allocate larger than pool size!");
+    assert(m_nFreeBlocks > 0 && "No more free blocks in arena!");
     
-    void* toRet = (void*)m_pFreeList->_data._mem;
+    void* toRet = (void*)m_pFreeList;
     m_pFreeList = m_pFreeList->_data._next;
-    memset(toRet, 0, blockByteSize);
-    --m_NumFreeBlocks;
+    --m_nFreeBlocks;
     return toRet;
 }
 
-template <size_t blockByteSize, unsigned int numBlocks>
-inline void FSPoolAllocator<blockByteSize, numBlocks>::Free(void* ptr)
+
+inline void CBMemPool::Free(void* ptr)
 {
     if (ptr == nullptr)
         return;
 
     // CAUTION: casting to to block pointer.
-    PoolBlock<blockByteSize> *blockPtr = reinterpret_cast<PoolBlock<blockByteSize>*>(ptr);
+    CBPoolBlock *blockPtr = reinterpret_cast<CBPoolBlock*>(ptr);
 
-    // No need to reset the data, data block is wiped
-    // during allocation.
-    //memset(blockPtr, 0, blockByteSize);
+    memset(blockPtr, 0, m_blockSize);
     blockPtr->_data._next = m_pFreeList;
     m_pFreeList = blockPtr;
 
-    ++m_NumFreeBlocks;
+    ++m_nFreeBlocks;
 }
 
 
-template <size_t blockByteSize, unsigned int numBlocks>
-inline size_t FSPoolAllocator<blockByteSize, numBlocks>::Capacity()
+
+inline size_t CBMemPool::Capacity()
 {
-    return blockByteSize * numBlocks;
+    return m_blockSize * m_nTotalBlocks;
 }
 
 

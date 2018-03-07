@@ -121,7 +121,10 @@
     <ClInclude Include="CBMemArena.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
-    <ClInclude Include="memory.h">
+    <ClInclude Include="typedefs.h">
+      <Filter>Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="CBMemory.h">
       <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>

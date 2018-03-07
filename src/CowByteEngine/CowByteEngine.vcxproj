@@ -151,12 +151,13 @@
     <ClInclude Include="CBPoolAllocator.h" />
     <ClInclude Include="iostream.h" />
     <ClInclude Include="Matrix4x4.h" />
-    <ClInclude Include="memory.h" />
+    <ClInclude Include="CBMemory.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="CBPath.h" />
     <ClInclude Include="string.h" />
     <ClInclude Include="CBStringOps.h" />
     <ClInclude Include="System.h" />
+    <ClInclude Include="typedefs.h" />
     <ClInclude Include="UObject.h" />
     <ClInclude Include="Vec3.h" />
     <ClInclude Include="Vertex.h" />
