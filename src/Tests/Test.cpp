@@ -11,7 +11,7 @@
 int main()
 {
     std::clock_t start;
-    FSPoolAllocator<16, 16> fspa;
+    CBMemPool<16, 16> fspa;
     fspa.Initialize();
 
     //////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
 #include "deletemacros.h"
 #include "Engine.h"
 #include "Debug.h"
+#include "CBMemory.h"
 
 #if defined (DEBUG) | defined(_DEBUG)
 int _tmain(int argc, char* argv) 

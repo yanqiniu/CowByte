@@ -60,9 +60,6 @@ bool Mesh::LoadContent()
         return false;
     }
 
-
-
-
     return true;
 
 }
@@ -134,6 +131,8 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     {
         DbgINFO ("Vertex %d [%f, %f, %f]", i, m_pVertices[i].m_Pos.X(), m_pVertices[i].m_Pos.Y(), m_pVertices[i].m_Pos.Z());
     }
+
+    operator delete(m_pVertices, m_NumVertices * sizeof(Vertex));
 
     return true;
 
