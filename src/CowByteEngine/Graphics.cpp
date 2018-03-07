@@ -4,6 +4,10 @@
 #include "exceptions.h"
 #include "Vertex.h"
 #include "Vec3.h"
+#include "CBString.h"
+#include "CBPath.h"
+#include "Debug.h"
+
 
 using namespace DirectX;
 
@@ -41,7 +45,7 @@ bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
     {
-        //Logger::Log("Graphics: Window pointer null!");
+        DbgERROR("Graphics: Window pointer null!");
         return false;
     }
     System::Initialize();
@@ -93,8 +97,10 @@ bool Graphics::Initialize()
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
-    D3DX11CompileFromFile(L"default.shader", 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
-    D3DX11CompileFromFile(L"default.shader", 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);
+    CBString<256> shaderPath;
+    Path::GenerateAssetPath(shaderPath, "shaders", "default.shader");
+    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
+    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);
 
     // encapsulate both shaders into shader objects
     m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);

@@ -3,6 +3,8 @@
 #include "string.h"
 #include "deletemacros.h"
 #include "Engine.h"
+#include "Debug.h"
+#include "CBMemory.h"
 
 #if defined (DEBUG) | defined(_DEBUG)
 int _tmain(int argc, char* argv) 
@@ -10,7 +12,7 @@ int _tmain(int argc, char* argv)
     UNREFERENCED_PARAMETER(argc);
     UNREFERENCED_PARAMETER(argv);
 
-    // Logger::Log(Starting the program);
+    DbgINFO("Starting the program...");
 
     // Run winmain function
     WinMain((HINSTANCE)GetModuleHandle(NULL), 0, 0, SW_SHOW);

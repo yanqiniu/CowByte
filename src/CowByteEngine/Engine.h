@@ -1,13 +1,9 @@
 #ifndef _ENGINE_H
 #define _ENFINE_H
 
-#ifndef _WINDOWS_
 #include <Windows.h>
-#endif // _WINDOWS_
-
-#ifndef _MAP_
 #include <map>
-#endif // _MAP_
+#include "Debug.h"
 
 enum SystemType;
 class System;
@@ -64,7 +60,7 @@ T* Engine::GetSystem(SystemType sysType)
     T* pSys = static_cast<T*>(m_MapSystems[sysType]);
     if (!pSys)
     {
-        // Logger::Log("System invalid!");
+        DbgWARNING("System invalid!");
         return nullptr;
     }
     return pSys;

@@ -13,7 +13,7 @@ public:
     ~CBFile();
 
     void ReadIntoBuffer(char *&buffer, size_t &size);
-    bool GetNextNonEmptyLine(char *buffer, size_t maxLineSize);
+    bool GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripNewLine);
 
 private:
     FILE *m_pFile;

@@ -1,5 +1,7 @@
-#include "CBFile.h"
 #include <assert.h>
+#include "CBFile.h"
+#include "CBStringOps.h"
+#include "Debug.h"
 
 CBFile::CBFile(const char *fileName)
 {
@@ -7,7 +9,7 @@ CBFile::CBFile(const char *fileName)
 
     if (!m_pFile)
     {
-        // Logger::
+        DbgERROR("Unable to open file: %s", fileName);
     }
 
     assert(m_pFile != nullptr);
@@ -34,7 +36,7 @@ void CBFile::ReadIntoBuffer(char *&buffer, size_t &size)
     size = read;
 }
 
-bool CBFile::GetNextNonEmptyLine(char *buffer, size_t maxLineSize)
+bool CBFile::GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripNewLine)
 {
     while (fgets(buffer, maxLineSize, m_pFile) != NULL)
     {
@@ -55,7 +57,12 @@ bool CBFile::GetNextNonEmptyLine(char *buffer, size_t maxLineSize)
 
         // Already found a non empty line and buffer filled.
         if (!isEmpty)
+        {
+            if (doStripNewLine)
+                CBStringOps::Strip(buffer, CBStringOps::StripMode::NEWLINE);
             return true;
+
+        }
     }
 
     return false;

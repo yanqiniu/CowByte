@@ -18,10 +18,22 @@
     <ClInclude Include="..\CowByteEngine\Vec3.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CowByteEngine\Matrix4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine\CBPoolAllocator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CowByteEngine\Matrix4x4.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CowByteEngine\Vec3.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

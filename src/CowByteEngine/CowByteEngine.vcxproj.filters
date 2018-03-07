@@ -44,6 +44,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{9212d064-d83c-470e-bd38-4e3489e546e6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Memory">
+      <UniqueIdentifier>{3c2bb38a-841a-4938-a476-5f328354a775}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="WinMain.h">
@@ -82,9 +85,6 @@
     <ClInclude Include="d3dx12.h">
       <Filter>Core\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="path.h">
-      <Filter>Defines</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics.h">
       <Filter>Core\Systems\Graphics</Filter>
     </ClInclude>
@@ -105,6 +105,27 @@
     </ClInclude>
     <ClInclude Include="CBStringOps.h">
       <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="CBPath.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Debug.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix4x4.h">
+      <Filter>Core\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="CBPoolAllocator.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="CBMemArena.h">
+      <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="typedefs.h">
+      <Filter>Defines</Filter>
+    </ClInclude>
+    <ClInclude Include="CBMemory.h">
+      <Filter>Core\Memory</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -140,6 +161,15 @@
     </ClCompile>
     <ClCompile Include="CBFile.cpp">
       <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="CBPath.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Vec3.cpp">
+      <Filter>Core\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix4x4.cpp">
+      <Filter>Core\Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

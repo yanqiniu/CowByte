@@ -24,7 +24,10 @@ public:
     void   Clear();
     size_t Capacity();
     size_t Size();
+    int    Compare(const char *rhs);
+    int    Compare(CBString &rhs);
     void   Append(const char *toAppend);
+    bool   Strip();
     bool   Strip(StripMode mode);
 
     void   operator=(const char* cstring);
@@ -38,16 +41,36 @@ private:
 };
 
 template <size_t len>
-size_t CBString<len>::Capacity()
+inline int CBString<len>::Compare(CBString &rhs)
+{
+    return strcmp(m_Data, rhs.Get());
+}
+
+template <size_t len>
+inline int CBString<len>::Compare(const char *rhs)
+{
+    return strcmp(m_Data, rhs);
+}
+
+template <size_t len>
+inline size_t CBString<len>::Capacity()
 {
     return len;
 }
 
 template <size_t len>
-bool CBString<len>::Strip(StripMode mode)
+inline bool CBString<len>::Strip(StripMode mode)
 {
     return CBStringOps::Strip(m_Data, mode);
 }
+
+// Strip newline at end and then spaces at both ends.
+template <size_t len>
+bool CBString<len>::Strip()
+{
+    return Strip(StripMode::ALL);
+}
+
 
 template <size_t len> 
 char CBString<len>::_s_buf[len];
