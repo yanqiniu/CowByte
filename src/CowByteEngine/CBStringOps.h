@@ -52,11 +52,11 @@ namespace CBStringOps
                 else
                 {
                     foundFirstNonSpace = true;
-                    *(str - numOfSpaces * sizeof(char)) = *str;
+                    *(str - numOfSpaces) = *str;
                 }
-                str += sizeof(char);
+                ++str;
             }
-            *(str - numOfSpaces * sizeof(char)) = *str;
+            *(str - numOfSpaces) = *str;
             return true;
         }
     }
@@ -71,12 +71,12 @@ namespace CBStringOps
         {
             char *start = str;
             str = start + strlen(start);
-            str -= sizeof(char);
+            --str;
             while (*str == ' ')
             {
-                str -= sizeof(char);
+                --str;
             }
-            *(str + sizeof(char)) = '\0';
+            *(str + 1) = '\0';
             return true;
         }
     }
@@ -109,7 +109,7 @@ namespace CBStringOps
         // skip extra white spaces.
         while (*str == ' ')
         {
-            str += sizeof(char);
+            ++str;
         }
 
         if (strlen(str) == 0)
@@ -119,8 +119,8 @@ namespace CBStringOps
         {
             if (str[i] == seperators || str[i] == '\0')
             {
-                assert((i + 1) * sizeof(char) <= bufSize);
-                memcpy(buf, str, (i + 1) * sizeof(char));
+                assert(i + 1 <= bufSize);
+                memcpy(buf, str, i + 1);
                 buf[i] = '\0';
 
                 // advance str pointer
