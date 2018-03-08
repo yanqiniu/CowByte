@@ -3,7 +3,7 @@
 #include "string.h"
 #include "deletemacros.h"
 #include "Engine.h"
-#include "Debug.h"
+#include "CBDebug.h"
 #include "CBMemory.h"
 
 #if defined (DEBUG) | defined(_DEBUG)

@@ -1,7 +1,7 @@
 #include <assert.h>
 #include "CBFile.h"
 #include "CBStringOps.h"
-#include "Debug.h"
+#include "CBDebug.h"
 
 CBFile::CBFile(const char *fileName)
 {
