@@ -7,28 +7,34 @@
 
 struct CBPoolBlock
 {
-    // _next pointer:
-    //This was previously implemented as a union with actual
-    //data:
-    //union PoolBlockData
-    //{
-    //    // This is a union since memory content and next pointer
-    //    // are never needed at the same time.
-    //    // This helps reduce block size and prevent ruining 
-    //    // alignment.
+    /*******************************************************
+     _next pointer:
+    This was previously implemented as a union with actual
+    data:
 
-    //    char _mem[blockSize]; 
-    //    CBPoolBlock *_next;
-    //};
-    //But since I moved from templated pool to support pools
-    //with varying sizes better, this no longer works.
+    union PoolBlockData
+    {
+        // This is a union since memory content and next pointer
+        // are never needed at the same time.
+        // This helps reduce block size and prevent ruining 
+        // alignment.
 
-    //The current approach is to simply overwrite the _next 
-    //ptr with data as if it's not there. And only accessing 
-    //it when we know it's not corrupted (when the block is 
-    //empty and next ptr has been reset).
+        char _mem[blockSize]; 
+        CBPoolBlock *_next;
+    };
 
-    //Yea...doesn't sound super safe. Works so far tho :/
+    But since I moved from templated pool to support pools
+    with varying sizes better, this no longer works.
+
+    The current approach is to simply overwrite the _next 
+    ptr with data as if it's not there. And only accessing 
+    it when we know it's not corrupted (when the block is 
+    empty and next ptr has been reset).
+
+    (Well yea, it's essentially still a union.)
+
+    Yea...doesn't sound super safe. Works so far tho :/
+    *******************************************************/
     CBPoolBlock *_next;
 
 #ifndef _WIN64
@@ -127,8 +133,7 @@ inline void* CBMemPool::Allocate(size_t size)
     assert(m_nFreeBlocks > 0 && "No more free blocks in pool!");
     void* toRet = (void*)m_pFreeList;
     m_pFreeList = m_pFreeList->_next;
-    // At last, erase next pointer and padding
-    memset(toRet, 0, sizeof(CBPoolBlock));
+    //memset(toRet, 0, sizeof(CBPoolBlock)); // At last, erase next pointer and padding
     --m_nFreeBlocks;
     return toRet;
 }
