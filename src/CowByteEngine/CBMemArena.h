@@ -70,6 +70,8 @@ void CBMemArena::Initialize()
     // Allocate all mem needed:
     m_pMemory = _aligned_malloc(m_TotalByteCapacity, 16);
 
+    DbgAssert(m_pMemory, "Failed to allocate requested amount of memory for arena.");
+
     char* pMarker = static_cast<char*>(m_pMemory);
     int i = 0;
     for (const auto& config : g_poolConfigs)
