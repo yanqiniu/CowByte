@@ -131,7 +131,7 @@ inline void* CBMemPool::Allocate(size_t size)
 {
     assert(size <= m_blockSize && "Cannot allocate larger than pool size!");
     assert(m_nFreeBlocks > 0 && "No more free blocks in pool!");
-    void* toRet = (void*)m_pFreeList;
+    CBPoolBlock* toRet = m_pFreeList;
     m_pFreeList = m_pFreeList->_next;
     //memset(toRet, 0, sizeof(CBPoolBlock)); // At last, erase next pointer and padding
     --m_nFreeBlocks;
@@ -147,7 +147,7 @@ inline void CBMemPool::Free(void* ptr)
     // CAUTION: casting to to block pointer.
     CBPoolBlock *blockPtr = reinterpret_cast<CBPoolBlock*>(ptr);
 
-    memset(blockPtr, 0, m_blockSize);
+    memset(ptr, 0, m_blockSize);
     blockPtr->_next = m_pFreeList;
     m_pFreeList = blockPtr;
 
