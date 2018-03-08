@@ -1,7 +1,5 @@
 #ifndef _CB_MEM_ARENA_H
 #define _CB_MEM_ARENA_H
-#include <Vector>
-#include <assert.h>
 #include "Debug.h"
 #include "CBPoolAllocator.h"
 
@@ -32,7 +30,7 @@ class CBMemArena
 {
 public:
     CBMemArena();
-    void Initialize();
+    void Initialize(); // Create pools with g_poolConfigs, and initialize each pool.
     void* Allocate(size_t size);
     void Free(void* ptr, size_t size); // size is needed to determine which pool it was in.
     static CBMemArena &Get() { return s_instance; }
@@ -72,7 +70,7 @@ void CBMemArena::Initialize()
     // Allocate all mem needed:
     m_pMemory = _aligned_malloc(m_TotalByteCapacity, 16);
 
-    byte* pMarker = static_cast<byte*>(m_pMemory);
+    char* pMarker = static_cast<char*>(m_pMemory);
     int i = 0;
     for (const auto& config : g_poolConfigs)
     {
@@ -100,8 +98,7 @@ inline void* CBMemArena::Allocate(size_t size)
     {
         if (size <= pPool->m_blockSize)
         {
-            void* toRet = pPool->Allocate(size);
-            return toRet;
+            return pPool->Allocate(size);
         }
     }
     DbgWARNING("Does not support dynamic allocation size of [%u]", size);
