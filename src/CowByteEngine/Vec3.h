@@ -10,6 +10,10 @@ __declspec(align(16)) struct Vec3
     __m128 _data;
 
 #pragma region Con/Destructor, Getter/Setter
+    __forceinline Vec3()
+    {
+        _data = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+    }
 
     // W set to 1.0f, representing a point.
     __forceinline Vec3(float xIn, float yIn, float zIn)

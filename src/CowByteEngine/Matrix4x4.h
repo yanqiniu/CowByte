@@ -64,6 +64,8 @@ __declspec(align(16)) struct Matrix4x4
         return _data[col].m128_f32[row];
     }
 
+    __forceinline ~Matrix4x4() {}
+
 #pragma endregion
 
 #pragma region Common Operations
