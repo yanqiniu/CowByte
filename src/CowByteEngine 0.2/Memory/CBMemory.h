@@ -42,10 +42,12 @@ void* operator new[](size_t size)
 void operator delete(void* ptr, size_t size)
 {
     CBMemArena::Get().Free(ptr, size);
+    ptr = nullptr;
 }
 void operator delete[](void* ptr, size_t size)
 {
     CBMemArena::Get().Free(ptr, size);
+    ptr = nullptr;
 }
 
 // Disable original ptr delete.

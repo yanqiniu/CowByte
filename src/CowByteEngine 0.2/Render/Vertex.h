@@ -5,7 +5,7 @@
 #include <D3DX10.h>
 #include <D3DX11.h>
 
-#include "Vec3.h"
+#include "../Math/Vec3.h"
 
 
 struct Vertex

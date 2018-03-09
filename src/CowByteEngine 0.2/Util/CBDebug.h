@@ -1,5 +1,6 @@
 #ifndef _DEBUG_H
 #define _DEBUG_H
+#include <stdio.h>
 #include <assert.h>
 
 #define DbgINFO(format, ...) printf("INFO: " format "\n", ##__VA_ARGS__)

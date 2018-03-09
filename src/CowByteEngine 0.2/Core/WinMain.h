@@ -2,7 +2,7 @@
 #define _WIN_MAIN_H
 
 #ifndef _WINDOW_
-    #include <windows.h>
+    #include <Windows.h>
 #endif
 
 int _tmain(int argc, char* argv); // For debugging.

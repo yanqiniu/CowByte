@@ -1,17 +1,87 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d1950819-8955-475c-9feb-ebcc2a7fc6d0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    <Filter Include="Memory">
+      <UniqueIdentifier>{e7da634a-9b6b-4168-89ef-ee5f03aec230}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="Math">
+      <UniqueIdentifier>{51ad93f6-c891-4eb0-b28b-bdba2df36e20}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{2342e279-6922-4a4a-a679-d71b88431092}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utils">
+      <UniqueIdentifier>{ea0fe01c-7eff-47fa-9aa7-4b807ed79517}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Memory\CBMemory.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\CBPoolAllocator.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Memory\CBMemArena.h">
+      <Filter>Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Matrix4x4.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\Vec3.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CBString.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CBStringOps.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\exceptions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\typedefs.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CBDebug.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CBFile.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\CBPath.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\WinMain.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Vertex.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Math\Vec3.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Matrix4x4.cpp">
+      <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\CBString.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\CBPath.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\WinMain.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Vertex.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Util\CBFile.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

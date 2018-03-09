@@ -1,10 +1,11 @@
 #include "WinMain.h"
-#include "iostream.h"
-#include "string.h"
-#include "deletemacros.h"
-#include "Engine.h"
-#include "CBDebug.h"
-#include "CBMemory.h"
+//#include "Engine.h"
+#include "../Util/CBDebug.h"
+#include "../Memory/CBMemory.h"
+#include <crtdbg.h>
+
+//#include <map>
+
 
 #if defined (DEBUG) | defined(_DEBUG)
 int _tmain(int argc, char* argv) 
@@ -37,14 +38,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _CrtSetBreakAlloc(0);
 #endif
 
-    // create the engine
-    Engine *pEngine = new Engine();
+    //// create the engine
+    //Engine *pEngine = new Engine();
 
-    //kick of the game
-    int result = pEngine->RunLoop();
+    ////kick of the game
+    //int result = pEngine->RunLoop();
 
-    // delete the engine
-    SafeDelete(pEngine);
+    //// delete the engine
+    //delete (pEngine);
 
     return 0;
 }
