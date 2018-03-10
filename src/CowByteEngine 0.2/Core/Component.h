@@ -23,13 +23,13 @@ public:
     bool Shutdown();
     void SetActive(bool inBool);
 
-private:
-    // Message bus related:
-    MessageBus *m_MessageBus; // TODO: multiple message bus support.
+protected:
     CBQueue<Message> m_MessageQueue;
     CBVector<Component*> m_Components;
 
-    // Other:
+private:
+    MessageBus *m_MessageBus; // TODO: multiple message bus support.
+
     bool m_bIsActive;
 };
 
