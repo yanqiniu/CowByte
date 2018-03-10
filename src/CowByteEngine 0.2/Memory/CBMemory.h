@@ -30,39 +30,15 @@ delete[]. Even an empty destructor def does the trick.
 
 //#define N_OVERLOAD_GLOBAL_NEW_DELETE
 #ifndef N_OVERLOAD_GLOBAL_NEW_DELETE
-void* operator new(size_t size) throw()
-{
-    return CBMemArena::Get().Allocate(size);
-}
-void* operator new[](size_t size)
-{
-    return CBMemArena::Get().Allocate(size);
-}
+void* operator new(size_t size);
+void* operator new[](size_t size);
 
-void operator delete(void* ptr, size_t size)
-{
-    CBMemArena::Get().Free(ptr, size);
-    ptr = nullptr;
-}
-void operator delete[](void* ptr, size_t size)
-{
-    CBMemArena::Get().Free(ptr, size);
-    ptr = nullptr;
-}
+void operator delete(void* ptr, size_t size);
+void operator delete[](void* ptr, size_t size);
 
 // Disable original ptr delete.
-void operator delete(void* ptr)
-{
-    // Do nothing.
-    DbgWARNING("Attempting using delete without size!");
-    assert(false);
-}
-void operator delete[](void* ptr)
-{
-    // Do nothing.
-    DbgWARNING("Attempting using delete[] without size!");
-    assert(false);
-}
+void operator delete(void* ptr);
+void operator delete[](void* ptr);
 #endif
 
 #endif // !_CBMEMORY_H
