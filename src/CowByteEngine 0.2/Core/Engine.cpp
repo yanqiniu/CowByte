@@ -44,7 +44,7 @@ int Engine::Initialize(GameContext &context)
     if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
         return false;
 
-    // Subscribe systems to the meddage bus.
+    // Subscribe systems to the message bus.
     context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
     context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
 

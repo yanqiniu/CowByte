@@ -1,16 +1,19 @@
 #include "CBMemArena.h"
 
-CBMemArena::CBMemArena()
+CBMemArena::CBMemArena() :
+    m_TotalByteCapacity(0)
 {
     // Calculate the total amount of bytes the will 
     // be allocated.
-    m_TotalByteCapacity = 0;
+
     for (const auto& config : g_poolConfigs)
     {
         assert(config[0] % 16 == 0 && "Block size must be divisible by 16!");
         m_TotalByteCapacity += (config[0] * config[1]);
     }
 
+    m_NumBytesUsed = 0;
+    m_NumBytesRequested = 0;
     Initialize();
 }
 
@@ -51,6 +54,8 @@ void* CBMemArena::Allocate(size_t size)
     {
         if (size <= pPool->m_blockSize)
         {
+            m_NumBytesRequested += size;
+            m_NumBytesUsed += pPool->m_blockSize;
             return pPool->Allocate(size);
         }
     }
@@ -64,6 +69,8 @@ void CBMemArena::Free(void* ptr, size_t size)
     {
         if (size <= pPool->m_blockSize)
         {
+            m_NumBytesRequested -= size;
+            m_NumBytesUsed -= pPool->m_blockSize;
             pPool->Free(ptr);
             return;
         }
