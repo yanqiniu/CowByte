@@ -24,6 +24,12 @@
     <ClInclude Include="..\CowByteEngine\CBPoolAllocator.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CowByteEngine\CBMemArena.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine\CBMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test.cpp">

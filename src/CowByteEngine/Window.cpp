@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "Debug.h"
+#include "CBDebug.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {

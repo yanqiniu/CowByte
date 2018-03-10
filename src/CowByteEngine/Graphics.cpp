@@ -6,7 +6,7 @@
 #include "Vec3.h"
 #include "CBString.h"
 #include "CBPath.h"
-#include "Debug.h"
+#include "CBDebug.h"
 
 
 using namespace DirectX;

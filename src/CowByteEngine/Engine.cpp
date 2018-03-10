@@ -7,7 +7,7 @@
 #include "context.h"
 #include "Window.h"
 #include "Graphics.h"
-#include "Debug.h"
+#include "CBDebug.h"
 
 #include <new.h>
 

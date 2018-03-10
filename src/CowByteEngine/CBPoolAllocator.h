@@ -2,31 +2,46 @@
 #define _CBPOOLALLOCATOR_H
 #include <assert.h>
 #include <cstring>
+#include <new.h>
 #include "typedefs.h"
 
 struct CBPoolBlock
 {
-    
-    union PoolBlockData 
+    /*******************************************************
+     _next pointer:
+    This was previously implemented as a union with actual
+    data:
+
+    union PoolBlockData
     {
         // This is a union since memory content and next pointer
         // are never needed at the same time.
         // This helps reduce block size and prevent ruining 
         // alignment.
 
-        //void* _mem; // make sure this sits at top of PoolBlock struct cuz it will be cast.
+        char _mem[blockSize]; 
         CBPoolBlock *_next;
     };
 
-    PoolBlockData _data;
+    But since I moved from templated pool to support pools
+    with varying sizes better, this no longer works.
 
-    // Ensure the array allocated is 16-byte aligned
-    //void* operator new[](size_t size) { return _aligned_malloc(size, 16); }
-    //void operator delete[](void* ptr) { _aligned_free(ptr); }
-private:
-    // prevent allocation of single block.
-    //void* operator new(size_t size) {}
-    //void operator delete(void *ptr) {}
+    The current approach is to simply overwrite the _next 
+    ptr with data as if it's not there. And only accessing 
+    it when we know it's not corrupted (when the block is 
+    empty and next ptr has been reset).
+
+    (Well yea, it's essentially still a union.)
+
+    Yea...doesn't sound super safe. Works so far tho :/
+    *******************************************************/
+    CBPoolBlock *_next;
+
+#ifndef _WIN64
+    UINT32 _padding[3]; // x86 padding
+#else
+    UINT32 _padding[2]; // x64 padding
+#endif // !_WIN64
 };
 
 // Stands for: Fixed sized pool allocator / arena.
@@ -83,25 +98,23 @@ CBMemPool::~CBMemPool()
 void CBMemPool::Initialize(void *startPtr)
 {
     m_pBlocks = static_cast<CBPoolBlock*>(startPtr);
-    byte* pMarker = reinterpret_cast<byte*>(m_pBlocks);
+    char* pMarker = reinterpret_cast<char*>(m_pBlocks);
     // Place blocks in mem arena.
     for (int i = 0; i < m_nTotalBlocks; ++i)
     {
         new (reinterpret_cast<CBPoolBlock*>(pMarker)) CBPoolBlock();
-        //reinterpret_cast<CBPoolBlock*>(pMarker)->_data._mem = static_cast<void*>(pMarker);
         pMarker += (size_t)m_blockSize;
     }
 
     // Setup the free list.
     m_pFreeList = m_pBlocks;
-    pMarker = reinterpret_cast<byte*>(m_pFreeList);
+    pMarker = reinterpret_cast<char*>(m_pFreeList);
     for (UINT32 i = 0; i < m_nTotalBlocks - 1; ++i)
     {
-        reinterpret_cast<CBPoolBlock*>(pMarker + i * m_blockSize)->_data._next = 
+        reinterpret_cast<CBPoolBlock*>(pMarker + i * m_blockSize)->_next = 
         reinterpret_cast<CBPoolBlock*>(pMarker + (i + 1) * m_blockSize);
-        //m_pFreeList[i]._data._next = &m_pFreeList[i + 1];
     }
-    reinterpret_cast<CBPoolBlock*>(pMarker +(m_nTotalBlocks - 1) * m_blockSize)->_data._next = nullptr;
+    reinterpret_cast<CBPoolBlock*>(pMarker +(m_nTotalBlocks - 1) * m_blockSize)->_next = nullptr;
 }
 
 
@@ -117,10 +130,10 @@ void CBMemPool::Shutdown()
 inline void* CBMemPool::Allocate(size_t size)
 {
     assert(size <= m_blockSize && "Cannot allocate larger than pool size!");
-    assert(m_nFreeBlocks > 0 && "No more free blocks in arena!");
-    
-    void* toRet = (void*)m_pFreeList;
-    m_pFreeList = m_pFreeList->_data._next;
+    assert(m_nFreeBlocks > 0 && "No more free blocks in pool!");
+    CBPoolBlock* toRet = m_pFreeList;
+    m_pFreeList = m_pFreeList->_next;
+    //memset(toRet, 0, sizeof(CBPoolBlock)); // At last, erase next pointer and padding
     --m_nFreeBlocks;
     return toRet;
 }
@@ -134,8 +147,8 @@ inline void CBMemPool::Free(void* ptr)
     // CAUTION: casting to to block pointer.
     CBPoolBlock *blockPtr = reinterpret_cast<CBPoolBlock*>(ptr);
 
-    memset(blockPtr, 0, m_blockSize);
-    blockPtr->_data._next = m_pFreeList;
+    memset(ptr, 0, m_blockSize);
+    blockPtr->_next = m_pFreeList;
     m_pFreeList = blockPtr;
 
     ++m_nFreeBlocks;

@@ -109,9 +109,6 @@
     <ClInclude Include="CBPath.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Debug.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Matrix4x4.h">
       <Filter>Core\Math</Filter>
     </ClInclude>
@@ -126,6 +123,9 @@
     </ClInclude>
     <ClInclude Include="CBMemory.h">
       <Filter>Core\Memory</Filter>
+    </ClInclude>
+    <ClInclude Include="CBDebug.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
