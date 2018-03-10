@@ -10,15 +10,15 @@ const static size_t g_MaxNumMemPools = 32;
 
 // TODO: yea... this needs to be tweaked.
 const static UINT32 g_poolConfigs[g_MaxNumMemPools][2] = {
-        // Block size, num of blocks
-{ 16, 1024},            //16B For smaller allocation like a single Vec3.
-{ 32, 1024 },            //32B For single matrix.
+// { Block size, num of blocks }
+{ 16, 1024},             //16B For smaller allocation like a single Vec3.
+{ 32, 1024 },            //32B
 { 64, 1024 },            //64B For single matrix.
 { 80, 1024 },            //80B
 { 96, 1024 },            //96B
 { 128, 1024 },           //128B
-{ 256, 1024 },
-{ 512, 1024 },
+{ 256, 1024 },           //256B
+{ 512, 1024 },           //512B
 { 0x400, 1024 },         //1KB;
 { 0x800, 1024 },         //2KB;
 { 0x1000, 1024 },        //4KB;
