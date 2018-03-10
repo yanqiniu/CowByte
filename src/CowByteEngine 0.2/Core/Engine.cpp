@@ -4,7 +4,6 @@
 
 #include "Window.h"
 #include "Graphics.h"
-#include "CBDebug.h"
 
 #include <new.h>
 
@@ -30,12 +29,12 @@ int Engine::Initialize()
         return false;
 
     // Add Systems.
-    Window *window = new Window(WindowData(640, 480));
-    Graphics *graphics = new Graphics(GraphicsData(window));
-    if (!AddSystem(window))
-        return false;
-    if (!AddSystem(graphics))
-        return false;
+    //Window *window = new Window(WindowData(640, 480));
+    //Graphics *graphics = new Graphics(GraphicsData(window));
+    //if (!AddSystem(window))
+    //    return false;
+    //if (!AddSystem(graphics))
+    //    return false;
 
 
     // Initialize Systems.
@@ -76,7 +75,7 @@ int Engine::ShutDown()
         	continue;
         }
 
-        SafeDelete(pSysPair.second);
+        delete (pSysPair.second);
     }
 
     return true;

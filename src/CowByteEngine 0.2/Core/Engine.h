@@ -3,7 +3,7 @@
 
 #include <Windows.h>
 #include <map>
-#include "CBDebug.h"
+#include "../Util/CBDebug.h"
 
 enum SystemType;
 class System;

@@ -33,32 +33,50 @@
     <ClInclude Include="Math\Vec3.h">
       <Filter>Math</Filter>
     </ClInclude>
-    <ClInclude Include="Util\CBString.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\CBStringOps.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\exceptions.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\typedefs.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\CBDebug.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\CBFile.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Util\CBPath.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Core\WinMain.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Render\Vertex.h">
       <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Component.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\GameContext.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MessageBus.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Message.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBQueue.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBString.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBStringOps.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\exceptions.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\typedefs.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBDebug.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBFile.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBPath.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBVector.h">
+      <Filter>Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -68,19 +86,25 @@
     <ClCompile Include="Math\Matrix4x4.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="Util\CBString.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
-    <ClCompile Include="Util\CBPath.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="Core\WinMain.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Render\Vertex.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Util\CBFile.cpp">
+    <ClCompile Include="Core\Component.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MessageBus.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CBString.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CBFile.cpp">
+      <Filter>Utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Utils\CBPath.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
   </ItemGroup>

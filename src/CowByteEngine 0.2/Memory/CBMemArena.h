@@ -1,6 +1,6 @@
 #ifndef _CB_MEM_ARENA_H
 #define _CB_MEM_ARENA_H
-#include "../Util/CBDebug.h"
+#include "../Utils/CBDebug.h"
 #include "CBPoolAllocator.h"
 
 #define MAX_NUM_POOLS 16

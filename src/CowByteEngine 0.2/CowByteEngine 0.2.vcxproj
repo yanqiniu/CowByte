@@ -134,6 +134,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Core\Component.h" />
+    <ClInclude Include="Core\GameContext.h" />
+    <ClInclude Include="Core\Message.h" />
+    <ClInclude Include="Core\MessageBus.h" />
     <ClInclude Include="Core\WinMain.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Vec3.h" />
@@ -141,22 +145,26 @@
     <ClInclude Include="Memory\CBMemory.h" />
     <ClInclude Include="Memory\CBPoolAllocator.h" />
     <ClInclude Include="Render\Vertex.h" />
-    <ClInclude Include="Util\CBDebug.h" />
-    <ClInclude Include="Util\CBFile.h" />
-    <ClInclude Include="Util\CBPath.h" />
-    <ClInclude Include="Util\CBString.h" />
-    <ClInclude Include="Util\CBStringOps.h" />
-    <ClInclude Include="Util\exceptions.h" />
-    <ClInclude Include="Util\typedefs.h" />
+    <ClInclude Include="Utils\CBDebug.h" />
+    <ClInclude Include="Utils\CBFile.h" />
+    <ClInclude Include="Utils\CBPath.h" />
+    <ClInclude Include="Utils\CBQueue.h" />
+    <ClInclude Include="Utils\CBString.h" />
+    <ClInclude Include="Utils\CBStringOps.h" />
+    <ClInclude Include="Utils\CBVector.h" />
+    <ClInclude Include="Utils\exceptions.h" />
+    <ClInclude Include="Utils\typedefs.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Core\Component.cpp" />
+    <ClCompile Include="Core\MessageBus.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
-    <ClCompile Include="Util\CBFile.cpp" />
-    <ClCompile Include="Util\CBPath.cpp" />
-    <ClCompile Include="Util\CBString.cpp" />
+    <ClCompile Include="Utils\CBFile.cpp" />
+    <ClCompile Include="Utils\CBPath.cpp" />
+    <ClCompile Include="Utils\CBString.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

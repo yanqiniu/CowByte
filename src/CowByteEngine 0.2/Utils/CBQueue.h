@@ -1,3 +1,6 @@
+#ifndef _CBQUEUE_H
+#define _CBQUEUE_H
+
 #include "../Memory/CBMemory.h"
 #include "typedefs.h"
 
@@ -11,7 +14,7 @@ public:
         m_Tail(nullptr)
     {};
 
-    ~CBQueue() 
+    ~CBQueue()
     {
         while (!IsEmpty())
         {
@@ -32,7 +35,7 @@ public:
         return m_Size == 0;
     }
 
-    bool Add(const DataT& dataToAdd)
+    bool Enqueue(const DataT& dataToAdd)
     {
         CBQueueNode *node = new CBQueueNode();
         if (!node)
@@ -86,9 +89,12 @@ public:
         }
     }
 
-    
+
 private:
-    CBQueueNode *m_Head;
+    CBQueueNode * m_Head;
     CBQueueNode *m_Tail;
     UINT32 m_Size; // Num of elements currently in the queue;
 };
+
+#endif // _CBQUEUE_H
+
