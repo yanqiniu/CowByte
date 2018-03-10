@@ -1,7 +1,8 @@
 # CowByte Engine
 A game engine by [Roy Niu](mailto:yanqi.roy.niu@gmail.com).
-
+![Cow Bite](https://github.com/yanqiniu/CowByte/blob/master/assets/other/cover.jpg)
 Don't worry about the name.
+
 
 ### Overview
 - This is a hobby game engine project by Roy Niu.
