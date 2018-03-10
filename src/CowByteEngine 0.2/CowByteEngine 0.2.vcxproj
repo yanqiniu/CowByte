@@ -147,7 +147,10 @@
     <ClInclude Include="Memory\CBMemArena.h" />
     <ClInclude Include="Memory\CBMemory.h" />
     <ClInclude Include="Memory\CBPoolAllocator.h" />
+    <ClInclude Include="Render\Graphics.h" />
+    <ClInclude Include="Render\Mesh.h" />
     <ClInclude Include="Render\Vertex.h" />
+    <ClInclude Include="Render\Window.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBPath.h" />
@@ -167,7 +170,13 @@
     <ClCompile Include="Core\WinMain.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
+    <ClCompile Include="Memory\CBMemArena.cpp" />
+    <ClCompile Include="Memory\CBMemory.cpp" />
+    <ClCompile Include="Memory\CBPoolAllocator.cpp" />
+    <ClCompile Include="Render\Graphics.cpp" />
+    <ClCompile Include="Render\Mesh.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
+    <ClCompile Include="Render\Window.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />
     <ClCompile Include="Utils\CBString.cpp" />

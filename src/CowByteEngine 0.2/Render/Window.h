@@ -4,9 +4,9 @@
 
 #include <Windows.h>
 
-#include "System.h"
-#include "context.h"
-#include "string.h"
+#include "../Core/System.h"
+#include "../Core/GameContext.h"
+#include "../Utils/typedefs.h"
 
 
 struct WindowData : public SystemData
@@ -51,7 +51,7 @@ protected:
     virtual ~Window();
 
     virtual bool Initialize();
-    virtual bool Update(Context& context);
+    virtual bool Update(GameContext& context);
     virtual bool ShutDown();
 
 private:

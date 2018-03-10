@@ -87,6 +87,15 @@
     <ClInclude Include="Core\Game.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Render\Mesh.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Window.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\Graphics.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -124,6 +133,24 @@
     </ClCompile>
     <ClCompile Include="Core\Game.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Mesh.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Window.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\Graphics.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\CBMemArena.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\CBPoolAllocator.cpp">
+      <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Memory\CBMemory.cpp">
+      <Filter>Memory</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

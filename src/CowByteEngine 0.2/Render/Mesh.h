@@ -1,10 +1,9 @@
 #ifndef _MESH_H
 #define _MESH_H
-#include "UObject.h"
-#include "CBString.h"
+#include "../Utils/CBString.h"
 #include "Vertex.h"
 
-class Mesh : UObject
+class Mesh
 {
 public:
     Mesh();

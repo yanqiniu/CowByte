@@ -1,10 +1,9 @@
 #include "Mesh.h"
-#include "CBPath.h"
-#include "CBFile.h"
-#include "CBDebug.h"
+#include "../Utils/CBPath.h"
+#include "../Utils/CBFile.h"
+#include "../Utils/CBDebug.h"
 
-Mesh::Mesh() :
-    UObject()
+Mesh::Mesh()
 {
 }
 

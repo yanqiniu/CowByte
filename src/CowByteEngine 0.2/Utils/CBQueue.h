@@ -2,6 +2,7 @@
 #define _CBQUEUE_H
 
 #include "typedefs.h"
+#include "../Memory/CBMemArena.h"
 
 template<typename DataT>
 class CBQueue

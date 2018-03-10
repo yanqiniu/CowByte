@@ -21,11 +21,16 @@ public:
     bool Initialize();
     bool Update(const GameContext &context);
     bool Shutdown();
+    void SetActive(bool inBool);
 
 private:
+    // Message bus related:
     MessageBus *m_MessageBus; // TODO: multiple message bus support.
     CBQueue<Message> m_MessageQueue;
     CBVector<Component*> m_Components;
+
+    // Other:
+    bool m_bIsActive;
 };
 
 #endif

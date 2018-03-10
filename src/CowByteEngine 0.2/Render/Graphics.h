@@ -11,7 +11,7 @@
 #pragma comment (lib, "d3dx11.lib")
 #pragma comment (lib, "d3dx10.lib")
 
-#include "System.h"
+#include "../Core/System.h"
 #include "Window.h"
 #include "Mesh.h"
 
@@ -31,7 +31,7 @@ public:
     explicit Graphics( const GraphicsData &data);
     virtual ~Graphics();
     virtual bool Initialize();
-    virtual bool Update(Context& context);
+    virtual bool Update(GameContext& context);
     virtual bool ShutDown();
     bool OnRender();
 

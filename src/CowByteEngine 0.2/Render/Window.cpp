@@ -1,5 +1,5 @@
 #include "Window.h"
-#include "CBDebug.h"
+#include "../Utils/CBDebug.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -23,9 +23,9 @@ LRESULT Window::HandleEvent(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lparam)
     case WM_ACTIVATE:
     {
         if (!HIWORD(wParam))
-            this->Activate();
+            SetActive(true);
         else
-            this->DeActivate();
+            SetActive(false);
     }
     case WM_SIZE:
     {
@@ -238,7 +238,7 @@ bool Window::Initialize()
     return true;
 }
 
-bool Window::Update(Context& context)
+bool Window::Update(GameContext& context)
 {
     if(context.pWnd != this)
         context.pWnd = this;

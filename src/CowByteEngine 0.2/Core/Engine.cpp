@@ -2,8 +2,8 @@
 #include "System.h"
 #include "Game.h"
 
-//#include "Window.h"
-//#include "Graphics.h"
+#include "../Render/Window.h"
+#include "../Render/Graphics.h"
 
 #include <new.h>
 
@@ -31,19 +31,22 @@ int Engine::Initialize(GameContext &context)
     
 
     // Add Systems.
-    //Window *window = new Window(WindowData(640, 480));
-    //Graphics *graphics = new Graphics(GraphicsData(window));
-    //if (!AddSystem(window))
-    //    return false;
-    //if (!AddSystem(graphics))
-    //    return false;
+    Window *window = new Window(WindowData(640, 480));
+    Graphics *graphics = new Graphics(GraphicsData(window));
+    if (!AddSystem(window))
+        return false;
+    if (!AddSystem(graphics))
+        return false;
 
+    //Initialize Systems.
+    if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
+        return false;
+    if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
+        return false;
 
-    // Initialize Systems.
-    //if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
-    //    return false;
-    //if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
-    //    return false;
+    // Subscribe systems to the meddage bus.
+    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
+    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
 
     return true;
 }

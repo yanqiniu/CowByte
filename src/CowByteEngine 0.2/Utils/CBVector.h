@@ -2,7 +2,10 @@
 #define _CBVECTOR_H
 
 #include <cstring>
+#include "../Memory/CBMemArena.h"
 
+// Unlike CBQueue who implement a block based linked list, 
+// CBVector implement a contiguous array in a single block.
 template <class T>
 class CBVector
 {
@@ -11,15 +14,15 @@ public:
 	~CBVector();
 
 	/* Capacity */
-	size_t Size() { return mSize; }
-	size_t Capacity() { return mSize; }
+	size_t Size() { return m_Size; }
+	size_t Capacity() { return m_Size; }
 	void Resize(size_t newCapacity); /* Change capacity of container. */
-	bool IsEmpty() { return mSize == 0; }
+	bool IsEmpty() { return m_Size == 0; }
 
 
 
-	T& at(size_t index) { return mData[index]; }
-	T& operator[](size_t index) { return mData[index]; }
+	T& at(size_t index) { return m_Data[index]; }
+	T& operator[](size_t index) { return m_Data[index]; }
 	// This is always a copy construct.
 	void Push_back(const T &toPush);
 	bool Pop_back();
@@ -31,12 +34,12 @@ public:
 
     T* begin()
     {
-        return &mData[0];
+        return &m_Data[0];
     }
 
     T* end()
     {
-        return &mData[mSize - 1];
+        return &m_Data[m_Size - 1];
     }
 
 private:
@@ -44,9 +47,9 @@ private:
 	void Grow_capacity();
 	bool IsValidIndex(size_t index);
 
-	T* mData;
-	size_t mCapacity;
-	size_t mSize;
+	T* m_Data;
+	size_t m_Capacity;
+	size_t m_Size;
 
 
 };
@@ -65,29 +68,29 @@ void CBVector<T>::Clear()
 template <class T>
 bool CBVector<T>::IsValidIndex(size_t index)
 {
-	return index >= 0 && index < mSize;
+	return index >= 0 && index < m_Size;
 }
 
 template <class T>
 bool CBVector<T>::Insert(size_t index, const T &value)
 {
-	if (index < 0 || index > mSize) // can insert at mSize (push_back)
+	if (index < 0 || index > m_Size) // can insert at mSize (push_back)
 		return false;
 
-	if (mSize + 1 > mCapacity)
+	if (m_Size + 1 > m_Capacity)
 		Grow_capacity();
 
 	// Shift. Make some space.
-	if(mSize > 0)
-		for (size_t i = mSize - 1; i >= index; --i)
+	if(m_Size > 0)
+		for (size_t i = m_Size - 1; i >= index; --i)
 		{
-			mData[i + 1] = mData[i];
+			m_Data[i + 1] = m_Data[i];
 
 			if(i == 0) break; // underflow guard.
 		}
 
-	mData[index] = value;
-	++mSize;
+	m_Data[index] = value;
+	++m_Size;
 
 	return true;
 }
@@ -99,14 +102,14 @@ bool CBVector<T>::Erase(size_t index)
 		return false;
 
 	// shift
-	for (size_t i = index + 1; i < mSize; ++i)
+	for (size_t i = index + 1; i < m_Size; ++i)
 	{
-		mData[i - 1] = mData[i];
+		m_Data[i - 1] = m_Data[i];
 	}
 
-	mData[mSize - 1].~T();
-	mData[mSize - 1] = NULL;
-	--mSize;
+	m_Data[m_Size - 1].~T();
+	m_Data[m_Size - 1] = NULL;
+	--m_Size;
 
 	return true;
 }
@@ -114,74 +117,76 @@ bool CBVector<T>::Erase(size_t index)
 template <class T>
 bool CBVector<T>::Pop_back()
 {
-	return Erase(mSize - 1);
+	return Erase(m_Size - 1);
 }
 
 template <class T>
 void CBVector<T>::Resize(size_t newCapacity)
 {
-	if (newCapacity == mCapacity) // wtf?
+	if (newCapacity == m_Capacity) // wtf?
 		return;
-	else if (newCapacity < mSize) // shrink
+	else if (newCapacity < m_Size) // shrink
 	{
 		// No need to shrink the actual array,
 		// since that introduces performance 
 		// overhead. Just destroy elements out 
 		// of bound and update bookkeepings.
-		for (size_t i = newCapacity; i < mSize; ++i)
+		for (size_t i = newCapacity; i < m_Size; ++i)
 		{
-			mData[i].~T();
-			mData[i] = NULL;
+			m_Data[i].~T();
+			m_Data[i] = NULL;
 		}
 
-		mCapacity = newCapacity;
-		mSize = newCapacity;
+		m_Capacity = newCapacity;
+		m_Size = newCapacity;
 	}
 	else // grow
 	{
-		mCapacity = newCapacity;
+		m_Capacity = newCapacity;
 		// Create new array
-		T *newData = new T[mCapacity];
+        T *newData = (T*)CBMemArena::Get().Allocate(newCapacity * sizeof(T));
 
 		if (!IsEmpty())
 		{
-			memcpy(newData, mData, mSize * sizeof(T));
-			delete[] mData;
-		}
+			memcpy(newData, m_Data, m_Size * sizeof(T));
+            CBMemArena::Get().Free(m_Data, newCapacity * sizeof(T));
+            m_Data = nullptr;
+        }
 
-		mData = newData;
+        m_Data = newData;
 	}
 }
 
 template <class T>
 CBVector<T>::CBVector() :
-	mSize(0),
-	mCapacity(0)
+	m_Size(0),
+	m_Capacity(0)
 {
 }
 
 template <class T>
 CBVector<T>::~CBVector()
 {
-	delete[] mData;
+    CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
+    m_Data = nullptr;
 }
 
 template <class T>
 void CBVector<T>::Push_back(const T &toPush)
 {
-	Insert(mSize, toPush);
+	Insert(m_Size, toPush);
 }
 
 
 template <class T>
 void CBVector<T>::Grow_capacity()
 {
-	if (mCapacity == 0)
+	if (m_Capacity == 0)
 	{
 		Resize(1);
 	}
 	else
-		Resize(mCapacity * 2);
+		Resize(m_Capacity * 2);
 }
 
 

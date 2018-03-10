@@ -1,12 +1,12 @@
 #include <exception>
 
 #include "Graphics.h"
-#include "exceptions.h"
+#include "../Utils/exceptions.h"
 #include "Vertex.h"
-#include "Vec3.h"
-#include "CBString.h"
-#include "CBPath.h"
-#include "CBDebug.h"
+#include "../Math/Vec3.h"
+#include "../Utils/CBString.h"
+#include "../Utils/CBPath.h"
+#include "../Utils/CBDebug.h"
 
 
 using namespace DirectX;
@@ -155,7 +155,7 @@ bool Graphics::Initialize()
     return true;
 }
 
-bool Graphics::Update(Context& context)
+bool Graphics::Update(GameContext& context)
 {
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     OnRender();

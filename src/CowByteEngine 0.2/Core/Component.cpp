@@ -55,3 +55,8 @@ bool Component::Shutdown()
     return true;
 }
 
+void Component::SetActive(bool inBool)
+{
+    m_bIsActive = inBool;
+}
+
