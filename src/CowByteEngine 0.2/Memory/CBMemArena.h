@@ -1,5 +1,6 @@
 #ifndef _CB_MEM_ARENA_H
 #define _CB_MEM_ARENA_H
+#include <malloc.h>
 #include "../Utils/CBDebug.h"
 #include "CBPoolAllocator.h"
 

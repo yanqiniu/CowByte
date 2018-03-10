@@ -2,8 +2,8 @@
 #include "System.h"
 #include "Game.h"
 
-#include "Window.h"
-#include "Graphics.h"
+//#include "Window.h"
+//#include "Graphics.h"
 
 #include <new.h>
 
@@ -20,13 +20,15 @@ Engine::~Engine()
     m_EngineState = EngineState::DESTROYING;
 }
 
-int Engine::Initialize()
+int Engine::Initialize(GameContext &context)
 {
     m_EngineState = EngineState::INITIALIZING;
 
     Game* pGame = CreateGame();
     if (!pGame)
         return false;
+    context.pEngineMessageBus->AddSubscriber(pGame);
+    
 
     // Add Systems.
     //Window *window = new Window(WindowData(640, 480));
@@ -38,20 +40,20 @@ int Engine::Initialize()
 
 
     // Initialize Systems.
-    if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
-        return false;
-    if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
-        return false;
+    //if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
+    //    return false;
+    //if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
+    //    return false;
 
     return true;
 }
 
-int Engine::Draw(Context& context)
+int Engine::Draw(GameContext& context)
 {
     return true;
 }
 
-int Engine::Update(Context& context)
+int Engine::Update(GameContext& context)
 {
     for (std::pair<SystemType, System*> pSys : m_MapSystems)
     {
@@ -69,7 +71,7 @@ int Engine::ShutDown()
 
     for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
     {
-        if (!pSysPair.second->ShutDown())
+        if (!pSysPair.second->Shutdown())
         {
         	DbgWARNING("Failed to shurdown system [%d]", pSysPair.first);
         	continue;
@@ -83,9 +85,9 @@ int Engine::ShutDown()
 
 int Engine::RunLoop()
 {
-    Context context;
-
-    if (!this->Initialize())
+    GameContext context;
+    context.pEngineMessageBus = &m_EngineMessageBus;
+    if (!this->Initialize(context))
         return 0;
 
     srand(GetTickCount());

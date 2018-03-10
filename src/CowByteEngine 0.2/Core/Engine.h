@@ -3,12 +3,14 @@
 
 #include <Windows.h>
 #include <map>
-#include "../Util/CBDebug.h"
+#include "../Utils/CBDebug.h"
+#include "MessageBus.h"
 
 enum SystemType;
 class System;
 class Game;
-struct Context;
+class MessageBus;
+struct GameContext;
 
 //Enumeration
 enum EngineState
@@ -27,9 +29,9 @@ public:
     Engine();
     ~Engine();
 
-    int Initialize();
-    int Draw(Context& context);
-    int Update(Context& context);
+    int Initialize(GameContext &context);
+    int Draw(GameContext& context);
+    int Update(GameContext& context);
     int ShutDown();
     int RunLoop();
 
@@ -42,15 +44,13 @@ public:
     // Create the game instance.
     Game* CreateGame();
 
-    //void* operator new(size_t size);
-    //void operator delete(void* pDelete);
-
     static EngineState GetEngineState() { return m_EngineState; }
 
     // =================================================//
 
 private:
     std::map<SystemType, System*> m_MapSystems;
+    MessageBus m_EngineMessageBus;
     static EngineState m_EngineState;
 };
 

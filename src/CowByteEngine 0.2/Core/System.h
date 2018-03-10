@@ -1,8 +1,8 @@
 #ifndef _SYSTEM_H
 #define _SYSTEM_H
 
-#include "UObject.h"
-#include "context.h"
+#include "Component.h"
+#include "GameContext.h"
 
 enum SystemType
 {
@@ -23,7 +23,7 @@ struct SystemData
     SystemType m_Type;
 };
 
-class System : public UObject
+class System : public Component
 {
     friend class Engine;
 
@@ -34,9 +34,9 @@ protected:
     System(const SystemData& data);
     virtual ~System();
 
-    virtual bool Initialize() { return UObject::Initialize(); }
-    virtual bool Update(Context& context) { return UObject::Update(context); }
-    virtual bool ShutDown() { return UObject::ShutDown(); }
+    virtual bool Initialize() { return Component::Initialize(); }
+    virtual bool Update(GameContext& context) { return Component::Update(context); }
+    virtual bool Shutdown() { return Component::Shutdown(); }
 
     SystemType GetType() const { return m_SystemType; }
 

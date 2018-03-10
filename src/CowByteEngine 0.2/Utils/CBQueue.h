@@ -1,7 +1,6 @@
 #ifndef _CBQUEUE_H
 #define _CBQUEUE_H
 
-#include "../Memory/CBMemory.h"
 #include "typedefs.h"
 
 template<typename DataT>

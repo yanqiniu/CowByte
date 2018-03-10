@@ -14,7 +14,7 @@ SystemData::SystemData(const SystemType type) :
 }
 
 System::System(const SystemData& data) :
-    UObject(),
+    Component(),
     m_SystemType(data.m_Type)
 {
 }

@@ -1,5 +1,5 @@
 #include "WinMain.h"
-//#include "Engine.h"
+#include "Engine.h"
 #include "../Utils/CBDebug.h"
 #include "../Memory/CBMemory.h"
 #include <crtdbg.h>
@@ -38,14 +38,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _CrtSetBreakAlloc(0);
 #endif
 
-    //// create the engine
-    //Engine *pEngine = new Engine();
+    // create the engine
+    Engine *pEngine = new Engine();
 
-    ////kick of the game
-    //int result = pEngine->RunLoop();
+    //kick of the game
+    int result = pEngine->RunLoop();
 
-    //// delete the engine
-    //delete (pEngine);
+    // delete the engine
+    delete (pEngine);
 
     return 0;
 }

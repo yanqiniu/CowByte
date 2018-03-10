@@ -143,7 +143,7 @@ void CBVector<T>::Resize(size_t newCapacity)
 		// Create new array
 		T *newData = new T[mCapacity];
 
-		if (!IsEmpty()())
+		if (!IsEmpty())
 		{
 			memcpy(newData, mData, mSize * sizeof(T));
 			delete[] mData;

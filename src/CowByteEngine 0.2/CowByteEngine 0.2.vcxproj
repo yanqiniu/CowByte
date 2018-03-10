@@ -135,9 +135,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Core\Component.h" />
+    <ClInclude Include="Core\Engine.h" />
+    <ClInclude Include="Core\Game.h" />
     <ClInclude Include="Core\GameContext.h" />
     <ClInclude Include="Core\Message.h" />
     <ClInclude Include="Core\MessageBus.h" />
+    <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Vec3.h" />
@@ -157,7 +160,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Component.cpp" />
+    <ClCompile Include="Core\Engine.cpp" />
+    <ClCompile Include="Core\Game.cpp" />
     <ClCompile Include="Core\MessageBus.cpp" />
+    <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
