@@ -35,6 +35,9 @@ public:
     bool OnRender();
 
 private:
+    bool InitializePipeline();
+    bool SimpleRenderSetup(); // TODO: Get rid of this placeholder code piece.
+
     static const int NumOfBuffers = 2;
 
     D3D11_VIEWPORT m_Viewport;

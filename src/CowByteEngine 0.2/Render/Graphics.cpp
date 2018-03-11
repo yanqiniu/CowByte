@@ -52,7 +52,63 @@ bool Graphics::Initialize()
     }
     System::Initialize();
 
+    if (!InitializePipeline())
+    {
+        DbgERROR("Graphics: Failed initialize pipeline!");
+        return false;
+    }
+
+    if (!SimpleRenderSetup())
+    {
+        DbgERROR("Graphics: Failed setting up simple render!");
+        return false;
+    }
+
+    // Create mesh manager.
+    m_pMeshManager = new MeshManager();
+    // TEST: Load single cube into mesh manager.
+    m_pMeshManager->CPULoadMesh("cube.mesha");
+
+    return true;
+}
+
+bool Graphics::Update(GameContext& context)
+{
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+    OnRender();
+    m_pSwapChain->Present(0, 0);
+    return true;
+}
+
+bool Graphics::ShutDown()
+{
+    m_pSwapChain->Release();
+    m_pDevice->Release();
+    m_pDeviceContext->Release();
+    m_pRenderTarget->Release();
+    return true;
+}
+
+bool Graphics::OnRender()
+{
+    UINT stride = sizeof(Vertex);
+    UINT offset = 0;
+    m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+    
+    m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+    m_pDeviceContext->Draw(3,             // the number of vertices to be drawn
+                           0);            // the first vertex to be drawn
+
+
+
+    return true;
+}
+
+bool Graphics::InitializePipeline()
+{
     DXGI_SWAP_CHAIN_DESC swapDesc;
+
     ZeroMemory(&swapDesc, sizeof(swapDesc));
     swapDesc.BufferCount = NumOfBuffers;
     swapDesc.BufferDesc.Width = 640; // TODO: remove hard coding.
@@ -95,6 +151,11 @@ bool Graphics::Initialize()
     m_Viewport.Height = m_pWindow->GetHeight();
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
 
+    return true;
+}
+
+bool Graphics::SimpleRenderSetup()
+{
     // Load and compile shaders. These will be put into a Mesh class.
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
@@ -141,44 +202,6 @@ bool Graphics::Initialize()
     // Create input layout.
     m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
     m_pDeviceContext->IASetInputLayout(m_pInputLayout);
-
-
-    // TEST: Create MeshManager and load it up.
-    m_pMeshManager = new MeshManager();
-    m_pMeshManager->CPULoadMesh("cube.mesha");
-
-    return true;
-}
-
-bool Graphics::Update(GameContext& context)
-{
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-    OnRender();
-    m_pSwapChain->Present(0, 0);
-    return true;
-}
-
-bool Graphics::ShutDown()
-{
-    m_pSwapChain->Release();
-    m_pDevice->Release();
-    m_pDeviceContext->Release();
-    m_pRenderTarget->Release();
-    return true;
-}
-
-bool Graphics::OnRender()
-{
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-    
-    m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-    m_pDeviceContext->Draw(3,             // the number of vertices to be drawn
-                           0);            // the first vertex to be drawn
-
-
 
     return true;
 }
