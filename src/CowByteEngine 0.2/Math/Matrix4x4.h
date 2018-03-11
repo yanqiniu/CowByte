@@ -75,6 +75,47 @@ __declspec(align(16)) struct Matrix4x4
         _MM_TRANSPOSE4_PS(_data[0], _data[1], _data[2], _data[3]);
     }
 
+    __forceinline void Mul(const Matrix4x4 &matrix)
+    {
+        __m128 temp[4] = {_data[0], _data[1], _data[2], _data[3]};
+        _MM_TRANSPOSE4_PS(temp[0], temp[1], temp[2], temp[3]);
+
+        // First col
+        _data[0] = _mm_dp_ps(temp[0], matrix._data[0], 0b11110001);// x
+        _data[0] = _mm_insert_ps(_data[0], _mm_dp_ps(temp[1], matrix._data[0], 0b11110001), 0b00010000); // y
+        _data[0] = _mm_insert_ps(_data[0], _mm_dp_ps(temp[2], matrix._data[0], 0b11110001), 0b00100000); // z
+        _data[0] = _mm_insert_ps(_data[0], _mm_dp_ps(temp[3], matrix._data[0], 0b11110001), 0b00110000); // w
+
+        // Second col
+        _data[1] = _mm_dp_ps(temp[0], matrix._data[1], 0b11110001);// x
+        _data[1] = _mm_insert_ps(_data[1], _mm_dp_ps(temp[1], matrix._data[1], 0b11110001), 0b00010000); // y
+        _data[1] = _mm_insert_ps(_data[1], _mm_dp_ps(temp[2], matrix._data[1], 0b11110001), 0b00100000); // z
+        _data[1] = _mm_insert_ps(_data[1], _mm_dp_ps(temp[3], matrix._data[1], 0b11110001), 0b00110000); // w
+
+        // Third col
+        _data[2] = _mm_dp_ps(temp[0], matrix._data[2], 0b11110001);// x
+        _data[2] = _mm_insert_ps(_data[2], _mm_dp_ps(temp[1], matrix._data[2], 0b11110001), 0b00010000); // y
+        _data[2] = _mm_insert_ps(_data[2], _mm_dp_ps(temp[2], matrix._data[2], 0b11110001), 0b00100000); // z
+        _data[2] = _mm_insert_ps(_data[2], _mm_dp_ps(temp[3], matrix._data[2], 0b11110001), 0b00110000); // w
+
+        // Forth col
+        _data[3] = _mm_dp_ps(temp[0], matrix._data[3], 0b11110001);// x
+        _data[3] = _mm_insert_ps(_data[3], _mm_dp_ps(temp[1], matrix._data[3], 0b11110001), 0b00010000); // y
+        _data[3] = _mm_insert_ps(_data[3], _mm_dp_ps(temp[2], matrix._data[3], 0b11110001), 0b00100000); // z
+        _data[3] = _mm_insert_ps(_data[3], _mm_dp_ps(temp[3], matrix._data[3], 0b11110001), 0b00110000); // w
+    }
+    __forceinline void operator*=(const Matrix4x4 &matrix)
+    {
+        Mul(matrix);
+    }
+
+    __forceinline Matrix4x4 operator*(const Matrix4x4 &matrix) const
+    {
+        Matrix4x4 toRet = *this;
+        toRet *= matrix;
+        return toRet;
+    }
+
 #pragma endregion
 
 #pragma region Useful Matrices
