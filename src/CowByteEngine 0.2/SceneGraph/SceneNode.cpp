@@ -6,8 +6,7 @@ SceneNode SceneNode::RootNode;
 SceneNode::SceneNode():
     m_WorldTransform(Matrix4x4::Identity()),
     m_LocalTransform(Matrix4x4::Identity()),
-    m_ChildrenNodes(4),
-    m_pParentNode(nullptr)
+    m_ChildrenNodes(4)
 {
 
 }
@@ -17,12 +16,15 @@ SceneNode::~SceneNode()
 
 }
 
-void SceneNode::SetParent(SceneNode *parentPtr)
+SceneNode* SceneNode::CreateSceneNodeThenAttach(SceneNode *parentPtr)
 {
-    // TODO: walk scene graph to make sure there isn't a cycle.
+    SceneNode* toRet = new SceneNode();
 
-    m_pParentNode = parentPtr;
-    parentPtr->m_ChildrenNodes.Push_back(this);
+    if (parentPtr != nullptr)
+    {
+        toRet->AttachTo_SceneNode_Parent(parentPtr);
+    }
+    return toRet;
 }
 
 inline const Matrix4x4 & SceneNode::GetLocalTransform()
@@ -38,11 +40,11 @@ inline const Matrix4x4 & SceneNode::GetWorldTransform()
 void SceneNode::UpdateWorldTransform()
 {
     m_WorldTransform = m_LocalTransform;
-    SceneNode *ptr = m_pParentNode;
+    SceneNode *ptr = m_pParentSceneNode;
     while (ptr != nullptr)
     {
         m_WorldTransform *= ptr->m_LocalTransform;
-        ptr = m_pParentNode->m_pParentNode;
+        ptr = m_pParentSceneNode->m_pParentSceneNode;
     }
 }
 
@@ -51,3 +53,11 @@ Vec3 SceneNode::CalculateWorldPosition(const Vec3& inPos)
     return inPos * m_WorldTransform;
 }
 
+void SceneNode::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
+{
+    AttachTo_NonSceneNode_Parent(parentPtr);
+    DbgAssert(parentPtr == m_pParentSceneNode, "SceneNode pointer component attached to must be the same as parent ptr!");
+    m_pParentSceneNode = parentPtr;
+
+    parentPtr->m_ChildrenNodes.Push_back(this);
+}

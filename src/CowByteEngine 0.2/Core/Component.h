@@ -7,6 +7,7 @@
 
 class MessageBus;
 class GameContext;
+class SceneNode;
 
 class Component
 {
@@ -23,14 +24,21 @@ public:
     bool Shutdown();
     void SetActive(bool inBool);
 
-    void AddChild(Component* childPtr);
+    void AttachTo_NonSceneNode_Parent(Component* parentPtr);
+    void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
+
+
 
 protected:
     CBQueue<Message> m_MessageQueue;
     CBVector<Component*> m_Components;
+    Component *m_pParentComponent;
+    SceneNode *m_pParentSceneNode; // Scene node this component is attached to. nullptr if none.
 
 private:
-    MessageBus *m_MessageBus; // TODO: multiple message bus support.
+    void AddChild(Component* childPtr);
+
+    MessageBus *m_pMessageBus; // TODO: multiple message bus support.
 
     bool m_bIsActive;
 };
