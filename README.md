@@ -22,3 +22,4 @@ Don't worry about the name :D
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later. 
  - Implements component model with message bus. 
  - Custom memory allocator (sets of pools).
+ - SIMD math (Intel SSE)
