@@ -133,12 +133,8 @@
     <ClInclude Include="..\CowByteEngine\CBMemArena.h" />
     <ClInclude Include="..\CowByteEngine\CBMemory.h" />
     <ClInclude Include="..\CowByteEngine\CBPoolAllocator.h" />
-    <ClInclude Include="..\CowByteEngine\Matrix4x4.h" />
-    <ClInclude Include="..\CowByteEngine\Vec3.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\CowByteEngine\Matrix4x4.cpp" />
-    <ClCompile Include="..\CowByteEngine\Vec3.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
