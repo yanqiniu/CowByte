@@ -23,6 +23,8 @@ public:
     bool Shutdown();
     void SetActive(bool inBool);
 
+    void AddChild(Component* childPtr);
+
 protected:
     CBQueue<Message> m_MessageQueue;
     CBVector<Component*> m_Components;

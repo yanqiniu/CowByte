@@ -5,7 +5,7 @@
 #include "Mesh.h"
 
 
-class MeshManager : Component
+class MeshManager : public Component
 {
 public:
     MeshManager();

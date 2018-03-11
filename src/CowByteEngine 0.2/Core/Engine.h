@@ -5,6 +5,7 @@
 #include <map>
 #include "../Utils/CBDebug.h"
 #include "MessageBus.h"
+#include "Component.h"
 
 enum SystemType;
 class System;
@@ -23,7 +24,7 @@ enum EngineState
     DESTROYING
 };
 
-class Engine
+class Engine : public Component
 {
 public:
     Engine();

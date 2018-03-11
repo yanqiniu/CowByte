@@ -4,7 +4,10 @@
 #include "../Utils/CBDebug.h"
 
 Component::Component() :
-    m_MessageBus(nullptr)
+    m_MessageBus(nullptr),
+    m_MessageQueue(),
+    m_Components(4),
+    m_bIsActive(true)
 {
 
 }
@@ -58,5 +61,12 @@ bool Component::Shutdown()
 void Component::SetActive(bool inBool)
 {
     m_bIsActive = inBool;
+}
+
+void Component::AddChild(Component* childPtr)
+{
+    // TODO: walk the component tree to make sure there is no cycle.
+
+    m_Components.Push_back(childPtr);
 }
 
