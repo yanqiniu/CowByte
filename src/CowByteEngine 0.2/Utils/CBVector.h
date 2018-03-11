@@ -24,10 +24,10 @@ public:
 	T& at(size_t index) { return m_Data[index]; }
 	T& operator[](size_t index) { return m_Data[index]; }
 	// This is always a copy construct.
-	void Push_back(const T &toPush);
+	T* Push_back(const T &toPush);
 	bool Pop_back();
 
-	bool Insert(size_t index, const T &value);
+	T* Insert(size_t index, const T &value);
 	bool Erase(size_t index);
 
 	void Clear();
@@ -70,12 +70,12 @@ bool CBVector<T>::IsValidIndex(size_t index)
 {
 	return index >= 0 && index < m_Size;
 }
-
+// Insert a copy. And return ptr to the inserted copy.
 template <class T>
-bool CBVector<T>::Insert(size_t index, const T &value)
+T* CBVector<T>::Insert(size_t index, const T &value)
 {
 	if (index < 0 || index > m_Size) // can insert at mSize (push_back)
-		return false;
+		return nullptr;
 
 	if (m_Size + 1 > m_Capacity)
 		Grow_capacity();
@@ -92,7 +92,7 @@ bool CBVector<T>::Insert(size_t index, const T &value)
 	m_Data[index] = value;
 	++m_Size;
 
-	return true;
+	return &m_Data[index];
 }
 
 template <class T>
@@ -134,7 +134,7 @@ void CBVector<T>::Resize(size_t newCapacity)
 		for (size_t i = newCapacity; i < m_Size; ++i)
 		{
 			m_Data[i].~T();
-			m_Data[i] = NULL;
+            memset(&m_Data[i], 0, sizeof(T));
 		}
 
 		m_Capacity = newCapacity;
@@ -160,21 +160,25 @@ void CBVector<T>::Resize(size_t newCapacity)
 template <class T>
 CBVector<T>::CBVector() :
 	m_Size(0),
-	m_Capacity(0)
+	m_Capacity(0),
+    m_Data(nullptr)
 {
 }
 
 template <class T>
 CBVector<T>::~CBVector()
 {
-    CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
-    m_Data = nullptr;
+    if (m_Data != nullptr)
+    {
+        CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
+        m_Data = nullptr;
+    }
 }
 
 template <class T>
-void CBVector<T>::Push_back(const T &toPush)
+T* CBVector<T>::Push_back(const T &toPush)
 {
-	Insert(m_Size, toPush);
+	return Insert(m_Size, toPush);
 }
 
 
