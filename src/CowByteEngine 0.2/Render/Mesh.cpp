@@ -4,7 +4,9 @@
 #include "../Utils/CBDebug.h"
 #include "Vertex.h"
 
-Mesh::Mesh()
+Mesh::Mesh() :
+    m_Vertices(8),
+    m_nVertices(0)
 {
 }
 
@@ -87,11 +89,11 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     }
     temp.Strip(StripMode::ALL);
     int intbuf;
-    m_NumVertices = static_cast<size_t>(atoi(temp.Get()));
+    m_nVertices = static_cast<size_t>(atoi(temp.Get()));
 
     // Initialize vertex array.
     float tempFloat, tempX, tempY, tempZ;;
-    for (size_t i = 0; i < m_NumVertices; ++i)
+    for (size_t i = 0; i < m_nVertices; ++i)
     {
         temp.Clear();
         if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
@@ -120,7 +122,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
-    for (size_t i = 0; i < m_NumVertices; ++i)
+    for (size_t i = 0; i < m_nVertices; ++i)
     {
         DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
     }

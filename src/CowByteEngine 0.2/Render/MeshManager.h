@@ -8,6 +8,8 @@
 class MeshManager : Component
 {
 public:
+    MeshManager();
+    ~MeshManager();
     // Return pointer to the mesh loaded.
     Mesh* CPULoadMesh(const char *meshName);
 

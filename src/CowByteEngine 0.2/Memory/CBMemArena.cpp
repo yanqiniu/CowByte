@@ -50,6 +50,7 @@ void CBMemArena::Initialize()
 
 void* CBMemArena::Allocate(size_t size)
 {
+    // TODO: threading
     for (const auto& pPool : m_pPools)
     {
         if (size <= pPool->m_blockSize)
@@ -65,6 +66,7 @@ void* CBMemArena::Allocate(size_t size)
 
 void CBMemArena::Free(void* ptr, size_t size)
 {
+    // TODO: threading
     for (const auto& pPool : m_pPools)
     {
         if (size <= pPool->m_blockSize)

@@ -11,6 +11,7 @@ class CBVector
 {
 public:
     CBVector();
+    CBVector(size_t size); // Initialize the container to a size.
     ~CBVector();
 
     /* Capacity */
@@ -51,6 +52,32 @@ private:
 
 
 };
+
+
+template <class T>
+CBVector<T>::CBVector() :
+    m_Size(0),
+    m_Capacity(0),
+    m_Data(nullptr)
+{
+}
+
+template <class T>
+CBVector<T>::CBVector(size_t size) :
+    CBVector()
+{
+    Resize(size);
+}
+
+template <class T>
+CBVector<T>::~CBVector()
+{
+    if (m_Data != nullptr)
+    {
+        CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
+        m_Data = nullptr;
+    }
+}
 
 template <class T>
 void CBVector<T>::Clear()
@@ -121,7 +148,7 @@ bool CBVector<T>::Pop_back()
 template <class T>
 void CBVector<T>::Resize(size_t newCapacity)
 {
-    if (newCapacity == m_Capacity) // wtf?
+    if (newCapacity == m_Capacity) // "wtf?"
         return;
     else if (newCapacity < m_Size) // shrink
     {
@@ -152,24 +179,6 @@ void CBVector<T>::Resize(size_t newCapacity)
         }
 
         m_Data = newData;
-    }
-}
-
-template <class T>
-CBVector<T>::CBVector() :
-    m_Size(0),
-    m_Capacity(0),
-    m_Data(nullptr)
-{
-}
-
-template <class T>
-CBVector<T>::~CBVector()
-{
-    if (m_Data != nullptr)
-    {
-        CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
-        m_Data = nullptr;
     }
 }
 

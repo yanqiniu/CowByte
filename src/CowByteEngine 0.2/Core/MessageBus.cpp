@@ -1,6 +1,18 @@
 #include "MessageBus.h"
 #include "Component.h"
 
+MessageBus::MessageBus() :
+    m_MessageQueue(),
+    m_Subscribers(8)
+{
+
+}
+
+MessageBus::~MessageBus()
+{
+
+}
+
 bool MessageBus::EnqueueNewMsg(const Message &msg)
 {
     return m_MessageQueue.Enqueue(msg);

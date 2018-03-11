@@ -18,7 +18,7 @@ public:
 
 private:
     CBVector<Vertex> m_Vertices;
-    size_t m_NumVertices;
+    size_t m_nVertices;
 
     bool ReadPosBufFile(const char *filepath);
 };

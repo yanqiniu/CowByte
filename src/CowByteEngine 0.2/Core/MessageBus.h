@@ -10,6 +10,8 @@ class Component;
 class MessageBus
 {
 public:
+    MessageBus();
+    ~MessageBus();
     bool EnqueueNewMsg(const Message &msg);
     int BroadCastFrontMsg();
     void AddSubscriber(Component* newSubscbr);
