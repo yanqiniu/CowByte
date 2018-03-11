@@ -19,6 +19,8 @@ int MessageBus::BroadCastFrontMsg()
     return numSentTo;
 }
 
+// For object that we want message bus not to send messages
+// directly to, don't call this method on it.
 void MessageBus::AddSubscriber(Component* newSubscbr)
 {
     newSubscbr->SetMessageBus(this);
