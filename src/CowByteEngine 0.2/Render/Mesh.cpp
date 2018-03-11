@@ -2,6 +2,7 @@
 #include "../Utils/CBPath.h"
 #include "../Utils/CBFile.h"
 #include "../Utils/CBDebug.h"
+#include "Vertex.h"
 
 Mesh::Mesh()
 {
@@ -21,11 +22,6 @@ bool Mesh::ConfigureMesh(const char* meshName)
     return true;
 }
 
-bool Mesh::Initialize()
-{
-    LoadContent();
-    return true;
-}
 
 bool Mesh::LoadContent()
 {
@@ -94,8 +90,6 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     m_NumVertices = static_cast<size_t>(atoi(temp.Get()));
 
     // Initialize vertex array.
-    // TODO: Allocator
-    m_pVertices = new Vertex[m_NumVertices];
     float tempFloat, tempX, tempY, tempZ;;
     for (size_t i = 0; i < m_NumVertices; ++i)
     {
@@ -123,16 +117,14 @@ bool Mesh::ReadPosBufFile(const char *filepath)
             }
         }
         
-        m_pVertices[i].m_Pos = Vec3(tempX, tempY, tempZ);
+        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
     for (size_t i = 0; i < m_NumVertices; ++i)
     {
-        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_pVertices[i].m_Pos.X(), m_pVertices[i].m_Pos.Y(), m_pVertices[i].m_Pos.Z());
+        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
     }
     
-    delete[] m_pVertices;
-
     return true;
 
 }

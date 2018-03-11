@@ -1,7 +1,9 @@
 #ifndef _MESH_H
 #define _MESH_H
 #include "../Utils/CBString.h"
-#include "Vertex.h"
+#include "../Utils/CBVector.h"
+
+class Vertex;
 
 class Mesh
 {
@@ -12,11 +14,10 @@ public:
     CBString<256> m_MeshFilePath;
 
     bool ConfigureMesh( const char* meshName );
-    bool Initialize();
     bool LoadContent();
 
 private:
-    Vertex * m_pVertices;
+    CBVector<Vertex> m_Vertices;
     size_t m_NumVertices;
 
     bool ReadPosBufFile(const char *filepath);

@@ -96,6 +96,9 @@
     <ClInclude Include="Render\Graphics.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\MeshManager.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -151,6 +154,9 @@
     </ClCompile>
     <ClCompile Include="Memory\CBMemory.cpp">
       <Filter>Memory</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MeshManager.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
