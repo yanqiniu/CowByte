@@ -2,6 +2,7 @@
 #define _GAME_H
 
 #include "System.h"
+class Camera;
 
 struct GameData : public SystemData
 {
@@ -13,6 +14,12 @@ class Game : public System
 public:
     Game(const GameData& gameData);
     virtual ~Game();
+
+    bool Initialize();
+    bool Update();
+
+private:
+    Camera *m_pMainCamera; // Pointer to current active cam.
 };
 
 #endif

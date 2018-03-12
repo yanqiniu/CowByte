@@ -173,14 +173,14 @@ __declspec(align(16)) struct Matrix4x4
         // we use __m128 to represent 2x2 matrix as A = | A0  A1 |
         //                                              | A2  A3 |
         // 2x2 row major Matrix multiply A*B
-        __forceinline __m128 Mat2Mul(__m128 vec1, __m128 vec2)
+        __forceinline __m128 Mat2Mul(__m128 vec1, __m128 vec2) const
         {
             return
                 _mm_add_ps(_mm_mul_ps(vec1, VecSwizzle(vec2, 0, 3, 0, 3)),
-                    _mm_mul_ps(VecSwizzle(vec1, 1, 0, 3, 2), VecSwizzle(vec2, 2, 1, 2, 1)));
+                  _mm_mul_ps(VecSwizzle(vec1, 1, 0, 3, 2), VecSwizzle(vec2, 2, 1, 2, 1)));
         }
         // 2x2 row major Matrix adjugate multiply (A#)*B
-        __forceinline __m128 Mat2AdjMul(__m128 vec1, __m128 vec2)
+        __forceinline __m128 Mat2AdjMul(__m128 vec1, __m128 vec2) const
         {
             return
                 _mm_sub_ps(_mm_mul_ps(VecSwizzle(vec1, 3, 3, 0, 0), vec2),
@@ -188,7 +188,7 @@ __declspec(align(16)) struct Matrix4x4
 
         }
         // 2x2 row major Matrix multiply adjugate A*(B#)
-        __forceinline __m128 Mat2MulAdj(__m128 vec1, __m128 vec2)
+        __forceinline __m128 Mat2MulAdj(__m128 vec1, __m128 vec2) const
         {
             return
                 _mm_sub_ps(_mm_mul_ps(vec1, VecSwizzle(vec2, 3, 0, 3, 0)),
@@ -197,7 +197,7 @@ __declspec(align(16)) struct Matrix4x4
 
     public: 
         // Inverse function is the same no matter column major or row major
-        inline Matrix4x4 Inverse()
+        inline Matrix4x4 Inverse() const
         {
           // use block matrix method
           // A is a matrix, then i(A) or iA means inverse of A, A# (or A_ in code) means adjugate of A, |A| (or detA in code) is determinant, tr(A) is trace

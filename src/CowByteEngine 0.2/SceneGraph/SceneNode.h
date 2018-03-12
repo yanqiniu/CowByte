@@ -18,8 +18,6 @@ public:
     // Create a new scene node on the heap and attach it to the parent specified.
     static SceneNode* CreateSceneNodeThenAttach(SceneNode *parentPtr);
 
-    void SetParent(SceneNode *parentPtr);
-
     const Matrix4x4 &GetLocalTransform();
     const Matrix4x4 &GetWorldTransform();
 

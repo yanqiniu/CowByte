@@ -152,6 +152,7 @@
     <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Render\Window.h" />
+    <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="Render\MeshManager.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="Render\Window.cpp" />
+    <ClCompile Include="SceneGraph\Camera.cpp" />
     <ClCompile Include="SceneGraph\SceneNode.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />

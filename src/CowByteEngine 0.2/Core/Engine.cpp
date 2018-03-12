@@ -53,8 +53,7 @@ int Engine::Initialize(GameContext &context)
 
 
     // Initialize SceneGraph.
-    this->AddChild(&SceneNode::RootNode);
-
+    SceneNode::RootNode.AttachTo_NonSceneNode_Parent(this);
     return true;
 }
 
