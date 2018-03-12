@@ -14,9 +14,8 @@ public:
     CBVector(size_t size); // Initialize the container to a size.
     ~CBVector();
 
-    /* Capacity */
     size_t Size() { return m_Size; }
-    size_t Capacity() { return m_Size; }
+    size_t Capacity() { return m_Capacity; }
     void Resize(size_t newCapacity); /* Change capacity of container. */
     bool IsEmpty() { return m_Size == 0; }
 
