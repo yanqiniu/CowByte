@@ -32,6 +32,8 @@ bool Game::Initialize()
 bool Game::Update()
 {
     m_pMainCamera->UpdateWToCMatrix();
+
+    return true;
 }
 
 GameData::GameData() :

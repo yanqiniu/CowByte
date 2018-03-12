@@ -3,6 +3,7 @@
 
 #include "../Core/Component.h"
 #include "../Math/Matrix4x4.h"
+#include "SceneNode.h"
 
 // Projection Camera
 class Camera : public Component
@@ -26,5 +27,21 @@ private:
     float m_NearPlane;
     float m_FarPlane;
 };
+
+inline void Camera::UpdateWToCMatrix()
+{
+    m_WorldToCamaraSpace = m_pParentSceneNode->GetWorldTransform().Inverse();
+}
+
+inline Matrix4x4 Camera::GetWToCMatrix() const
+{
+    return m_WorldToCamaraSpace;
+}
+
+inline Matrix4x4 Camera::GetProjectionMatrix() const
+{
+    return m_ProjectionMatrix;
+}
+
 
 #endif

@@ -2,7 +2,8 @@
 #define _MATRIX4x4_H
 #include <xmmintrin.h>
 #include <smmintrin.h>
-#include <math.h>
+#include <cmath>
+
 
 //////////////////////////////////////////////////////////////////////////
 /*

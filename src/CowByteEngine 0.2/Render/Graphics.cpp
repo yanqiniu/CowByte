@@ -111,8 +111,8 @@ bool Graphics::InitializePipeline()
 
     ZeroMemory(&swapDesc, sizeof(swapDesc));
     swapDesc.BufferCount = NumOfBuffers;
-    swapDesc.BufferDesc.Width = 640; // TODO: remove hard coding.
-    swapDesc.BufferDesc.Height = 480; // TODO: remove hard coding.
+    swapDesc.BufferDesc.Width = m_pWindow->GetWidth();
+    swapDesc.BufferDesc.Height = m_pWindow->GetHeight();
     swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapDesc.OutputWindow = m_pWindow->GetWindowHandle();

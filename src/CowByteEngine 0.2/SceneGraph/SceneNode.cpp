@@ -27,16 +27,6 @@ SceneNode* SceneNode::CreateSceneNodeThenAttach(SceneNode *parentPtr)
     return toRet;
 }
 
-inline const Matrix4x4 & SceneNode::GetLocalTransform()
-{
-    return m_LocalTransform;
-}
-
-inline const Matrix4x4 & SceneNode::GetWorldTransform()
-{
-    return m_WorldTransform;
-}
-
 void SceneNode::UpdateWorldTransform()
 {
     m_WorldTransform = m_LocalTransform;

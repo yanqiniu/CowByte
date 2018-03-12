@@ -43,4 +43,15 @@ private:
                                           // It won't be needed if one day we use handle that can tell types to manage pointers.
 };
 
+
+inline const Matrix4x4 & SceneNode::GetLocalTransform()
+{
+    return m_LocalTransform;
+}
+
+inline const Matrix4x4 & SceneNode::GetWorldTransform()
+{
+    return m_WorldTransform;
+}
+
 #endif

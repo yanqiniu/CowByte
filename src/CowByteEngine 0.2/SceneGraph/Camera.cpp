@@ -1,5 +1,4 @@
 #include "Camera.h"
-#include "SceneNode.h"
 
 Camera::Camera() :
     m_WorldToCamaraSpace(Matrix4x4::Identity()),
@@ -26,19 +25,4 @@ Camera::Camera(float ar, float fovy, float np, float fp) :
 Camera::~Camera()
 {
 
-}
-
-inline void Camera::UpdateWToCMatrix()
-{
-    m_WorldToCamaraSpace = m_pParentSceneNode->GetWorldTransform().Inverse();
-}
-
-inline Matrix4x4 Camera::GetWToCMatrix() const
-{
-    return m_WorldToCamaraSpace;
-}
-
-inline Matrix4x4 Camera::GetProjectionMatrix() const
-{
-    return m_ProjectionMatrix;
 }
