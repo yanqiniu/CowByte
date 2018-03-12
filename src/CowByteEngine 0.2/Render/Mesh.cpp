@@ -18,31 +18,25 @@ Mesh::~Mesh()
 {
 }
 
-// Configure file path and such. This should run before
-// LoadContent(), therefore before Initialize().
-bool Mesh::ConfigureMesh(const char* meshName)
+bool Mesh::LoadContent(const char* meshName)
 {
-    Path::GenerateAssetPath(m_MeshFilePath, "meshes", meshName);
-    DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
-    return true;
-}
+    Filepath meshFilePath;
+    Path::GenerateAssetPath(meshFilePath, "meshes", meshName);
+    //DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
 
-
-bool Mesh::LoadContent()
-{
-    CBFile meshFile(m_MeshFilePath.Get());
+    CBFile meshFile(meshFilePath.Get());
     CBString<64> temp;
 
     // Check if it's a Mesh file
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        DbgERROR("Failed getting file type [%s]", m_MeshFilePath.Get());
+        DbgERROR("Failed getting file type [%s]", meshFilePath.Get());
         return false;
     }
     temp.Strip(StripMode::ALL);
     if (temp.Compare("MESH") != 0)
     {
-        printf("Not a mesh file! [s]\n", m_MeshFilePath.Get());
+        printf("Not a mesh file! [s]\n", meshFilePath.Get());
         return false;
     }
 
@@ -50,7 +44,7 @@ bool Mesh::LoadContent()
     temp.Clear();
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
-        DbgERROR("Failed getting pos buf file in [%s].", m_MeshFilePath.Get());
+        DbgERROR("Failed getting pos buf file in [%s].", meshFilePath.Get());
         return false;
     }
     temp.Strip(StripMode::ALL);
@@ -66,7 +60,7 @@ bool Mesh::LoadContent()
 
 bool Mesh::ReadPosBufFile(const char *filepath)
 {
-    CBString<256> tempPath;
+    Filepath tempPath;
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile posBufFile(tempPath.Get());
 

@@ -5,6 +5,7 @@
 typedef unsigned int UINT32;
 typedef long long INT64;
 typedef int UID;
+typedef CBString<256> Filepath;
 
 // String ================================================
 

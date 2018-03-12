@@ -160,7 +160,7 @@ bool Graphics::SimpleRenderSetup()
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
-    CBString<256> shaderPath;
+    Filepath shaderPath;
     Path::GenerateAssetPath(shaderPath, "shaders", "default.shader");
     D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
     D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);

@@ -12,10 +12,9 @@ public:
     Mesh();
     ~Mesh();
 
-    CBString<256> m_MeshFilePath;
+    CBString<64> m_MeshName;
 
-    bool ConfigureMesh( const char* meshName );
-    bool LoadContent();
+    bool LoadContent(const char* meshName);
     UID GetID() const;
 
 private:

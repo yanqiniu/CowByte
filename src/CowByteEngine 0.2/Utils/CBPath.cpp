@@ -3,7 +3,7 @@
 namespace Path
 {
     // className: mesh, shader...etc.
-    void GenerateAssetPath(CBString<256> &buf, const char *className, const char *fileName)
+    void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName)
     {
         buf.Clear();
         buf.Set(AssetsFolder);
