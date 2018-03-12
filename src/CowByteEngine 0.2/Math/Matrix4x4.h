@@ -17,9 +17,17 @@ Each __m128 in _data represent a column in the matrix.
 
 class Vec3;
 
+#ifndef _SHUFFLE
+    #define _SHUFFLE_R(a, b, c, d) _MM_SHUFFLE(d, c, b, a)
+#endif
+
 __declspec(align(16)) struct Matrix4x4
 {
-    __m128 _data[4]; // 4 columns, row vector
+    union
+    {
+        __m128 _data[4]; // 4 columns, row vector
+        float _m[4][4]; // [col][row]
+    };
 
 #pragma region Con/Destructor, Getter/Setter
 
@@ -108,13 +116,13 @@ __declspec(align(16)) struct Matrix4x4
     {
         Mul(matrix);
     }
-
     __forceinline Matrix4x4 operator*(const Matrix4x4 &matrix) const
     {
         Matrix4x4 toRet = *this;
         toRet *= matrix;
         return toRet;
     }
+
 
 #pragma endregion
 
@@ -139,6 +147,138 @@ __declspec(align(16)) struct Matrix4x4
     static Matrix4x4 Translate(Vec3 *vec);
 
 #pragma endregion
+
+#pragma region Inverse 
+    private:
+    // This section is modified from https://lxjk.github.io/2017/09/03/Fast-4x4-Matrix-Inverse-with-SSE-SIMD-Explained.html
+
+    #define MakeShuffleMask(x,y,z,w)           (x | (y<<2) | (z<<4) | (w<<6))
+
+    // vec(0, 1, 2, 3) -> (vec[x], vec[y], vec[z], vec[w])
+    #define VecSwizzle(vec, x,y,z,w)           _mm_shuffle_ps(vec, vec, MakeShuffleMask(x,y,z,w))
+    #define VecSwizzle1(vec, x)                _mm_shuffle_ps(vec, vec, MakeShuffleMask(x,x,x,x))
+    // special swizzle
+    #define VecSwizzle_0101(vec)               _mm_movelh_ps(vec, vec)
+    #define VecSwizzle_2323(vec)               _mm_movehl_ps(vec, vec)
+    #define VecSwizzle_0022(vec)               _mm_moveldup_ps(vec)
+    #define VecSwizzle_1133(vec)               _mm_movehdup_ps(vec)
+
+    // return (vec1[x], vec1[y], vec2[z], vec2[w])
+    #define VecShuffle(vec1, vec2, x,y,z,w)    _mm_shuffle_ps(vec1, vec2, MakeShuffleMask(x,y,z,w))
+    // special shuffle
+    #define VecShuffle_0101(vec1, vec2)        _mm_movelh_ps(vec1, vec2)
+    #define VecShuffle_2323(vec1, vec2)        _mm_movehl_ps(vec2, vec1)
+
+        // for row major matrix
+        // we use __m128 to represent 2x2 matrix as A = | A0  A1 |
+        //                                              | A2  A3 |
+        // 2x2 row major Matrix multiply A*B
+        __forceinline __m128 Mat2Mul(__m128 vec1, __m128 vec2)
+        {
+            return
+                _mm_add_ps(_mm_mul_ps(vec1, VecSwizzle(vec2, 0, 3, 0, 3)),
+                    _mm_mul_ps(VecSwizzle(vec1, 1, 0, 3, 2), VecSwizzle(vec2, 2, 1, 2, 1)));
+        }
+        // 2x2 row major Matrix adjugate multiply (A#)*B
+        __forceinline __m128 Mat2AdjMul(__m128 vec1, __m128 vec2)
+        {
+            return
+                _mm_sub_ps(_mm_mul_ps(VecSwizzle(vec1, 3, 3, 0, 0), vec2),
+                    _mm_mul_ps(VecSwizzle(vec1, 1, 1, 2, 2), VecSwizzle(vec2, 2, 3, 0, 1)));
+
+        }
+        // 2x2 row major Matrix multiply adjugate A*(B#)
+        __forceinline __m128 Mat2MulAdj(__m128 vec1, __m128 vec2)
+        {
+            return
+                _mm_sub_ps(_mm_mul_ps(vec1, VecSwizzle(vec2, 3, 0, 3, 0)),
+                    _mm_mul_ps(VecSwizzle(vec1, 1, 0, 3, 2), VecSwizzle(vec2, 2, 1, 2, 1)));
+        }
+
+    public: 
+        // Inverse function is the same no matter column major or row major
+        inline Matrix4x4 Inverse()
+        {
+          // use block matrix method
+          // A is a matrix, then i(A) or iA means inverse of A, A# (or A_ in code) means adjugate of A, |A| (or detA in code) is determinant, tr(A) is trace
+
+          // sub matrices
+          __m128 A = VecShuffle_0101(_data[0], _data[1]);
+          __m128 B = VecShuffle_2323(_data[0], _data[1]);
+          __m128 C = VecShuffle_0101(_data[2], _data[3]);
+          __m128 D = VecShuffle_2323(_data[2], _data[3]);
+
+          __m128 detA = _mm_set1_ps(_m[0][0] * _m[1][1] - _m[0][1] * _m[1][0]);
+          __m128 detB = _mm_set1_ps(_m[0][2] * _m[1][3] - _m[0][3] * _m[1][2]);
+          __m128 detC = _mm_set1_ps(_m[2][0] * _m[3][1] - _m[2][1] * _m[3][0]);
+          __m128 detD = _mm_set1_ps(_m[2][2] * _m[3][3] - _m[2][3] * _m[3][2]);
+
+    #if 0 // for determinant, float version is faster
+          // determinant as (|A| |B| |C| |D|)
+          __m128 detSub = _mm_sub_ps(
+            _mm_mul_ps(VecShuffle(_data[0], _data[2], 0, 2, 0, 2), VecShuffle(_data[1], _data[3], 1, 3, 1, 3)),
+            _mm_mul_ps(VecShuffle(_data[0], _data[2], 1, 3, 1, 3), VecShuffle(_data[1], _data[3], 0, 2, 0, 2))
+          );
+          __m128 detA = VecSwizzle1(detSub, 0);
+          __m128 detB = VecSwizzle1(detSub, 1);
+          __m128 detC = VecSwizzle1(detSub, 2);
+          __m128 detD = VecSwizzle1(detSub, 3);
+    #endif
+
+          // let iM = 1/|M| * | X Y |
+          //         | Z W |
+
+          // D#C
+          __m128 D_C = Mat2AdjMul(D, C);
+          // A#B
+          __m128 A_B = Mat2AdjMul(A, B);
+          // X# = |D|A - B(D#C)
+          __m128 X_ = _mm_sub_ps(_mm_mul_ps(detD, A), Mat2Mul(B, D_C));
+          // W# = |A|D - C(A#B)
+          __m128 W_ = _mm_sub_ps(_mm_mul_ps(detA, D), Mat2Mul(C, A_B));
+
+          // |M| = |A|*|D| + ... (continue later)
+          __m128 detM = _mm_mul_ps(detA, detD);
+
+          // Y# = |B|C - D(A#B)#
+          __m128 Y_ = _mm_sub_ps(_mm_mul_ps(detB, C), Mat2MulAdj(D, A_B));
+          // Z# = |C|B - A(D#C)#
+          __m128 Z_ = _mm_sub_ps(_mm_mul_ps(detC, B), Mat2MulAdj(A, D_C));
+
+          // |M| = |A|*|D| + |B|*|C| ... (continue later)
+          detM = _mm_add_ps(detM, _mm_mul_ps(detB, detC));
+
+          // tr((A#B)(D#C))
+          __m128 tr = _mm_mul_ps(A_B, VecSwizzle(D_C, 0, 2, 1, 3));
+          tr = _mm_hadd_ps(tr, tr);
+          tr = _mm_hadd_ps(tr, tr);
+          // |M| = |A|*|D| + |B|*|C| - tr((A#B)(D#C)
+          detM = _mm_sub_ps(detM, tr);
+
+          const __m128 adjSignMask = _mm_setr_ps(1.f, -1.f, -1.f, 1.f);
+          // (1/|M|, -1/|M|, -1/|M|, 1/|M|)
+          __m128 rDetM = _mm_div_ps(adjSignMask, detM);
+
+          X_ = _mm_mul_ps(X_, rDetM);
+          Y_ = _mm_mul_ps(Y_, rDetM);
+          Z_ = _mm_mul_ps(Z_, rDetM);
+          W_ = _mm_mul_ps(W_, rDetM);
+
+          Matrix4x4 r;
+
+          // apply adjugate and store, here we combine adjugate shuffle and store shuffle
+          r._data[0] = VecShuffle(X_, Y_, 3, 1, 3, 1);
+          r._data[1] = VecShuffle(X_, Y_, 2, 0, 2, 0);
+          r._data[2] = VecShuffle(Z_, W_, 3, 1, 3, 1);
+          r._data[3] = VecShuffle(Z_, W_, 2, 0, 2, 0);
+          return r;
+        }
+
+
+
+
+#pragma endregion
+
 };
 
 
