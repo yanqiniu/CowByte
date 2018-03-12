@@ -16,8 +16,7 @@ MeshManager::~MeshManager()
 Mesh* MeshManager::CPULoadMesh(const char *meshName)
 {
     Mesh *toRet = AddMesh(Mesh());
-    toRet->ConfigureMesh(meshName);
-    toRet->LoadContent();
+    toRet->LoadContent(meshName);
     return toRet;
 }
 
@@ -44,7 +43,7 @@ Mesh* MeshManager::GetMeshPtr(UID meshId)
             return &m_Meshes[m];
         else if (meshId < m_Meshes[m].GetID())
             r = m - 1;
-        else // m_Meshes[m].GetID() > m
+        else // meshId > m_Meshes[m].GetID()
             l = m + 1;
     }
 
@@ -62,5 +61,23 @@ Mesh* MeshManager::AddMesh(const Mesh &toAdd)
             return m_Meshes.Insert(i + 1, toAdd);
         }
     }
+
+    // Empty or end of vector.
+    return m_Meshes.Insert(m_Meshes.Size(), toAdd);
+}
+
+// Used upon MeshInstance creation to identify which Mesh
+// it needs.
+UID MeshManager::GetMeshID(const Filename &meshfn) const
+{
+    for (const auto& m : m_Meshes)
+    {
+        if (m.GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
+        {
+            return m.GetID();
+        }
+    }
+
+    return INVALID_UID;
 }
 

@@ -30,7 +30,7 @@ public:
         CBQueueNode *_next;
     };
 
-    inline bool IsEmpty()
+    inline bool IsEmpty() const
     {
         return m_Size == 0;
     }

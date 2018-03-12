@@ -1,11 +1,16 @@
 #ifndef _TYPEDEFS_H
 #define _TYPEDEFS_H
 
+#include "CBString.h"
+
 // Primitives ============================================
 typedef unsigned int UINT32;
 typedef long long INT64;
 typedef int UID;
 typedef CBString<256> Filepath;
+typedef CBString<64> Filename;
+
+#define INVALID_UID -1
 
 // String ================================================
 

@@ -108,6 +108,9 @@
     <ClInclude Include="SceneGraph\Camera.h">
       <Filter>SceneGraph</Filter>
     </ClInclude>
+    <ClInclude Include="Render\MeshInstance.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -172,6 +175,9 @@
     </ClCompile>
     <ClCompile Include="SceneGraph\Camera.cpp">
       <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MeshInstance.cpp">
+      <Filter>Render</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -4,14 +4,22 @@
 #include "../Utils/typedefs.h"
 #include "../Core/Component.h"
 
+class MeshManager;
+
 class MeshInstance : public Component
 {
 public:
     MeshInstance();
+    MeshInstance(const char *filename);
     ~MeshInstance();
 
+    void SetFileName( const char *filename);
+    bool FindAndSetMeshID(const MeshManager& meshManager);
+
 private:
+    Filename m_MeshFileName;
     UID m_MeshID;
+
 };
 
 #endif

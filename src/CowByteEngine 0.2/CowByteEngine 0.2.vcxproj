@@ -149,6 +149,7 @@
     <ClInclude Include="Memory\CBPoolAllocator.h" />
     <ClInclude Include="Render\Graphics.h" />
     <ClInclude Include="Render\Mesh.h" />
+    <ClInclude Include="Render\MeshInstance.h" />
     <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="Render\Vertex.h" />
     <ClInclude Include="Render\Window.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Memory\CBPoolAllocator.cpp" />
     <ClCompile Include="Render\Graphics.cpp" />
     <ClCompile Include="Render\Mesh.cpp" />
+    <ClCompile Include="Render\MeshInstance.cpp" />
     <ClCompile Include="Render\MeshManager.cpp" />
     <ClCompile Include="Render\Vertex.cpp" />
     <ClCompile Include="Render\Window.cpp" />

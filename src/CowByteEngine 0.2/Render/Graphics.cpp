@@ -8,6 +8,7 @@
 #include "../Utils/CBString.h"
 #include "../Utils/CBPath.h"
 #include "../Utils/CBDebug.h"
+#include "../Utils/typedefs.h"
 
 
 using namespace DirectX;

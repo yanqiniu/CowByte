@@ -58,6 +58,7 @@ bool Mesh::LoadContent(const char* meshName)
 
 }
 
+
 bool Mesh::ReadPosBufFile(const char *filepath)
 {
     Filepath tempPath;
@@ -85,7 +86,6 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         return false;
     }
     temp.Strip(StripMode::ALL);
-    int intbuf;
     m_nVertices = static_cast<size_t>(atoi(temp.Get()));
 
     // Initialize vertex array.

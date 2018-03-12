@@ -14,10 +14,10 @@ public:
     CBVector(size_t size); // Initialize the container to a size.
     ~CBVector();
 
-    size_t Size() { return m_Size; }
-    size_t Capacity() { return m_Capacity; }
+    size_t Size() const { return m_Size; }
+    size_t Capacity() const { return m_Capacity; }
     void Resize(size_t newCapacity); /* Change capacity of container. */
-    bool IsEmpty() { return m_Size == 0; }
+    bool IsEmpty() const { return m_Size == 0; }
 
     T& at(size_t index) { return m_Data[index]; }
     T& operator[](size_t index) { return m_Data[index]; }
@@ -30,12 +30,12 @@ public:
 
     void Clear();
 
-    T* begin()
+    T* begin() const
     {
         return &m_Data[0];
     }
 
-    T* end()
+    T* end() const
     {
         return &m_Data[m_Size - 1];
     }
