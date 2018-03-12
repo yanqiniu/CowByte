@@ -3,7 +3,7 @@
 
 #include "../Core/Component.h"
 #include "Mesh.h"
-
+#include "../Utils/typedefs.h"
 
 class MeshManager : public Component
 {
@@ -12,6 +12,8 @@ public:
     ~MeshManager();
     // Return pointer to the mesh loaded.
     Mesh* CPULoadMesh(const char *meshName);
+    Mesh* GetMeshPtr(UID meshId);
+    Mesh* AddMesh(const Mesh &toAdd);
 
 private:
     CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.

@@ -4,9 +4,12 @@
 #include "../Utils/CBDebug.h"
 #include "Vertex.h"
 
+int Mesh::g_IDCounter = 0;
+
 Mesh::Mesh() :
     m_Vertices(8),
-    m_nVertices(0)
+    m_nVertices(0),
+    m_UID(g_IDCounter++)
 {
 }
 
