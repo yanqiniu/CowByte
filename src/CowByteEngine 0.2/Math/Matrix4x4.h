@@ -2,6 +2,7 @@
 #define _MATRIX4x4_H
 #include <xmmintrin.h>
 #include <smmintrin.h>
+#include <math.h>
 
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -144,7 +145,17 @@ __declspec(align(16)) struct Matrix4x4
                          x,    y,    z,    1.0f);
     }
 
-    static Matrix4x4 Translate(Vec3 *vec);
+    // fovy is in radian here.
+    __forceinline static Matrix4x4 Projection(float ar, float fovy, float np, float fp)
+    {
+        return Matrix4x4(1.0f/(ar * std::tan(fovy / 2)), 0.0f,                    0.0f,           0.0f,
+                         0.0f,                           1.0f/std::tan(fovy / 2), 0.0f,           0.0f,
+                         0.0f,                           0.0f,                    fp / (fp - np), 1.0f,
+                         0.0f,                           0.0f, -(fp * np / (fp - np)),            1.0f);
+
+    }
+
+    static Matrix4x4 Translate(const Vec3 &vec);
 
 #pragma endregion
 

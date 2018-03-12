@@ -61,3 +61,8 @@ void SceneNode::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
 
     parentPtr->m_ChildrenNodes.Push_back(this);
 }
+
+void SceneNode::Translate(const Vec3& inPos)
+{
+    m_LocalTransform *= Matrix4x4::Translate(inPos);
+}

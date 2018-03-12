@@ -24,7 +24,8 @@ bool Game::Initialize()
 
 
     // TEMP: Create Mesh in the scene.
-
+    // SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    // cubeSceneNode->AddMeshInstance();
     return true;
 }
 

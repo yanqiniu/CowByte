@@ -30,6 +30,10 @@ public:
 
     void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
 
+    void Translate(const Vec3& inPos);
+    // void Rotate();
+    // void Scale();
+
 private:
     Matrix4x4 m_WorldTransform; // Model Space -> World Space, yea this is cached.
     Matrix4x4 m_LocalTransform; // Local Space -> Parent Space
