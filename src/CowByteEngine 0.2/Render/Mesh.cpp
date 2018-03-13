@@ -131,7 +131,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
             }
         }
         
-        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
+        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(0.5f * tempX, 0.5f * tempY, 0.5f  * tempZ + 0.5f);
     }
 
     for (size_t i = 0; i < m_nVertices; ++i)
@@ -191,7 +191,7 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
                 DbgERROR("Not enough values for triangle[%d] in [%s].", i, filepath);
                 return false;
             }
-            m_Indices.Push_back(tempInt);
+            m_Indices.Push_back(static_cast<WORD>(tempInt));
         }
     }
 

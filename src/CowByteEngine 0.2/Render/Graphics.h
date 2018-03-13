@@ -62,6 +62,7 @@ private:
     ID3D11DepthStencilView* m_pDepthStencilView;
 
     ID3D11Buffer *m_pVertexBuffer;
+    ID3D11Buffer *m_pIndexBuffer;
     ID3D11Buffer *m_pConstantBuffers[NUM_CBUFFER];
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11InputLayout *m_pInputLayout;

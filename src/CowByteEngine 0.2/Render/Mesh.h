@@ -16,7 +16,7 @@ public:
     UID               GetID() const;
     const Filename&   GetMeshName() const;
     CBVector<Vertex>& GetVertices();
-    CBVector<UINT32>& GetIndices();
+    CBVector<WORD>&   GetIndices();
     size_t            GetNumVertices() const;
     size_t            GetNumTriangles() const;
 
@@ -27,7 +27,7 @@ private:
     static int g_IDCounter;
     Filename m_MeshName;
     CBVector<Vertex> m_Vertices;
-    CBVector<UINT32> m_Indices;
+    CBVector<WORD>   m_Indices;
     size_t m_nVertices;
     size_t m_nTriangles;
     UID m_UID;
@@ -48,7 +48,7 @@ inline CBVector<Vertex>& Mesh::GetVertices()
 {
     return m_Vertices;
 }
-inline CBVector<UINT32>& Mesh::GetIndices()
+inline CBVector<WORD>& Mesh::GetIndices()
 {
     return m_Indices;
 }

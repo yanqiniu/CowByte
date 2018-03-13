@@ -39,6 +39,7 @@ Graphics::Graphics(const GraphicsData &data):
     m_pRenderTarget(nullptr),
     m_pDepthStencilView(nullptr),
     m_pVertexBuffer(nullptr),
+    m_pIndexBuffer(nullptr),
     m_pConstantBuffers(),
     m_pDepthStencilBuffer(nullptr),
     m_pInputLayout(nullptr),
@@ -54,12 +55,6 @@ Graphics::~Graphics()
 
 bool Graphics::Initialize()
 {
-    // Create mesh manager.
-    m_pMeshManager = new MeshManager();
-    // TEST: Load single cube into mesh manager.
-    m_pMeshManager->CPULoadMesh("cube.mesha");
-    m_pMeshManager->CPULoadMesh("cube.mesha");
-
     if (m_pWindow == nullptr)
     {
         DbgERROR("Graphics: Window pointer null!");
@@ -79,6 +74,10 @@ bool Graphics::Initialize()
         return false;
     }
 
+    // Create mesh manager.
+    m_pMeshManager = new MeshManager();
+    // TEST: Load single cube into mesh manager.
+    m_pMeshManager->CPULoadMesh("cube.mesha");
 
     return true;
 }
@@ -105,11 +104,11 @@ bool Graphics::OnRender()
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
     m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+    m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pDeviceContext->Draw(3,             // the number of vertices to be drawn
-                           0);            // the first vertex to be drawn
+    m_pDeviceContext->DrawIndexed(36, 0, 0);
 
 
 
@@ -277,11 +276,24 @@ bool Graphics::SimpleRenderSetup()
     resourceData.pSysMem = &myCube.GetVertices()[0];
     ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
 
+
+    // Create and initialize the index buffer.
+    D3D11_BUFFER_DESC indexBufferDesc;
+    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.ByteWidth = sizeof(WORD) * myCube.GetNumTriangles() * 3;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = 0;
+    resourceData.pSysMem = &myCube.GetIndices()[0];
+    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
+
+    /*
     // Fill the vertex buffer.
     D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
     ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
     memcpy(mappedSubrcs.pData, &myCube.GetVertices()[0], sizeof(Vertex) * myCube.GetNumVertices());
     m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
+    */
 
     // TODO: index buffer.
 
