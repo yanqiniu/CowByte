@@ -19,6 +19,9 @@
     <Filter Include="SceneGraph">
       <UniqueIdentifier>{582eb1d5-aa00-4d73-b314-08d71c08ce32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3657466d-63fa-4ca7-b5a0-9159fe854f69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\CBMemory.h">
@@ -179,5 +182,13 @@
     <ClCompile Include="Render\MeshInstance.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\meshes\cube_pos.bufa">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="..\..\assets\meshes\cube.mesha">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
