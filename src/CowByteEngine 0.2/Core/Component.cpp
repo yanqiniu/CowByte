@@ -30,7 +30,7 @@ void Component::SetMessageBus(MessageBus *mBus)
     m_pMessageBus = mBus;
 }
 
-void Component::_AcceptMessage(const Message &msg)
+void Component::AcceptMessage(const Message &msg)
 {
     m_MessageQueue.Enqueue(msg);
 }

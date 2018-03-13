@@ -23,7 +23,7 @@ int MessageBus::BroadCastFrontMsg()
     int numSentTo = 0;
     for (auto subscriber : m_Subscribers)
     {
-        subscriber->_AcceptMessage(*m_MessageQueue.Front());
+        subscriber->AcceptMessage(*m_MessageQueue.Front());
         ++numSentTo;
     }
 

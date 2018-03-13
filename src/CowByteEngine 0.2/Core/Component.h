@@ -16,8 +16,7 @@ public:
     virtual ~Component();
 
     void SetMessageBus(MessageBus *mBus);
-    void _AcceptMessage(const Message &msg);
-    virtual void _HandleMessage(const Message &msg);
+    void AcceptMessage(const Message &msg);
 
     bool Initialize();
     bool Update(const GameContext &context);
@@ -30,6 +29,8 @@ public:
 
 
 protected:
+    virtual void _HandleMessage(const Message &msg);
+
     CBQueue<Message> m_MessageQueue;
     CBVector<Component*> m_Components;
     Component *m_pParentComponent;
