@@ -129,8 +129,8 @@ template <class T>
 void CBVector<T>::Clear()
 {
     // Please note that this does not set capacity to 0.
-    // The idea is that when you clear an array, it's most
-    // likely you are going to put new stuff in.
+    // The idea is that when you clear an array, it's 
+    // possible you are going to put new stuff in.
 
     while(!IsEmpty())
         Pop_back();
