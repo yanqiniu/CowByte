@@ -2,13 +2,14 @@
 #include "../Utils/CBPath.h"
 #include "../Utils/CBFile.h"
 #include "../Utils/CBDebug.h"
-#include "Vertex.h"
 
 int Mesh::g_IDCounter = 0;
 
 Mesh::Mesh() :
     m_Vertices(8),
+    m_Indices(8),
     m_nVertices(0),
+    m_nTriangles(0),
     m_UID(g_IDCounter++)
 {
 }
@@ -54,10 +55,24 @@ bool Mesh::LoadContent(const char* meshName)
         return false;
     }
 
+    // Read the index buffer file.
+    temp.Clear();
+    if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting index buf file in [%s].", meshFilePath.Get());
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (!ReadIndexBufFile(temp.Get()))
+    {
+        DbgERROR("Failed reading in index buffer [%s].", temp.Get());
+        return false;
+    }
+
+
     return true;
 
 }
-
 
 bool Mesh::ReadPosBufFile(const char *filepath)
 {
@@ -126,4 +141,64 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     
     return true;
 
+}
+
+bool Mesh::ReadIndexBufFile(const char *filepath)
+{
+    Filepath tempPath;
+    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBFile indexBufFile(tempPath.Get());
+
+    CBString<64> temp;
+    if (!indexBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting file type [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (temp.Compare("INDEX_BUF") != 0)
+    {
+        DbgERROR("Not a index_buf file! [%s]\n", filepath);
+        return false;
+    }
+
+    // Get num of triangles.
+    temp.Clear();
+    if (!indexBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting num of vertices [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    m_nTriangles = static_cast<size_t>(atoi(temp.Get()));
+
+    // Initialize vertex array.
+    int tempInt;
+    for (size_t i = 0; i < m_nTriangles; ++i)
+    {
+        temp.Clear();
+        if (!indexBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+        {
+            DbgERROR("Not enough triangles in [%s].", filepath);
+            return false;
+        }
+        temp.Strip();
+        char *marker = temp.Get();
+        for (int j = 0; j < 3; ++j)
+        {
+            if (!CBStringOps::GetNextInt32(marker, tempInt, ' '))
+            {
+                DbgERROR("Not enough values for triangle[%d] in [%s].", i, filepath);
+                return false;
+            }
+            m_Indices.Push_back(tempInt);
+        }
+    }
+
+    for (size_t i = 0; i < m_nTriangles; ++i)
+    {
+        DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
+    }
+
+    return true;
 }
