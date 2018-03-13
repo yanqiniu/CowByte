@@ -166,16 +166,16 @@ void CBVector<T>::Resize(size_t newCapacity)
     }
     else // grow
     {
-        m_Capacity = newCapacity;
         // Create new array
         T *newData = (T*)CBMemArena::Get().Allocate(newCapacity * sizeof(T));
 
         if (!IsEmpty())
         {
             memcpy(newData, m_Data, m_Size * sizeof(T));
-            CBMemArena::Get().Free(m_Data, newCapacity * sizeof(T));
+            CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
             m_Data = nullptr;
         }
+        m_Capacity = newCapacity;
 
         m_Data = newData;
     }
