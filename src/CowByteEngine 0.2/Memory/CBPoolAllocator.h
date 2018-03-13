@@ -5,6 +5,8 @@
 #include <new.h>
 #include "../Utils/typedefs.h"
 
+#define VALID_INTEGRITY static_cast<UINT32>(0xdeadbeef)
+
 struct CBPoolBlock
 {
     /*******************************************************
@@ -35,12 +37,13 @@ struct CBPoolBlock
 
     Yea...doesn't sound super safe. Works so far tho :/
     *******************************************************/
+    UINT32 _integrity; // Set to 0xdeadbeef when the block is free. 
+                      // TODO: is the extra padding on x64 here gonna
+                      // slow things down?
     CBPoolBlock *_next;
 
 #ifndef _WIN64
-    UINT32 _padding[3]; // x86 padding
-#else
-    UINT32 _padding[2]; // x64 padding
+    UINT32 _padding[2]; // x86 padding
 #endif // !_WIN64
 };
 

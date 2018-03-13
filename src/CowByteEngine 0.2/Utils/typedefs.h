@@ -4,15 +4,18 @@
 #include "CBString.h"
 
 // Primitives ============================================
+typedef int INT32;
 typedef unsigned int UINT32;
 typedef long long INT64;
 typedef int UID;
-typedef CBString<256> Filepath;
-typedef CBString<64> Filename;
+
 
 #define INVALID_UID -1
 
 // String ================================================
+
+typedef CBString<256> Filepath;
+typedef CBString<64> Filename;
 
 // C Runtime Header Files
 #ifndef _TCHAR_INC_

@@ -1,4 +1,6 @@
 #include "CBPoolAllocator.h"
+#include "../Utils/CBDebug.h"
+
 
 
 CBMemPool::CBMemPool(UINT32 blockSize, UINT32 nBlocks) :
@@ -8,7 +10,7 @@ CBMemPool::CBMemPool(UINT32 blockSize, UINT32 nBlocks) :
     m_nTotalBlocks(nBlocks),
     m_nFreeBlocks(nBlocks)
 {
-
+    DbgAssert(sizeof(CBPoolBlock) <= 16, "Size of pool block struct can't be larger than 16 bytes!");
 }
 
 CBMemPool::~CBMemPool()
@@ -33,10 +35,13 @@ void CBMemPool::Initialize(void *startPtr)
     pMarker = reinterpret_cast<char*>(m_pFreeList);
     for (UINT32 i = 0; i < m_nTotalBlocks - 1; ++i)
     {
-        reinterpret_cast<CBPoolBlock*>(pMarker + i * m_blockSize)->_next =
-            reinterpret_cast<CBPoolBlock*>(pMarker + (i + 1) * m_blockSize);
+        CBPoolBlock* pb = reinterpret_cast<CBPoolBlock*>(pMarker + i * m_blockSize);
+        pb->_next = reinterpret_cast<CBPoolBlock*>(pMarker + (i + 1) * m_blockSize);
+        pb->_integrity = VALID_INTEGRITY;
     }
-    reinterpret_cast<CBPoolBlock*>(pMarker + (m_nTotalBlocks - 1) * m_blockSize)->_next = nullptr;
+    CBPoolBlock* lastBlock = reinterpret_cast<CBPoolBlock*>(pMarker + (m_nTotalBlocks - 1) * m_blockSize);
+    lastBlock->_next = nullptr;
+    lastBlock->_integrity = VALID_INTEGRITY;
 }
 
 
@@ -51,11 +56,15 @@ void CBMemPool::Shutdown()
 
 void* CBMemPool::Allocate(size_t size)
 {
-    assert(size <= m_blockSize && "Cannot allocate larger than pool size!");
-    assert(m_nFreeBlocks > 0 && "No more free blocks in pool!");
+    DbgAssert(size <= m_blockSize, "Cannot allocate larger than pool size!");
+    DbgAssert(m_nFreeBlocks > 0, "No more free blocks in pool!");
+    if (m_pFreeList->_integrity != VALID_INTEGRITY)
+    {
+        int i = 9;
+    }
+    DbgAssert(m_pFreeList->_integrity == VALID_INTEGRITY, "Data corruption detected in pool!");
     CBPoolBlock* toRet = m_pFreeList;
     m_pFreeList = m_pFreeList->_next;
-    //memset(toRet, 0, sizeof(CBPoolBlock)); // At last, erase next pointer and padding
     --m_nFreeBlocks;
     return toRet;
 }
@@ -71,6 +80,7 @@ void CBMemPool::Free(void* ptr)
 
     memset(ptr, 0, m_blockSize);
     blockPtr->_next = m_pFreeList;
+    blockPtr->_integrity = VALID_INTEGRITY;
     m_pFreeList = blockPtr;
 
     ++m_nFreeBlocks;
