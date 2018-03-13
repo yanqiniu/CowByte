@@ -38,8 +38,9 @@ struct CBPoolBlock
     Yea...doesn't sound super safe. Works so far tho :/
     *******************************************************/
     UINT32 _integrity; // Set to 0xdeadbeef when the block is free. 
-                      // TODO: is the extra padding on x64 here gonna
-                      // slow things down?
+#ifdef _WIN64
+    UINT32 _padding;
+#endif
     CBPoolBlock *_next;
 
 #ifndef _WIN64
