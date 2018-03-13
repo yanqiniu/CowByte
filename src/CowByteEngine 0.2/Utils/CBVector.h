@@ -11,8 +11,10 @@ class CBVector
 {
 public:
     CBVector();
+    CBVector(const CBVector &toCopy);
     CBVector(size_t size); // Initialize the container to a size.
     ~CBVector();
+    CBVector<T> & operator=(const CBVector<T> &rhs);
 
     size_t Size() const { return m_Size; }
     size_t Capacity() const { return m_Capacity; }
@@ -48,8 +50,6 @@ private:
     T* m_Data;
     size_t m_Capacity;
     size_t m_Size;
-
-
 };
 
 
@@ -59,6 +59,18 @@ CBVector<T>::CBVector() :
     m_Capacity(0),
     m_Data(nullptr)
 {
+}
+
+// Custom copy constructor that doesn't just do a shallow copy.
+template <class T>
+CBVector<T>::CBVector(const CBVector &toCopy) :
+    m_Size(0),
+    m_Capacity(0),
+    m_Data(nullptr)
+{
+    Resize(toCopy.m_Capacity);
+    memcpy(m_Data, toCopy.m_Data, m_Size * sizeof(T));
+    m_Size = toCopy.m_Size;
 }
 
 template <class T>
@@ -71,6 +83,7 @@ CBVector<T>::CBVector(size_t size) :
 template <class T>
 CBVector<T>::~CBVector()
 {
+    Clear();
     if (m_Data != nullptr)
     {
         CBMemArena::Get().Free(m_Data, m_Capacity * sizeof(T));
@@ -79,13 +92,47 @@ CBVector<T>::~CBVector()
 }
 
 template <class T>
+CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
+{
+    /*
+    Ok, here's the problem.
+
+    To assign a CBVector to a new value, we'd want to destruct stuff already
+    in it, if there happens to be any.
+
+    Since assignment operator is used to initialize objects, it means that 
+    when we run into this func, the class can be either uninitialized or
+    filled with stuff that needs to be destructed.
+
+    And there isn't really a reliable way of knowing which case it is. 
+    And if it happens to be uninitialized, we are gonna get an error 
+    trying to Clear() it.
+
+    So we can only assume that this is an empty/uninitialized vector, 
+    and explicitly clean it up before the assignment operator is called.
+    */
+
+    // Reset counts.
+    m_Size = 0;
+    m_Capacity = 0;
+
+    // Copy data
+    Resize(rhs.m_Capacity);
+    memcpy(m_Data, rhs.m_Data, m_Size * sizeof(T));
+    m_Size = rhs.m_Size;
+
+    return *this;
+}
+
+
+template <class T>
 void CBVector<T>::Clear()
 {
     // Please note that this does not set capacity to 0.
     // The idea is that when you clear an array, it's most
     // likely you are going to put new stuff in.
 
-    while(!IsEmpty()())
+    while(!IsEmpty())
         Pop_back();
 }
 
@@ -105,13 +152,21 @@ T* CBVector<T>::Insert(size_t index, const T &value)
         Grow_capacity();
 
     // Shift. Make some space.
+    bool shifted = false;
     if(m_Size > 0)
         for (size_t i = m_Size - 1; i >= index; --i)
         {
             m_Data[i + 1] = m_Data[i];
-
+            shifted = true;
             if(i == 0) break; // underflow guard.
         }
+
+    if (shifted)
+    {
+        // That means the slot about to get overwritten 
+        // had an initialized object in it, so destruct it.
+        m_Data[index].~T();
+    }
 
     m_Data[index] = value;
     ++m_Size;
@@ -132,7 +187,7 @@ bool CBVector<T>::Erase(size_t index)
     }
 
     m_Data[m_Size - 1].~T();
-    m_Data[m_Size - 1] = NULL;
+    memset(&m_Data[m_Size - 1], 0, sizeof(T));
     --m_Size;
 
     return true;
