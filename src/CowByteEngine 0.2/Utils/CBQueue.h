@@ -14,12 +14,47 @@ public:
         m_Tail(nullptr)
     {};
 
+    CBQueue(const CBQueue &toCopy) :
+        m_Size(0),
+        m_Head(nullptr),
+        m_Tail(nullptr)
+    {
+        for (CBQueueNode *node = toCopy.Front(); node != toCopy.Back(); node = node->_next)
+        {
+            Enqueue(node->_data);
+        }
+    };
+
+
     ~CBQueue()
     {
         while (!IsEmpty())
         {
             PopFront();
         }
+    }
+
+    // Need to explicitly destruct the CBQueue before
+    // calling this, if the queue is not empty. Since 
+    // there's no way of knowing whether the queue has 
+    // been initialized. You can find a similar and more 
+    // comprehensive reasoning about this in CBVector's
+    // assignment operator overload.
+    CBQueue & operator=(const CBQueue &rhs)
+    {
+        // This should be an empty object now.
+
+        m_Size = 0;
+        m_Head = nullptr;
+        m_Tail = nullptr;
+
+        for (CBQueueNode *node = rhs.Front(); node != rhs.Back(); node = node->_next)
+        {
+            Enqueue(node->_data);
+        }
+
+        return *this;
+
     }
 
     struct CBQueueNode
