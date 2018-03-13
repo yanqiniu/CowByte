@@ -142,6 +142,9 @@ bool CBVector<T>::IsValidIndex(size_t index)
     return index >= 0 && index < m_Size;
 }
 // Insert a copy. And return ptr to the inserted copy.
+// Notice that insert in the middle is very costly as it
+// needs to destruct elements being shifted when shifting
+// them.
 template <class T>
 T* CBVector<T>::Insert(size_t index, const T &value)
 {
@@ -152,21 +155,13 @@ T* CBVector<T>::Insert(size_t index, const T &value)
         Grow_capacity();
 
     // Shift. Make some space.
-    bool shifted = false;
     if(m_Size > 0)
         for (size_t i = m_Size - 1; i >= index; --i)
         {
             m_Data[i + 1] = m_Data[i];
-            shifted = true;
+            m_Data[i].~T();
             if(i == 0) break; // underflow guard.
         }
-
-    if (shifted)
-    {
-        // That means the slot about to get overwritten 
-        // had an initialized object in it, so destruct it.
-        m_Data[index].~T();
-    }
 
     m_Data[index] = value;
     ++m_Size;
