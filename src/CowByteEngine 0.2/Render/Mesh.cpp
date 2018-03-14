@@ -69,7 +69,7 @@ bool Mesh::LoadContent(const char* meshName)
         return false;
     }
 
-
+    m_MeshName = Filename(meshName);
     return true;
 
 }
