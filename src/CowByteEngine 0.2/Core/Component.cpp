@@ -5,53 +5,44 @@
 #include "../SceneGraph/SceneNode.h"
 
 Component::Component() :
-    m_pMessageBus(nullptr),
     m_MessageQueue(),
     m_Components(4),
     m_bIsActive(true),
     m_pParentComponent(nullptr),
-    m_pParentSceneNode(nullptr),
-    m_CompType(CompType::DEFAULT)
+    m_pParentSceneNode(nullptr)
 {
 
 }
 
 Component::~Component()
 {
-
+    Shutdown();
 }
 
-void Component::SetMessageBus(MessageBus *mBus)
+void Component::AcceptMessage(CBRefCountPtr<Message> pMsg)
 {
-    if (mBus == nullptr)
-    {
-        DbgWARNING("Trying to subscribe to null message bus!");
-        return;
-    }
-    m_pMessageBus = mBus;
+    m_MessageQueue.Enqueue(pMsg);
 }
 
-void Component::AcceptMessage(const Message &msg)
-{
-    m_MessageQueue.Enqueue(msg);
-}
 
-void Component::PostMessage(const Message &msg)
+void Component::PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus)
 {
-    if (m_pMessageBus == nullptr)
+    if (msgBus == nullptr)
     {
         DbgWARNING("Trying to post to null message bus.");
     }
 
-    m_pMessageBus->EnqueueNewMsg(msg);
+    msgBus->EnqueueNewMsg(pMsg);
+
 }
 
-void Component::_HandleMessage(const Message &msg)
+void Component::_HandleMessage(CBRefCountPtr<Message> pMsg)
 {
-    if (msg.type == Message::DEFAULT)
+    if (pMsg->type == Message::DEFAULT)
     {
         DbgINFO("Message received!");
     }
+
 }
 
 void Component::HandleMessageQueue()
@@ -59,7 +50,7 @@ void Component::HandleMessageQueue()
     while (!m_MessageQueue.IsEmpty())
     {
         this->_HandleMessage(*m_MessageQueue.Front());
-        BroadCastToChildren(*m_MessageQueue.Front());
+        BroadcastToChildren(*m_MessageQueue.Front());
         m_MessageQueue.PopFront();
     }
 }
@@ -76,15 +67,23 @@ bool Component::Update(const GameContext &context)
 
 bool Component::Shutdown()
 {
-    m_pMessageBus = nullptr;
     m_MessageQueue.~CBQueue();
     m_Components.~CBVector();
+    m_pParentComponent = nullptr;
+    m_pParentSceneNode = nullptr;
+
     return true;
 }
 
 void Component::SetActive(bool inBool)
 {
     m_bIsActive = inBool;
+}
+
+// Doesn't care if a parent is disabled.
+bool Component::IsActiveSelf()
+{
+    return m_bIsActive;
 }
 
 void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
@@ -100,16 +99,12 @@ void Component::AddChild(Component* childPtr)
     m_Components.Push_back(childPtr);
 }
 
-void Component::BroadCastToChildren(const Message &msg)
+void Component::BroadcastToChildren(CBRefCountPtr<Message> pMsg)
 {
     for (int i = 0; i < m_Components.Size(); ++i)
     {
-        m_Components.at(i)->AcceptMessage(msg);
-
-        // TEMP: manual handle.
-        m_Components.at(i)->HandleMessageQueue();
+        m_Components.at(i)->AcceptMessage(pMsg);
     }
-
 }
 
 void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
