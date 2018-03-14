@@ -24,14 +24,8 @@ VS_Output VShader(float4 position : POSITION, float4 color : COLOR)
 {
     VS_Output output;
     
-    matrix mvp = mul(worldMatrix, cameraViewMatrix);
-    mvp = mul(mvp, projectionMatrix);
-    output.position = mul( position, mvp );
-
-    // float4x4 mvp = mul(projectionMatrix, mul(cameraViewMatrix, worldMatrix));
-    // output.position = mul( mvp, position );
-
-    // output.position = position;
+    float4x4 mvp = mul(mul(worldMatrix, cameraViewMatrix), projectionMatrix);
+    output.position = mul(position, mvp );
     output.color = color;
 
     return output;
