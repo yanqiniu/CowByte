@@ -22,10 +22,10 @@ public:
     void   Set(CBString &toAppend);
     char*  Get();
     void   Clear();
-    size_t Capacity();
-    size_t Size();
-    int    Compare(const char *rhs);
-    int    Compare(CBString &rhs);
+    size_t Capacity() const;
+    size_t Size() const;
+    int    Compare(const char *rhs) const;
+    int    Compare(CBString &rhs) const;
     void   Append(const char *toAppend);
     bool   Strip();
     bool   Strip(StripMode mode);
@@ -41,19 +41,19 @@ private:
 };
 
 template <size_t len>
-inline int CBString<len>::Compare(CBString &rhs)
+inline int CBString<len>::Compare(CBString &rhs) const
 {
     return strcmp(m_Data, rhs.Get());
 }
 
 template <size_t len>
-inline int CBString<len>::Compare(const char *rhs)
+inline int CBString<len>::Compare(const char *rhs) const
 {
     return strcmp(m_Data, rhs);
 }
 
 template <size_t len>
-inline size_t CBString<len>::Capacity()
+inline size_t CBString<len>::Capacity() const
 {
     return len;
 }
@@ -119,7 +119,7 @@ inline void CBString<len>::Clear()
 }
 
 template <size_t len>
-inline size_t CBString<len>::Size()
+inline size_t CBString<len>::Size() const
 {
     return strlen(m_Data);
 }

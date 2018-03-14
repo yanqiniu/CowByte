@@ -2,6 +2,7 @@
 #define _CBPATH_H
 
 #include "CBString.h"
+#include "typedefs.h"
 
 namespace Path
 {
@@ -9,7 +10,7 @@ namespace Path
     static const char MeshFolder[256] = "../../assets/meshes/";
 
     // className: mesh, shader...etc.
-    void GenerateAssetPath(CBString<256> &buf, const char *className, const char *fileName);
+    void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName);
 }
 
 

@@ -12,7 +12,7 @@
 struct WindowData : public SystemData
 {
     WindowData();
-    WindowData(int w, int h, const std::tstring& title = _T("CowByte Engine Ver1.0  - by Roy Niu"), int b = 32, bool fullScreen = false);
+    WindowData(int w, int h, const std::tstring& title = _T("CowByte Engine Ver 0.2 - Roy Niu"), int b = 32, bool fullScreen = false);
 
     int m_Width;
     int m_Height;

@@ -16,6 +16,12 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{ea0fe01c-7eff-47fa-9aa7-4b807ed79517}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SceneGraph">
+      <UniqueIdentifier>{582eb1d5-aa00-4d73-b314-08d71c08ce32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Assets">
+      <UniqueIdentifier>{3657466d-63fa-4ca7-b5a0-9159fe854f69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\CBMemory.h">
@@ -96,6 +102,18 @@
     <ClInclude Include="Render\Graphics.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\MeshManager.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\SceneNode.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="SceneGraph\Camera.h">
+      <Filter>SceneGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\MeshInstance.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -152,5 +170,33 @@
     <ClCompile Include="Memory\CBMemory.cpp">
       <Filter>Memory</Filter>
     </ClCompile>
+    <ClCompile Include="Render\MeshManager.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\SceneNode.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="SceneGraph\Camera.cpp">
+      <Filter>SceneGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\MeshInstance.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\assets\meshes\cube_pos.bufa">
+      <Filter>Assets</Filter>
+    </None>
+    <None Include="..\..\assets\meshes\cube.mesha">
+      <Filter>Assets</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\assets\shaders\default_ps.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\assets\shaders\default_vs.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

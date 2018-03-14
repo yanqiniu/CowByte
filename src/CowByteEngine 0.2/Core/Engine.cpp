@@ -4,12 +4,14 @@
 
 #include "../Render/Window.h"
 #include "../Render/Graphics.h"
+#include "../SceneGraph/SceneNode.h"
 
 #include <new.h>
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
-Engine::Engine()
+Engine::Engine() :
+    Component()
 {
     m_EngineState = EngineState::CONSTRUCTING;
 }
@@ -48,6 +50,10 @@ int Engine::Initialize(GameContext &context)
     context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
     context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
 
+
+
+    // Initialize SceneGraph.
+    SceneNode::RootNode.AttachTo_NonSceneNode_Parent(this);
     return true;
 }
 

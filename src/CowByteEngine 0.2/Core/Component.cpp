@@ -2,9 +2,15 @@
 #include "MessageBus.h"
 #include "../Utils/CBQueue.h"
 #include "../Utils/CBDebug.h"
+#include "../SceneGraph/SceneNode.h"
 
 Component::Component() :
-    m_MessageBus(nullptr)
+    m_pMessageBus(nullptr),
+    m_MessageQueue(),
+    m_Components(4),
+    m_bIsActive(true),
+    m_pParentComponent(nullptr),
+    m_pParentSceneNode(nullptr)
 {
 
 }
@@ -21,10 +27,10 @@ void Component::SetMessageBus(MessageBus *mBus)
         DbgWARNING("Trying to subscribe to null message bus!");
         return;
     }
-    m_MessageBus = mBus;
+    m_pMessageBus = mBus;
 }
 
-void Component::_AcceptMessage(const Message &msg)
+void Component::AcceptMessage(const Message &msg)
 {
     m_MessageQueue.Enqueue(msg);
 }
@@ -49,7 +55,7 @@ bool Component::Update(const GameContext &context)
 
 bool Component::Shutdown()
 {
-    m_MessageBus = nullptr;
+    m_pMessageBus = nullptr;
     m_MessageQueue.~CBQueue();
     m_Components.~CBVector();
     return true;
@@ -58,5 +64,25 @@ bool Component::Shutdown()
 void Component::SetActive(bool inBool)
 {
     m_bIsActive = inBool;
+}
+
+void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
+{
+    parentPtr->AddChild(this);
+    m_pParentComponent = parentPtr;
+}
+
+void Component::AddChild(Component* childPtr)
+{
+    // TODO: walk the component tree to make sure there is no cycle.
+
+    m_Components.Push_back(childPtr);
+}
+
+void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
+{
+    AttachTo_NonSceneNode_Parent(parentPtr);
+    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
+    m_pParentSceneNode = parentPtr;
 }
 

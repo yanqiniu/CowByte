@@ -1,9 +1,8 @@
 #include <ctime>
 #include <stdio.h>
 #include <stdlib.h>
-#include "../CowByteEngine/CBMemArena.h"
-#include "../CowByteEngine/Matrix4x4.h"
-//#include "Vec3.h"
+#include "../CowByteEngine 0.2/Memory/CBMemArena.h"
+#include "../CowByteEngine 0.2/Math/Matrix4x4.h"
 
 class TestStruct
 {
@@ -14,36 +13,21 @@ public:
     ~TestStruct() {}
 };
 
-#define NUMITERATION 1000000
-#define ALLOCATION_SIZE 16 //1048576
 int main()
 {
     std::clock_t start;
-    //////////////////////////////////////////////////////////////////////////
     start = std::clock();
+    //////////////////////////////////////////////////////////////////////////
 
-    void *ptr;
-    for (int i = 0; i < NUMITERATION; ++i)
-    {
-        //ptr = new TestStruct[ALLOCATION_SIZE];
-        //delete[] (ptr);
-        ptr = CBMemArena::Get().Allocate(ALLOCATION_SIZE);
-        CBMemArena::Get().Free(ptr, ALLOCATION_SIZE);
-    }
+    Matrix4x4 m1(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 3, 4, 1);
+    Matrix4x4 m2(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 33, 13, 4, 1);
+
+    Matrix4x4 inv = m1.Inverse();
+
+    Matrix4x4 m3 = m1 * m2;
+
+    //////////////////////////////////////////////////////////////////////////
     double duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
     printf("My duration: %f\n", duration);
-    //////////////////////////////////////////////////////////////////////////
-
-    start = std::clock();
-    for (int i = 0; i < NUMITERATION; ++i)
-    {
-        ptr = malloc(ALLOCATION_SIZE);
-        free(ptr);
-    }
-    duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
-    printf("Built-in duration: %f\n", duration);
-
-
-
     system("Pause");
 }

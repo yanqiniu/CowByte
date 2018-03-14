@@ -1,12 +1,19 @@
 #include <exception>
 
 #include "Graphics.h"
+#include "Window.h"
 #include "../Utils/exceptions.h"
 #include "Vertex.h"
 #include "../Math/Vec3.h"
 #include "../Utils/CBString.h"
 #include "../Utils/CBPath.h"
 #include "../Utils/CBDebug.h"
+#include "../Utils/typedefs.h"
+#include "../SceneGraph/Camera.h"
+#include "../SceneGraph/SceneNode.h"
+#include "MeshInstance.h"
+#include "../Utils/CBFile.h"
+#include <DirectXMath.h>
 
 
 using namespace DirectX;
@@ -32,7 +39,17 @@ Graphics::Graphics(const GraphicsData &data):
     m_pWindow(data.m_pWindow),
     m_pDevice(nullptr),
     m_pDeviceContext(nullptr),
-    m_pSwapChain(nullptr)
+    m_pSwapChain(nullptr),
+    m_pMeshManager(nullptr),
+    m_pRenderTarget(nullptr),
+    m_pDepthStencilView(nullptr),
+    m_pVertexBuffer(nullptr),
+    m_pIndexBuffer(nullptr),
+    m_pConstantBuffers(),
+    m_pDepthStencilBuffer(nullptr),
+    m_pInputLayout(nullptr),
+    m_pDepthStencilState(nullptr),
+    m_pRasterizerState(nullptr)
 {
 
 }
@@ -41,6 +58,11 @@ Graphics::~Graphics()
 {
 }
 
+// TEST:
+Mesh *g_pMyCube;
+SceneNode *g_pCubeNode;
+SceneNode *g_pCamNode;
+MeshInstance g_CubeInst;
 bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
@@ -50,113 +72,49 @@ bool Graphics::Initialize()
     }
     System::Initialize();
 
-    DXGI_SWAP_CHAIN_DESC swapDesc;
-    ZeroMemory(&swapDesc, sizeof(swapDesc));
-    swapDesc.BufferCount = NumOfBuffers;
-    swapDesc.BufferDesc.Width = 640; // TODO: remove hard coding.
-    swapDesc.BufferDesc.Height = 480; // TODO: remove hard coding.
-    swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapDesc.OutputWindow = m_pWindow->GetWindowHandle();
-    swapDesc.SampleDesc.Count = 4;
-    swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    swapDesc.Windowed = !m_pWindow->GetIsFullScreen();
-
-    ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
-        NULL,
-        D3D_DRIVER_TYPE_HARDWARE,
-        NULL,
-        NULL,
-        NULL,
-        NULL,
-        D3D11_SDK_VERSION,
-        &swapDesc,
-        &m_pSwapChain,
-        &m_pDevice,
-        NULL,
-        &m_pDeviceContext
-    ));
-
-
-    // Set render target.
-    ID3D11Texture2D *pBackBuffer;
-    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, NULL, &m_pRenderTarget));
-    pBackBuffer->Release();
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTarget, NULL);
-
-    // Set viewport.
-    ZeroMemory(&m_Viewport, sizeof(D3D11_VIEWPORT));
-    m_Viewport.TopLeftX = 0;
-    m_Viewport.TopLeftY = 0;
-    m_Viewport.Width = m_pWindow->GetWidth();
-    m_Viewport.Height = m_pWindow->GetHeight();
-    m_pDeviceContext->RSSetViewports(1, &m_Viewport);
-
-    // Load and compile shaders. These will be put into a Mesh class.
-    ID3D10Blob *VS, *PS;
-    ID3D11VertexShader *pVS;
-    ID3D11PixelShader *pPS;
-    CBString<256> shaderPath;
-    Path::GenerateAssetPath(shaderPath, "shaders", "default.shader");
-    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
-    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);
-
-    // encapsulate both shaders into shader objects
-    m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
-    m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
-
-    // set the shader objects
-    m_pDeviceContext->VSSetShader(pVS, 0, 0);
-    m_pDeviceContext->PSSetShader(pPS, 0, 0);
-
-
-    // Test vertices for drawing a triangle.
-    static const int NumVerts = 3;
-    Vertex testVerts[NumVerts] =
+    if (!InitializePipeline())
     {
-        Vertex(0.0f,    0.5f, 0.0f, 1.0f, 0.0f, 0.0f),
-        Vertex(0.45f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f),
-        Vertex(-0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f)
-    };
-    Mesh myMesh;
-    myMesh.ConfigureMesh("cube.mesha");
-    myMesh.Initialize();
+        DbgERROR("Graphics: Failed initialize pipeline!");
+        return false;
+    }
 
-    Vec3 offset(-0.11f, -0.1f, 0.0f);
-    //offset = offset * 5.0f;
-    //for (Vertex & vert : testVerts)
-    //{
-    //    vert.m_Pos = vert.m_Pos + (offset);
-    //}
+    // TEST: render cube
+    // Create mesh manager.
+    m_pMeshManager = new MeshManager();
+    g_pMyCube = m_pMeshManager->CPULoadMesh("cube.mesha");
 
-    // Create vertex buffer.
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * NumVerts;
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, NULL, &m_pVertexBuffer));
-
-    // Fill the vertex buffer.
-    D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
-    ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-    memcpy(mappedSubrcs.pData, testVerts, sizeof(testVerts));
-    m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
+    // cube instance setup.
+    g_CubeInst = MeshInstance("cube.mesha");
+    bool found = g_CubeInst.FindAndSetMeshID(*m_pMeshManager);
+    g_pCubeNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    g_CubeInst.AttachTo_SceneNode_Parent(g_pCubeNode);
 
 
-    // Create input layout.
-    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
-    m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+    // Camera setup.
+    m_pMainCamera = new Camera((float)m_pWindow->GetWidth() / m_pWindow->GetHeight(),
+        1.0472f, 0.01f, 1000.0f);
+    g_pCamNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
+    g_pCamNode->Translate(Vec3(0, 0, -5.0f));
+    SimpleRenderSetup();
 
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
 
-
+    XMMATRIX testMat = XMMatrixPerspectiveFovLH(1.0472f, (float)m_pWindow->GetWidth() / m_pWindow->GetHeight(), 0.01f, 1000.0f);
+    XMMATRIX lookat = XMMatrixLookAtLH(Vec3(0, 0, -10.0)._data, Vec3(0, 0, 0)._data, Vec3(0, 1, 0)._data);
     return true;
 }
 
 bool Graphics::Update(GameContext& context)
 {
+    g_pCubeNode->UpdateWorldTransform();
+    g_pCamNode->UpdateWorldTransform();
+    m_pMainCamera->UpdateWToCMatrix();
+
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &g_CubeInst.GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
+
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     OnRender();
     m_pSwapChain->Present(0, 0);
@@ -177,13 +135,181 @@ bool Graphics::OnRender()
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
     m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+    m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
     
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pDeviceContext->Draw(3,             // the number of vertices to be drawn
-                           0);            // the first vertex to be drawn
+    m_pDeviceContext->DrawIndexed(36, 0, 0);
 
 
+
+    return true;
+}
+
+bool Graphics::InitializePipeline()
+{
+    DXGI_SWAP_CHAIN_DESC swapDesc;
+
+    ZeroMemory(&swapDesc, sizeof(swapDesc));
+    swapDesc.BufferCount = NumOfBuffers;
+    swapDesc.BufferDesc.Width = m_pWindow->GetWidth();
+    swapDesc.BufferDesc.Height = m_pWindow->GetHeight();
+    DXGI_RATIONAL refreshRate;
+    refreshRate.Numerator = 60;
+    refreshRate.Denominator = 1;
+    swapDesc.BufferDesc.RefreshRate = refreshRate;
+    swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapDesc.OutputWindow = m_pWindow->GetWindowHandle();
+    swapDesc.SampleDesc.Count = 4;
+    swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+    swapDesc.Windowed = !m_pWindow->GetIsFullScreen();
+
+    D3D_FEATURE_LEVEL featureLevels[] =
+    {
+        D3D_FEATURE_LEVEL_11_0,
+        D3D_FEATURE_LEVEL_10_1,
+        D3D_FEATURE_LEVEL_10_0,
+        D3D_FEATURE_LEVEL_9_3,
+        D3D_FEATURE_LEVEL_9_2,
+        D3D_FEATURE_LEVEL_9_1
+    };
+    D3D_FEATURE_LEVEL featureLevel;
+
+    ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
+        nullptr,
+        D3D_DRIVER_TYPE_HARDWARE,
+        nullptr,
+        0,
+        featureLevels,
+        _countof(featureLevels),
+        D3D11_SDK_VERSION,
+        &swapDesc,
+        &m_pSwapChain,
+        &m_pDevice,
+        &featureLevel,
+        &m_pDeviceContext
+    ));
+
+
+    // Set render target.
+    ID3D11Texture2D *pBackBuffer;
+    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTarget));
+    pBackBuffer->Release();
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTarget, nullptr);
+
+    // Create a depth stencil buffer and view.
+    D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
+    ZeroMemory(&depthStencilBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    depthStencilBufferDesc.ArraySize = 1;
+    depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthStencilBufferDesc.CPUAccessFlags = 0;
+    depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilBufferDesc.Width = m_pWindow->GetWidth();
+    depthStencilBufferDesc.Height = m_pWindow->GetHeight();
+    depthStencilBufferDesc.MipLevels = 1;
+    depthStencilBufferDesc.SampleDesc.Count = 4;
+    depthStencilBufferDesc.SampleDesc.Quality = 0;
+    depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBuffer));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, nullptr, &m_pDepthStencilView));
+
+    // Create depth/stencil state.
+    D3D11_DEPTH_STENCIL_DESC depthStencilStateDesc;
+    ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
+    depthStencilStateDesc.DepthEnable = TRUE;
+    depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // mess with this for transparency
+    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    depthStencilStateDesc.StencilEnable = FALSE;
+    ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilState));
+
+
+    // Create rasterizer state.
+    D3D11_RASTERIZER_DESC rasterizerDesc;
+    ZeroMemory(&rasterizerDesc, sizeof(D3D11_RASTERIZER_DESC));
+    rasterizerDesc.AntialiasedLineEnable = FALSE;
+    rasterizerDesc.CullMode = D3D11_CULL_BACK;
+    rasterizerDesc.DepthBias = 0;
+    rasterizerDesc.DepthBiasClamp = 0.0f;
+    rasterizerDesc.DepthClipEnable = TRUE;
+    rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+    rasterizerDesc.FrontCounterClockwise = FALSE;
+    rasterizerDesc.MultisampleEnable = FALSE;
+    rasterizerDesc.ScissorEnable = FALSE;
+    rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+    ThrowIfFailed( m_pDevice->CreateRasterizerState(&rasterizerDesc, &m_pRasterizerState));
+
+    // Set viewport.
+    ZeroMemory(&m_Viewport, sizeof(D3D11_VIEWPORT));
+    m_Viewport.TopLeftX = 0;
+    m_Viewport.TopLeftY = 0;
+    m_Viewport.Width = static_cast<FLOAT>(m_pWindow->GetWidth());
+    m_Viewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
+    m_Viewport.MinDepth = 0.0f;
+    m_Viewport.MaxDepth = 1.0f;
+    m_pDeviceContext->RSSetViewports(1, &m_Viewport);
+
+    return true;
+}
+
+bool Graphics::SimpleRenderSetup()
+{
+    // Load and compile shaders. These will be put into a Mesh class.
+    ID3D10Blob *VS, *PS;
+    ID3D11VertexShader *pVS;
+    ID3D11PixelShader *pPS;
+
+    D3DReadFileToBlob(L"../x64/Debug/default_vs.cso", &VS);
+    ThrowIfFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS));
+
+    D3DReadFileToBlob(L"../x64/Debug/default_ps.cso", &PS);
+    ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS));
+
+    // set the shader objects
+    m_pDeviceContext->VSSetShader(pVS, 0, 0);
+    m_pDeviceContext->PSSetShader(pPS, 0, 0);
+
+
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(Vertex) * g_pMyCube->GetNumVertices();
+    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    D3D11_SUBRESOURCE_DATA resourceData;
+    ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+    resourceData.pSysMem = &g_pMyCube->GetVertices()[0];
+    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
+
+
+    // Create and initialize the index buffer.
+    D3D11_BUFFER_DESC indexBufferDesc;
+    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.ByteWidth = sizeof(WORD) * g_pMyCube->GetNumTriangles() * 3;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = 0;
+    resourceData.pSysMem = &g_pMyCube->GetIndices()[0];
+    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
+
+    // Create the constant buffers for the variables defined in the vertex shader.
+    D3D11_BUFFER_DESC constantBufferDesc;
+    ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDesc.ByteWidth = sizeof(Matrix4x4);
+    constantBufferDesc.CPUAccessFlags = 0;
+    constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
+
+
+    // Create input layout.
+    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, PS->GetBufferPointer(), PS->GetBufferSize(), &m_pInputLayout);
+    m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
     return true;
 }

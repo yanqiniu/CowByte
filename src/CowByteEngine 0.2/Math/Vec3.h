@@ -10,6 +10,7 @@ __declspec(align(16)) struct Vec3
     __m128 _data;
 
 #pragma region Con/Destructor, Getter/Setter
+    // Default to zero vector.
     __forceinline Vec3()
     {
         _data = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
@@ -175,19 +176,29 @@ __declspec(align(16)) struct Vec3
 
 #pragma region Matrix4x4 operators and operations
 
-    __forceinline Vec3 Mul(const Matrix4x4 &matrix)
+    __forceinline void Mul(const Matrix4x4 &matrix) 
     {
         __m128 temp = _mm_dp_ps(_data, matrix._data[0], 0b11110001); // x
         temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[1], 0b11110001), 0b00010000); // y
         temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[2], 0b11110001), 0b00100000); // z
         temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[3], 0b11110001), 0b00110000); // w
+        _data = temp;
+    }
+    __forceinline void operator*=(const Matrix4x4 &matrix)
+    {
+        Mul(matrix);
+    }
 
+    __forceinline Vec3 operator*(const Matrix4x4 &matrix) const
+    {
+        __m128 temp = _mm_dp_ps(_data, matrix._data[0], 0b11110001); // x
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[1], 0b11110001), 0b00010000); // y
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[2], 0b11110001), 0b00100000); // z
+        temp = _mm_insert_ps(temp, _mm_dp_ps(_data, matrix._data[3], 0b11110001), 0b00110000); // w
         return Vec3(temp);
     }
-    __forceinline Vec3 operator*(const Matrix4x4 &matrix)
-    {
-        return Mul(matrix);
-    }
+
+
 
 #pragma endregion
     

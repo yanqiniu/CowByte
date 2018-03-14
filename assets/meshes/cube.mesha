@@ -1,2 +1,3 @@
-  MESH   
+MESH   
 cube_pos.bufa
+cube_index.bufa
