@@ -191,4 +191,12 @@
       <Filter>Assets</Filter>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\..\assets\shaders\default_ps.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+    <FxCompile Include="..\..\assets\shaders\default_vs.hlsl">
+      <Filter>Assets</Filter>
+    </FxCompile>
+  </ItemGroup>
 </Project>

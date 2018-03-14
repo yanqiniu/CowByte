@@ -23,15 +23,16 @@ cbuffer PerObject : register(b2)
 VS_Output VShader(float4 position : POSITION, float4 color : COLOR)
 {
     VS_Output output;
+    
+    matrix mvp = mul(worldMatrix, cameraViewMatrix);
+    mvp = mul(mvp, projectionMatrix);
+    output.position = mul( position, mvp );
 
-    output.position = position;
+    // float4x4 mvp = mul(projectionMatrix, mul(cameraViewMatrix, worldMatrix));
+    // output.position = mul( mvp, position );
+
+    // output.position = position;
     output.color = color;
 
     return output;
-}
-
-
-float4 PShader(float4 position : SV_POSITION, float4 color : COLOR) : SV_TARGET
-{
-    return color;
 }

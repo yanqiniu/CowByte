@@ -228,14 +228,12 @@ bool Graphics::SimpleRenderSetup()
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
-    Filepath shaderPath;
-    Path::GenerateAssetPath(shaderPath, "shaders", "default.hlsl");
-    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "VShader", "vs_5_0", 0, 0, 0, &VS, 0, 0);
-    D3DX11CompileFromFile(shaderPath.Get(), 0, 0, "PShader", "ps_5_0", 0, 0, 0, &PS, 0, 0);
 
-    // encapsulate both shaders into shader objects
-    m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS);
-    m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS);
+    D3DReadFileToBlob(L"../x64/Debug/default_vs.cso", &VS);
+    ThrowIfFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS));
+
+    D3DReadFileToBlob(L"../x64/Debug/default_ps.cso", &PS);
+    ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS));
 
     // set the shader objects
     m_pDeviceContext->VSSetShader(pVS, 0, 0);
