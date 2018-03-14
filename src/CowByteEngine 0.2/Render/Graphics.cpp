@@ -9,6 +9,11 @@
 #include "../Utils/CBPath.h"
 #include "../Utils/CBDebug.h"
 #include "../Utils/typedefs.h"
+#include "../SceneGraph/Camera.h"
+#include "../SceneGraph/SceneNode.h"
+#include "MeshInstance.h"
+#include "../Utils/CBFile.h"
+#include <DirectXMath.h>
 
 
 using namespace DirectX;
@@ -53,6 +58,11 @@ Graphics::~Graphics()
 {
 }
 
+// TEST:
+Mesh *g_pMyCube;
+SceneNode *g_pCubeNode;
+SceneNode *g_pCamNode;
+MeshInstance g_CubeInst;
 bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
@@ -68,22 +78,43 @@ bool Graphics::Initialize()
         return false;
     }
 
-    if (!SimpleRenderSetup())
-    {
-        DbgERROR("Graphics: Failed setting up simple render!");
-        return false;
-    }
-
+    // TEST: render cube
     // Create mesh manager.
     m_pMeshManager = new MeshManager();
-    // TEST: Load single cube into mesh manager.
-    m_pMeshManager->CPULoadMesh("cube.mesha");
+    g_pMyCube = m_pMeshManager->CPULoadMesh("cube.mesha");
 
+    // cube instance setup.
+    g_CubeInst = MeshInstance("cube.mesha");
+    bool found = g_CubeInst.FindAndSetMeshID(*m_pMeshManager);
+    g_pCubeNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    g_CubeInst.AttachTo_SceneNode_Parent(g_pCubeNode);
+
+
+    // Camera setup.
+    m_pMainCamera = new Camera((float)m_pWindow->GetWidth() / m_pWindow->GetHeight(),
+        1.0472f, 0.01f, 1000.0f);
+    g_pCamNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
+    g_pCamNode->Translate(Vec3(0, 0, -5.0f));
+    SimpleRenderSetup();
+
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
+
+    XMMATRIX testMat = XMMatrixPerspectiveFovLH(1.0472f, (float)m_pWindow->GetWidth() / m_pWindow->GetHeight(), 0.01f, 1000.0f);
+    XMMATRIX lookat = XMMatrixLookAtLH(Vec3(0, 0, -10.0)._data, Vec3(0, 0, 0)._data, Vec3(0, 1, 0)._data);
     return true;
 }
 
 bool Graphics::Update(GameContext& context)
 {
+    g_pCubeNode->UpdateWorldTransform();
+    g_pCamNode->UpdateWorldTransform();
+    m_pMainCamera->UpdateWToCMatrix();
+
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &g_CubeInst.GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
+
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     OnRender();
     m_pSwapChain->Present(0, 0);
@@ -240,38 +271,16 @@ bool Graphics::SimpleRenderSetup()
     m_pDeviceContext->PSSetShader(pPS, 0, 0);
 
 
-    // TSET: vertices for drawing a triangle.
-    //static const int NumVerts = 3;
-    //Vertex testVerts[NumVerts] =
-    //{
-    //    Vertex(0.0f,    0.5f, 0.0f, 1.0f, 0.0f, 0.0f),
-    //    Vertex(0.45f,  -0.5f, 0.0f, 0.0f, 1.0f, 0.0f),
-    //    Vertex(-0.45f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f)
-    //};
-
-    // TEST: load a mesh.
-
-    Mesh myCube;
-    myCube.LoadContent("cube.mesha");
-
-    // Create vertex buffer.
-    //D3D11_BUFFER_DESC bufferDesc;
-    //ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-    //bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    //bufferDesc.ByteWidth = sizeof(Vertex) * NumVerts;
-    //bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    //bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    //ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, NULL, &m_pVertexBuffer));
     D3D11_BUFFER_DESC bufferDesc;
     ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
     bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * myCube.GetNumVertices();
+    bufferDesc.ByteWidth = sizeof(Vertex) * g_pMyCube->GetNumVertices();
     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
     D3D11_SUBRESOURCE_DATA resourceData;
     ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-    resourceData.pSysMem = &myCube.GetVertices()[0];
+    resourceData.pSysMem = &g_pMyCube->GetVertices()[0];
     ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
 
 
@@ -279,24 +288,27 @@ bool Graphics::SimpleRenderSetup()
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(WORD) * myCube.GetNumTriangles() * 3;
+    indexBufferDesc.ByteWidth = sizeof(WORD) * g_pMyCube->GetNumTriangles() * 3;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
-    resourceData.pSysMem = &myCube.GetIndices()[0];
+    resourceData.pSysMem = &g_pMyCube->GetIndices()[0];
     ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
 
-    /*
-    // Fill the vertex buffer.
-    D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
-    ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-    memcpy(mappedSubrcs.pData, &myCube.GetVertices()[0], sizeof(Vertex) * myCube.GetNumVertices());
-    m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
-    */
+    // Create the constant buffers for the variables defined in the vertex shader.
+    D3D11_BUFFER_DESC constantBufferDesc;
+    ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    constantBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    constantBufferDesc.ByteWidth = sizeof(Matrix4x4);
+    constantBufferDesc.CPUAccessFlags = 0;
+    constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
-    // TODO: index buffer.
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
+
 
     // Create input layout.
-    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
+    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, PS->GetBufferPointer(), PS->GetBufferSize(), &m_pInputLayout);
     m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
     return true;
