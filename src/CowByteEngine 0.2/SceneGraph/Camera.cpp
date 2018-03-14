@@ -17,7 +17,7 @@ Camera::Camera(float ar, float fovy, float np, float fp) :
     m_FOVy(fovy),
     m_NearPlane(np),
     m_FarPlane(fp),
-    m_ProjectionMatrix(Matrix4x4::Projection(ar, fovy, np, fp))
+    m_ProjectionMatrix(Matrix4x4::PerspectiveProjection(ar, fovy, np, fp))
 {
 
 }
