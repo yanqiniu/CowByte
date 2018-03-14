@@ -48,7 +48,7 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
             return;
         }
     }
-    newSubscbr->SetMessageBus(this);
+
     m_Subscribers.Push_back(newSubscbr);
 }
 
