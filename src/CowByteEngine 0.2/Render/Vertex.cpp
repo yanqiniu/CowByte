@@ -10,7 +10,7 @@ D3D11_INPUT_ELEMENT_DESC Vertex::InputDesc[2] =
 // Default is origin pos, white color.
 Vertex::Vertex() :
     m_Pos(Vec3(0, 0, 0, 1.0f)),
-    m_Color(D3DXCOLOR(1.0f, 1.0f, 1.0f, 1.0f))
+    m_Color(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f)) // Initialize to purple.
 {
 
 }
