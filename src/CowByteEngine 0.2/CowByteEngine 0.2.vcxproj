@@ -159,6 +159,7 @@
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBPath.h" />
     <ClInclude Include="Utils\CBQueue.h" />
+    <ClInclude Include="Utils\CBRefCountPtr.h" />
     <ClInclude Include="Utils\CBString.h" />
     <ClInclude Include="Utils\CBStringOps.h" />
     <ClInclude Include="Utils\CBVector.h" />
