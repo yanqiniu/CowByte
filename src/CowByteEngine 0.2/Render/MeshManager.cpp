@@ -70,11 +70,11 @@ Mesh* MeshManager::AddMesh(const Mesh &toAdd)
 // it needs.
 UID MeshManager::GetMeshID(const Filename &meshfn) const
 {
-    for (const auto& m : m_Meshes)
+    for (size_t i = 0; i < m_Meshes.Size(); ++i)
     {
-        if (m.GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
+        if (m_Meshes.peekat(i).GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
         {
-            return m.GetID();
+            return m_Meshes.peekat(i).GetID();
         }
     }
 

@@ -21,6 +21,7 @@ public:
     void Resize(size_t newCapacity); /* Change capacity of container. */
     bool IsEmpty() const { return m_Size == 0; }
 
+    const T& peekat(size_t index) const { return m_Data[index]; } // const version of at().
     T& at(size_t index) { return m_Data[index]; }
     T& operator[](size_t index) { return m_Data[index]; }
     // This is always a copy construct.
