@@ -48,9 +48,14 @@ public:
         m_Head = nullptr;
         m_Tail = nullptr;
 
-        for (CBQueueNode *node = rhs.Front(); node != rhs.Back(); node = node->_next)
+        if (rhs.m_Head != nullptr && rhs.m_Tail != nullptr)
         {
-            Enqueue(node->_data);
+            for (CBQueueNode *node = rhs.m_Head; node != rhs.m_Tail; node = node->_next)
+            {
+                Enqueue(node->_data);
+            }
+            Enqueue(rhs.m_Tail->_data);
+
         }
 
         return *this;
