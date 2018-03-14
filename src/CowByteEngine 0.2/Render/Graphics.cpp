@@ -1,4 +1,5 @@
 #include <exception>
+#include <DirectXMath.h>
 
 #include "Graphics.h"
 #include "Window.h"
@@ -13,8 +14,7 @@
 #include "../SceneGraph/SceneNode.h"
 #include "MeshInstance.h"
 #include "../Utils/CBFile.h"
-#include <DirectXMath.h>
-
+#include "../Core/MessageBus.h"
 
 using namespace DirectX;
 
@@ -58,11 +58,7 @@ Graphics::~Graphics()
 {
 }
 
-// TEST:
-Mesh *g_pMyCube;
-SceneNode *g_pCubeNode;
 SceneNode *g_pCamNode;
-MeshInstance g_CubeInst;
 bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
@@ -81,13 +77,8 @@ bool Graphics::Initialize()
     // TEST: render cube
     // Create mesh manager.
     m_pMeshManager = new MeshManager();
-    g_pMyCube = m_pMeshManager->CPULoadMesh("cube.mesha");
-
-    // cube instance setup.
-    g_CubeInst = MeshInstance("cube.mesha");
-    bool found = g_CubeInst.FindAndSetMeshID(*m_pMeshManager);
-    g_pCubeNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
-    g_CubeInst.AttachTo_SceneNode_Parent(g_pCubeNode);
+    m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
+    m_pMeshManager->CPULoadMesh("cube.mesha");
 
 
     // Camera setup.
@@ -100,23 +91,26 @@ bool Graphics::Initialize()
 
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
 
-    XMMATRIX testMat = XMMatrixPerspectiveFovLH(1.0472f, (float)m_pWindow->GetWidth() / m_pWindow->GetHeight(), 0.01f, 1000.0f);
-    XMMATRIX lookat = XMMatrixLookAtLH(Vec3(0, 0, -10.0)._data, Vec3(0, 0, 0)._data, Vec3(0, 1, 0)._data);
     return true;
 }
 
 bool Graphics::Update(GameContext& context)
 {
-    g_pCubeNode->UpdateWorldTransform();
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+    
+    m_pMeshManager->HandleMessageQueue();
     g_pCamNode->UpdateWorldTransform();
     m_pMainCamera->UpdateWToCMatrix();
-
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &g_CubeInst.GetParentSceneNode()->GetWorldTransform(), 0, 0);
-    m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
 
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-    OnRender();
+    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    {
+        SetupSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
+        m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
+        OnRender();
+    }
+
+
     m_pSwapChain->Present(0, 0);
     return true;
 }
@@ -140,8 +134,6 @@ bool Graphics::OnRender()
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     m_pDeviceContext->DrawIndexed(36, 0, 0);
-
-
 
     return true;
 }
@@ -271,29 +263,6 @@ bool Graphics::SimpleRenderSetup()
     m_pDeviceContext->PSSetShader(pPS, 0, 0);
 
 
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * g_pMyCube->GetNumVertices();
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-    D3D11_SUBRESOURCE_DATA resourceData;
-    ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-    resourceData.pSysMem = &g_pMyCube->GetVertices()[0];
-    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
-
-
-    // Create and initialize the index buffer.
-    D3D11_BUFFER_DESC indexBufferDesc;
-    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(WORD) * g_pMyCube->GetNumTriangles() * 3;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
-    resourceData.pSysMem = &g_pMyCube->GetIndices()[0];
-    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
-
     // Create the constant buffers for the variables defined in the vertex shader.
     D3D11_BUFFER_DESC constantBufferDesc;
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -311,6 +280,37 @@ bool Graphics::SimpleRenderSetup()
     m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, PS->GetBufferPointer(), PS->GetBufferSize(), &m_pInputLayout);
     m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
+    return true;
+}
+
+bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
+{
+    Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
+
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(Vertex) * mesh->GetNumVertices();
+    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+
+    D3D11_SUBRESOURCE_DATA resourceData;
+    ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
+    resourceData.pSysMem = &mesh->GetVertices()[0];
+    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
+
+
+    // Create and initialize the index buffer.
+    D3D11_BUFFER_DESC indexBufferDesc;
+    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    indexBufferDesc.ByteWidth = sizeof(WORD) * mesh->GetNumTriangles() * 3;
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = 0;
+    resourceData.pSysMem = &mesh->GetIndices()[0];
+    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
+
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &meshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
     return true;
 }
 

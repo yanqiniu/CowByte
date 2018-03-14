@@ -1,9 +1,12 @@
 #include "MeshManager.h"
 #include "Mesh.h"
+#include "../Core/Message.h"
+#include "MeshInstance.h"
 
 
 MeshManager::MeshManager() :
-    m_Meshes(8)
+    m_Meshes(8),
+    m_MesheInstPtrs(8)
 {
 
 }
@@ -80,4 +83,26 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
 
     return INVALID_UID;
 }
+
+void MeshManager::_HandleMessage(const Message &msg)
+{
+    if (msg.type == Message::RegisterDrawbleMeshInstance)
+    {
+        Message nonConstMsg = const_cast<Message&>(msg);
+        Msg_RegisterDrawbleMeshInst realMsg = static_cast<Msg_RegisterDrawbleMeshInst&>(nonConstMsg);
+        m_MesheInstPtrs.Push_back(realMsg.m_MeshInstPtr);
+        realMsg.m_MeshInstPtr->FindAndSetMeshID(*this);
+    }
+}
+
+void MeshManager::HandleMessageQueue()
+{
+    while (!m_MessageQueue.IsEmpty())
+    {
+        this->_HandleMessage(*m_MessageQueue.Front());
+        BroadCastToChildren(*m_MessageQueue.Front());
+        m_MessageQueue.PopFront();
+    }
+}
+
 

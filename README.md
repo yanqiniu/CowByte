@@ -24,6 +24,7 @@ Don't worry about the name :D
  - Custom memory allocator (sets of pools);
  - Custom data containers (Queue, Vector);
  - SIMD math (Intel SSE);
- - Component model and Scenegraph;
+ - Scenegraph;
  - Mesh Instancing;  
+ - Custom string and File that supports commenting.
  ...
