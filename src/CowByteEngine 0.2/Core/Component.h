@@ -26,7 +26,7 @@ public:
     void AttachTo_NonSceneNode_Parent(Component* parentPtr);
     void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
 
-
+    SceneNode *GetParentSceneNode() const;
 
 protected:
     virtual void _HandleMessage(const Message &msg);
@@ -43,6 +43,12 @@ private:
 
     bool m_bIsActive;
 };
+
+inline SceneNode *Component::GetParentSceneNode() const
+{
+    return m_pParentSceneNode;
+}
+
 
 #endif
 

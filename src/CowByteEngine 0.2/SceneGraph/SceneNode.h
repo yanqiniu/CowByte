@@ -1,7 +1,7 @@
 #ifndef _SCENENODE_H
 #define _SCENENODE_H
 
-#include "../Math/Matrix4x4.h"
+#include "../Math/Vec3.h"
 #include "../Core/Component.h"
 #include "../Utils/CBVector.h"
 

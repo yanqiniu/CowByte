@@ -82,7 +82,7 @@ void Component::AddChild(Component* childPtr)
 void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
 {
     AttachTo_NonSceneNode_Parent(parentPtr);
-    DbgAssert(parentPtr == m_pParentSceneNode, "SceneNode pointer component attached to must be the same as parent ptr!");
+    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
     m_pParentSceneNode = parentPtr;
 }
 
