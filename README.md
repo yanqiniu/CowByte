@@ -25,5 +25,5 @@ Don't worry about the name :D
  - Custom data containers (Queue, Vector);
  - SIMD math (Intel SSE);
  - Scenegraph.
- - Mesh Instancing.
+ - Mesh Instancing.  
  ...
