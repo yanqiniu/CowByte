@@ -29,7 +29,7 @@ void CBFile::ReadIntoBuffer(char *&buffer, size_t &size)
 
     fseek(m_pFile, 0, SEEK_SET);
 
-    buffer = (char *)malloc(size * 2); // allow space for "//n"
+    buffer = (char *)malloc(size * 2); // allow space for "//n" // TODO: use mem arena.
 
     size_t read = fread(buffer, 1, size, m_pFile);
     buffer[read++] = '\n';
