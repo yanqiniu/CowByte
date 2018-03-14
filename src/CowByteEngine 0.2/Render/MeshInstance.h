@@ -15,6 +15,7 @@ public:
 
     void SetFileName( const char *filename);
     bool FindAndSetMeshID(const MeshManager& meshManager);
+    UID GetMeshID() { return m_MeshID; }
 
 private:
     Filename m_MeshFileName;

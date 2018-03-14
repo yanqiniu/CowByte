@@ -12,7 +12,6 @@ enum SystemType
     SYS_INPUT,
     SYS_GRAPHICS,
     SYS_GAMETIMER,
-
     SYS_MAX
 };
 

@@ -1,6 +1,8 @@
 #include "Game.h"
+#include "Message.h"
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
+#include "../Render/MeshInstance.h"
 
 
 
@@ -24,8 +26,10 @@ bool Game::Initialize()
 
 
     // TEMP: Create Mesh in the scene.
-    // SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
-    // cubeSceneNode->AddMeshInstance();
+    SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    MeshInstance *cube1 = new MeshInstance("cube.mesha");
+    PostMessage(Msg_RegisterDrawbleMeshInst(cube1));
+
     return true;
 }
 

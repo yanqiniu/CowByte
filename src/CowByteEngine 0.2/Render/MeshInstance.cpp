@@ -5,13 +5,14 @@ MeshInstance::MeshInstance() :
     m_MeshFileName(),
     m_MeshID(INVALID_UID)
 {
-
+    m_CompType = Component::CompType::MESHINSTANCE;
 }
 
 MeshInstance::MeshInstance(const char *filename) :
     m_MeshFileName(),
     m_MeshID(INVALID_UID)
 {
+    Component::CompType::MESHINSTANCE;
     SetFileName(filename);
 }
 

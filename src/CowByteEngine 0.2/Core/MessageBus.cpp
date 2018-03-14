@@ -13,17 +13,22 @@ MessageBus::~MessageBus()
 
 }
 
-bool MessageBus::EnqueueNewMsg(const Message &msg)
+
+
+int MessageBus::AttempBroadCastFrontMsg()
 {
-    return m_MessageQueue.Enqueue(msg);
+    while (!m_MessageQueue.IsEmpty())
+        BroadCastFrontMsg();
+
+    return 0;
 }
 
 int MessageBus::BroadCastFrontMsg()
 {
     int numSentTo = 0;
-    for (auto subscriber : m_Subscribers)
+    for (int i = 0; i < m_Subscribers.Size(); ++i)
     {
-        subscriber->AcceptMessage(*m_MessageQueue.Front());
+        m_Subscribers.at(i)->AcceptMessage(*m_MessageQueue.Front());
         ++numSentTo;
     }
 
@@ -35,6 +40,14 @@ int MessageBus::BroadCastFrontMsg()
 // directly to, don't call this method on it.
 void MessageBus::AddSubscriber(Component* newSubscbr)
 {
+    // Prevent double subscription.
+    for (int i = 0; i < m_Subscribers.Size(); ++i)
+    {
+        if (m_Subscribers.peekat(i) == newSubscbr)
+        {
+            return;
+        }
+    }
     newSubscbr->SetMessageBus(this);
     m_Subscribers.Push_back(newSubscbr);
 }

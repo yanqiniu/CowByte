@@ -41,6 +41,7 @@ public:
 private:
     bool InitializePipeline();
     bool SimpleRenderSetup(); // TODO: Get rid of this placeholder code piece.
+    bool SetupSingleMeshInst(MeshInstance *meshInst);
 
     static const int NumOfBuffers = 2;
     enum ConstantBufferType

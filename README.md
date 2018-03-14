@@ -19,7 +19,12 @@ Don't worry about the name :D
 
 
 ### Features
- - As mentioned above, this engine uses DirectX 11. Might support DX12 later. 
- - Implements component model with message bus. 
- - Custom memory allocator (sets of pools).
- - SIMD math (Intel SSE)
+ - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
+ - Implements component model with message bus;
+ - Custom memory allocator (sets of pools);
+ - Custom data containers (Queue, Vector);
+ - SIMD math (Intel SSE);
+ - Scenegraph;
+ - Mesh Instancing;  
+ - Custom string and File that supports commenting.
+ ...
