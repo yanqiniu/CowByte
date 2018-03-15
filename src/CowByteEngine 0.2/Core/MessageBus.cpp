@@ -64,3 +64,13 @@ void CB::InitializeEngineBus()
 {
     MessageBus::GetEngineBus() = new MessageBus();
 }
+
+void CB::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus)
+{
+    if (msgBus == nullptr)
+    {
+        DbgWARNING("Trying to post to null message bus.");
+    }
+
+    msgBus->EnqueueNewMsg(pMsg);
+}

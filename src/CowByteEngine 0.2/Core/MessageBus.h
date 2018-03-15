@@ -41,7 +41,7 @@ inline MessageBus *& MessageBus::GetEngineBus()
 namespace  CB
 {
     void InitializeEngineBus();
-
+    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus);
 }
 
 #endif
