@@ -34,8 +34,17 @@ bool Game::Initialize()
 
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
     static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
-
     PostMessage(msgPtr, MessageBus::GetEngineBus());
+
+    // TEMP: Create A Second in the scene.
+    m_pTestSceneNode2 = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    MeshInstance *cube2 = new MeshInstance("cube.mesha");
+    cube2->AttachTo_SceneNode_Parent(m_pTestSceneNode2);
+
+    CBRefCountPtr<Message> msgPtr2 = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
+    static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr2.Get())->m_MeshInstPtr = cube2;
+    PostMessage(msgPtr2, MessageBus::GetEngineBus());
+
 
     return true;
 }
@@ -44,10 +53,11 @@ bool Game::Update(const GameContext &context)
 {
     //m_pMainCamera->UpdateWToCMatrix();
 
-    Vec3 translateAmount(0.5f, 0, 0);
-    translateAmount *= context.dTime;
-    m_pTestSceneNode->Translate(Vec3(0.5, 0, 0) * context.dTime);
+    m_pTestSceneNode->Translate(Vec3(0.5f, 0, 0) * context.dTime);
     m_pTestSceneNode->UpdateWorldTransform();
+
+    m_pTestSceneNode2->Translate(Vec3(0, 0.5f, 0) * context.dTime);
+    m_pTestSceneNode2->UpdateWorldTransform();
 
     return true;
 }

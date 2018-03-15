@@ -108,6 +108,7 @@ bool Graphics::Update(const GameContext& context)
         SetupSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
         m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
         OnRender();
+
     }
 
 
@@ -322,7 +323,7 @@ bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
     // Update index buffer.
     ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
     ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-    memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3);
+    memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
     m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
 
 

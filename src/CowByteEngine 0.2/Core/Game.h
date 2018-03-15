@@ -21,6 +21,7 @@ public:
 private:
     Camera *m_pMainCamera; // Pointer to current active cam.
     SceneNode *m_pTestSceneNode;
+    SceneNode *m_pTestSceneNode2;
 };
 
 #endif
