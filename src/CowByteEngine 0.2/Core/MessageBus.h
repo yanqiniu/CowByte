@@ -11,13 +11,17 @@ class Component;
 class MessageBus
 {
 public:
+
     MessageBus();
     ~MessageBus();
     bool EnqueueNewMsg(CBRefCountPtr<Message> pMsg);
     int AttempBroadCastFrontMsg();
     void AddSubscriber(Component* newSubscbr);
 
+    MessageBus *GetEngineBus();
+
 private:
+    static MessageBus s_EngineBus;
     int BroadCastFrontMsg();
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
@@ -28,5 +32,11 @@ inline bool MessageBus::EnqueueNewMsg(CBRefCountPtr<Message> pMsg)
 {
     return m_MessageQueue.Enqueue(pMsg);
 }
+
+inline MessageBus * MessageBus::GetEngineBus()
+{
+    return &s_EngineBus;
+}
+
 
 #endif

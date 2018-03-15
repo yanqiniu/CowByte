@@ -1,6 +1,9 @@
 #include "MessageBus.h"
 #include "Component.h"
 
+
+MessageBus MessageBus::s_EngineBus;
+
 MessageBus::MessageBus() :
     m_MessageQueue(),
     m_Subscribers(8)
@@ -51,4 +54,5 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
 
     m_Subscribers.Push_back(newSubscbr);
 }
+
 
