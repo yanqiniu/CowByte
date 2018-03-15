@@ -38,7 +38,7 @@ void Component::PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus)
 
 void Component::_HandleMessage(CBRefCountPtr<Message> pMsg)
 {
-    if (pMsg->type == Message::DEFAULT)
+    if (pMsg->type == MessageType::MsgType_Default)
     {
         DbgINFO("Message received!");
     }

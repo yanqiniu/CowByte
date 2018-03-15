@@ -3,6 +3,7 @@
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
 #include "../Render/MeshInstance.h"
+#include "../Utils/CBRefCountPtr.h"
 
 
 
@@ -28,7 +29,11 @@ bool Game::Initialize()
     // TEMP: Create Mesh in the scene.
     SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     MeshInstance *cube1 = new MeshInstance("cube.mesha");
-    PostMessage(Msg_RegisterDrawbleMeshInst(cube1));
+
+    CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
+    static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
+
+    PostMessage(msgPtr);
 
     return true;
 }
