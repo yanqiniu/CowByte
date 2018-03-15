@@ -68,7 +68,7 @@ bool Component::UpdateTree(const GameContext &context)
     toRet &= Update(context);
     for (int i = 0; i < m_Components.Size(); ++i)
     {
-        toRet &= m_Components.at(i)->Update(context);
+        toRet &= m_Components.at(i)->UpdateTree(context);
     }
 
     return toRet;
