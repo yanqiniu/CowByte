@@ -53,7 +53,7 @@ protected:
     virtual bool Initialize();
     virtual bool Update(const GameContext &context) override;
     virtual bool ShutDown();
-    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+    virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
     bool CenterWindow();
 

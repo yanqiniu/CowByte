@@ -137,7 +137,7 @@ bool Graphics::OnRender()
     return true;
 }
 
-void Graphics::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }

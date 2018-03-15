@@ -17,7 +17,7 @@ public:
 
     bool Initialize();
     bool Update(const GameContext &context);
-    void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+    void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
     Camera *m_pMainCamera; // Pointer to current active cam.
     SceneNode *m_pTestSceneNode;

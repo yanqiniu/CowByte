@@ -16,8 +16,8 @@ public:
     Component();
     virtual ~Component();
 
-    void AcceptMessage(CBRefCountPtr<Message> pMsg);
-    void PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus);
+    void AcceptMessage(CBRefCountPtr<Message> &pMsg);
+    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus);
 
     virtual bool Initialize();
     virtual bool Shutdown();
@@ -36,7 +36,7 @@ public:
 
 protected:
     virtual bool Update(const GameContext &context) = 0;
-    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) = 0;
+    virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) = 0;
     void HandleMessageQueue();
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;

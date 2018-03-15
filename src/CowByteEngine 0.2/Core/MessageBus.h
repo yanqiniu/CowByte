@@ -14,7 +14,7 @@ public:
 
     MessageBus();
     ~MessageBus();
-    bool EnqueueNewMsg(CBRefCountPtr<Message> pMsg);
+    bool EnqueueNewMsg(CBRefCountPtr<Message> &pMsg);
     void AddSubscriber(Component* newSubscbr);
     int Broadcast();
 
@@ -28,7 +28,7 @@ private:
     CBVector<Component*> m_Subscribers;
 };
 
-inline bool MessageBus::EnqueueNewMsg(CBRefCountPtr<Message> pMsg)
+inline bool MessageBus::EnqueueNewMsg(CBRefCountPtr<Message> &pMsg)
 {
     return m_MessageQueue.Enqueue(pMsg);
 }

@@ -174,7 +174,7 @@ Game* Engine::CreateGame()
     return game;
 }
 
-void Engine::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void Engine::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }

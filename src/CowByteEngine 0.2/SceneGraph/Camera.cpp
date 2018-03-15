@@ -32,7 +32,7 @@ bool Camera::Update(const GameContext &context)
     return true;
 }
 
-void Camera::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void Camera::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }

@@ -19,7 +19,7 @@ Component::~Component()
     Shutdown();
 }
 
-void Component::AcceptMessage(CBRefCountPtr<Message> pMsg)
+void Component::AcceptMessage(CBRefCountPtr<Message> &pMsg)
 {
     m_MessageQueue.Enqueue(pMsg);
 
@@ -30,7 +30,7 @@ void Component::AcceptMessage(CBRefCountPtr<Message> pMsg)
     }
 }
 
-void Component::PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus)
+void Component::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus)
 {
     if (msgBus == nullptr)
     {
@@ -68,7 +68,7 @@ bool Component::UpdateTree(const GameContext &context)
     toRet &= Update(context);
     for (int i = 0; i < m_Components.Size(); ++i)
     {
-        toRet &= m_Components.at(i)->Update(context);
+        toRet &= m_Components.at(i)->UpdateTree(context);
     }
 
     return toRet;
@@ -120,7 +120,7 @@ void Component::HandleMessagesQueueTree()
     HandleMessageQueue();
     for (int i = 0; i < m_Components.Size(); ++i)
     {
-        m_Components.at(i)->HandleMessageQueue();
+        m_Components.at(i)->HandleMessagesQueueTree();
     }
 }
 

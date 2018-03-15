@@ -62,7 +62,7 @@ bool SceneNode::Update(const GameContext &context)
     return true;
 }
 
-void SceneNode::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void SceneNode::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }

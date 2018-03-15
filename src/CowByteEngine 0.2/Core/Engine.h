@@ -46,7 +46,7 @@ public:
     Game* CreateGame();
 
     static EngineState GetEngineState() { return m_EngineState; }
-    void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+    void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
     // =================================================//
 

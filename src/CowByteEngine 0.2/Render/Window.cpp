@@ -278,7 +278,7 @@ bool Window::ShutDown()
     return true;
 }
 
-void Window::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void Window::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }
