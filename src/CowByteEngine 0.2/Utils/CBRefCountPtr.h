@@ -14,12 +14,13 @@ template <typename DataT>
 class CBRefCountPtr
 {
 public:
-    explicit CBRefCountPtr(T* ptr);
+    explicit CBRefCountPtr(DataT* ptr);
     CBRefCountPtr(const CBRefCountPtr& toCopy);
     ~CBRefCountPtr();
 
-    T& operator*();
-    T* operator->();
+    DataT& operator*();
+    DataT* operator->();
+    DataT* Get() const;
 
 private:
     // Disallow assignment operator to avoid complicating it...
@@ -30,7 +31,7 @@ private:
 };
 
 template <typename DataT>
-CBRefCountPtr<DataT>::CBRefCountPtr(T* ptr)
+CBRefCountPtr<DataT>::CBRefCountPtr(DataT* ptr)
 {
     m_pControlBlock = new CBRefCountPtr_ControlBlock();
     m_pControlBlock->RefCount = 1;
@@ -58,21 +59,24 @@ CBRefCountPtr<DataT>::~CBRefCountPtr()
 }
 
 template <typename DataT>
-T& CBRefCountPtr<DataT>::operator*()
+DataT& CBRefCountPtr<DataT>::operator*()
 {
     return *m_pData;
 }
 
 template <typename DataT>
-T* CBRefCountPtr<DataT>::operator->()
+DataT* CBRefCountPtr<DataT>::operator->()
 {
     return m_pData;
 }
 
-template <typename DataT>
-CBRefCountPtr & CBRefCountPtr<DataT>::operator=(const CBRefCountPtr& other)
-{
 
+template <typename DataT>
+DataT* CBRefCountPtr<DataT>::Get() const
+{
+    return m_pData;
 }
+
+
 
 #endif
