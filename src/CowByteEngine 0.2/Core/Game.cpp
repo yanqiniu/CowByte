@@ -1,8 +1,10 @@
 #include "Game.h"
 #include "Message.h"
+#include "MessageBus.h"
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
 #include "../Render/MeshInstance.h"
+#include "../Utils/CBRefCountPtr.h"
 
 
 
@@ -28,16 +30,26 @@ bool Game::Initialize()
     // TEMP: Create Mesh in the scene.
     SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     MeshInstance *cube1 = new MeshInstance("cube.mesha");
-    PostMessage(Msg_RegisterDrawbleMeshInst(cube1));
+    cube1->AttachTo_SceneNode_Parent(cubeSceneNode);
+
+    CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
+    static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
+
+    PostMessage(msgPtr, MessageBus::GetEngineBus());
 
     return true;
 }
 
-bool Game::Update()
+bool Game::Update(const GameContext &context)
 {
     m_pMainCamera->UpdateWToCMatrix();
 
     return true;
+}
+
+void Game::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }
 
 GameData::GameData() :

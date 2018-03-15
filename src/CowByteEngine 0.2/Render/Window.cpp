@@ -238,10 +238,10 @@ bool Window::Initialize()
     return true;
 }
 
-bool Window::Update(GameContext& context)
+bool Window::Update(const GameContext& context)
 {
     if(context.pWnd != this)
-        context.pWnd = this;
+        const_cast<GameContext&>(context).pWnd = this;
 
     return true;
 }
@@ -276,6 +276,11 @@ bool Window::ShutDown()
     }
 
     return true;
+}
+
+void Window::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }
 
 bool Window::CenterWindow()

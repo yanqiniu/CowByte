@@ -12,7 +12,6 @@ class MessageBus;
 struct GameContext
 {
     Window* pWnd;
-    MessageBus* pEngineMessageBus;
     float dTime; //deltaTime
 };
 

@@ -34,7 +34,7 @@ protected:
     virtual ~System();
 
     virtual bool Initialize() { return Component::Initialize(); }
-    virtual bool Update(GameContext& context) { return Component::Update(context); }
+    virtual bool Update(const GameContext& context) override { return true; }
     virtual bool Shutdown() { return Component::Shutdown(); }
 
     SystemType GetType() const { return m_SystemType; }

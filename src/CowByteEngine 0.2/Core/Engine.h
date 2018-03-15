@@ -32,7 +32,7 @@ public:
 
     int Initialize(GameContext &context);
     int Draw(GameContext& context);
-    int Update(GameContext& context);
+    bool Update(const GameContext& context);
     int ShutDown();
     int RunLoop();
 
@@ -46,12 +46,12 @@ public:
     Game* CreateGame();
 
     static EngineState GetEngineState() { return m_EngineState; }
+    void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
 
     // =================================================//
 
 private:
     std::map<SystemType, System*> m_MapSystems;
-    MessageBus m_EngineMessageBus;
     static EngineState m_EngineState;
 };
 

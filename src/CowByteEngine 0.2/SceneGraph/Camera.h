@@ -16,6 +16,8 @@ public:
 
     Matrix4x4 GetWToCMatrix() const;
     Matrix4x4 GetProjectionMatrix() const;
+    bool Update(const GameContext &context);
+    void _HandleMessage(CBRefCountPtr<Message> pMsg);
 
 private:
     Matrix4x4 m_WorldToCamaraSpace; //Inverse of SceneNode::m_WorldTransform. 

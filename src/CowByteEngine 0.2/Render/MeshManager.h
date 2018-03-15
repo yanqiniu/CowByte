@@ -15,17 +15,18 @@ public:
     Mesh* GetMeshPtr(UID meshId);
     Mesh* AddMesh(const Mesh &toAdd);
     UID   GetMeshID(const Filename &meshfn) const;
-    const CBVector<MeshInstance*> GetMeshInsts() const;
-    virtual void HandleMessageQueue();
+    const CBVector<MeshInstance*> &GetMeshInsts() const;
+
+    bool Update(const GameContext &context) override;
 
 private:
-    virtual void _HandleMessage(const Message &msg) override;
+    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
 
     CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.
     CBVector<MeshInstance*> m_MesheInstPtrs;
 };
 
-inline const CBVector<MeshInstance*> MeshManager::GetMeshInsts() const
+inline const CBVector<MeshInstance*>& MeshManager::GetMeshInsts() const
 {
     return m_MesheInstPtrs;
 }

@@ -94,11 +94,10 @@ bool Graphics::Initialize()
     return true;
 }
 
-bool Graphics::Update(GameContext& context)
+bool Graphics::Update(const GameContext& context)
 {
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     
-    m_pMeshManager->HandleMessageQueue();
     g_pCamNode->UpdateWorldTransform();
     m_pMainCamera->UpdateWToCMatrix();
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
@@ -136,6 +135,11 @@ bool Graphics::OnRender()
     m_pDeviceContext->DrawIndexed(36, 0, 0);
 
     return true;
+}
+
+void Graphics::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }
 
 bool Graphics::InitializePipeline()

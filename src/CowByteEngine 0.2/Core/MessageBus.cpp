@@ -1,6 +1,9 @@
 #include "MessageBus.h"
 #include "Component.h"
 
+
+MessageBus* MessageBus::s_pEngineBus;
+
 MessageBus::MessageBus() :
     m_MessageQueue(),
     m_Subscribers(8)
@@ -13,15 +16,19 @@ MessageBus::~MessageBus()
 
 }
 
-
-
-int MessageBus::AttempBroadCastFrontMsg()
+// Broad cast all messages to all subscribers.
+int MessageBus::Broadcast()
 {
+    int toRet = 0;
     while (!m_MessageQueue.IsEmpty())
-        BroadCastFrontMsg();
-
-    return 0;
+    {
+        toRet += BroadCastFrontMsg();
+    }
+    
+    return toRet;
 }
+
+
 
 int MessageBus::BroadCastFrontMsg()
 {
@@ -48,7 +55,12 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
             return;
         }
     }
-    newSubscbr->SetMessageBus(this);
+
     m_Subscribers.Push_back(newSubscbr);
 }
 
+
+void CB::InitializeEngineBus()
+{
+    MessageBus::GetEngineBus() = new MessageBus();
+}

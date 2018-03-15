@@ -25,20 +25,20 @@ Engine::~Engine()
 int Engine::Initialize(GameContext &context)
 {
     m_EngineState = EngineState::INITIALIZING;
+    // Construct Engine bus.
+    CB::InitializeEngineBus();
 
+    // Add Game.
     Game* pGame = CreateGame();
     if (!pGame)
         return false;
-    context.pEngineMessageBus->AddSubscriber(pGame);
-    
-    AddSystem(pGame);
 
     // Add Systems.
-    Window *window = new Window(WindowData(640, 480));
-    Graphics *graphics = new Graphics(GraphicsData(window));
-    if (!AddSystem(window))
+    Window *pWindow = new Window(WindowData(640, 480));
+    Graphics *pGraphics = new Graphics(GraphicsData(pWindow));
+    if (!AddSystem(pWindow))
         return false;
-    if (!AddSystem(graphics))
+    if (!AddSystem(pGraphics))
         return false;
 
     //Initialize Systems.
@@ -51,13 +51,14 @@ int Engine::Initialize(GameContext &context)
 
 
     // Subscribe systems to the message bus.
-    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
-    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GAME]);
+
+    MessageBus::GetEngineBus()->AddSubscriber(&SceneNode::RootNode);
 
 
 
-    // Initialize SceneGraph.
-    SceneNode::RootNode.AttachTo_NonSceneNode_Parent(this);
     return true;
 }
 
@@ -66,18 +67,10 @@ int Engine::Draw(GameContext& context)
     return true;
 }
 
-int Engine::Update(GameContext& context)
+bool Engine::Update(const GameContext& context)
 {
-    context.pEngineMessageBus->AttempBroadCastFrontMsg();
 
-    for (std::pair<SystemType, System*> pSys : m_MapSystems)
-    {
-        if(!pSys.second)
-            continue;
 
-        pSys.second->HandleMessageQueue();
-        pSys.second->Update(context);
-    }
     return true;
 }
 
@@ -102,7 +95,6 @@ int Engine::ShutDown()
 int Engine::RunLoop()
 {
     GameContext context;
-    context.pEngineMessageBus = &m_EngineMessageBus;
     if (!this->Initialize(context))
         return 0;
 
@@ -122,8 +114,23 @@ int Engine::RunLoop()
             DispatchMessage(&msg);
         }
 
-        this->Update(context);
-        this->Draw(context);
+        // Update each system:
+        m_MapSystems[SystemType::SYS_GAME]->UpdateTree(context); // Update game first.
+        SceneNode::RootNode.UpdateTree(context); // Update scene.
+        m_MapSystems[SystemType::SYS_GRAPHICS]->UpdateTree(context);
+        m_MapSystems[SystemType::SYS_WINDOW]->UpdateTree(context);
+
+        // Now broadcast all the messages received in the earlier:
+        MessageBus::GetEngineBus()->Broadcast();
+
+        // Process all the messages:
+        m_MapSystems[SystemType::SYS_GAME]->HandleMessagesQueueTree(); // Update game first.
+        SceneNode::RootNode.HandleMessagesQueueTree(); // Update scene.
+        m_MapSystems[SystemType::SYS_GRAPHICS]->HandleMessagesQueueTree();
+        m_MapSystems[SystemType::SYS_WINDOW]->HandleMessagesQueueTree();
+
+
+        // TODO: Late update.
     }
 
     DbgINFO("Ending the program...");
@@ -156,4 +163,9 @@ Game* Engine::CreateGame()
     //	return nullptr;
 
     return game;
+}
+
+void Engine::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }

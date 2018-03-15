@@ -84,25 +84,21 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
     return INVALID_UID;
 }
 
-void MeshManager::_HandleMessage(const Message &msg)
+bool MeshManager::Update(const GameContext &context)
 {
-    if (msg.type == Message::RegisterDrawbleMeshInstance)
+    return true;
+}
+
+void MeshManager::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+    if (pMsg->type == MessageType::MsgType_RegisterDrawbleMeshInstance)
     {
-        Message nonConstMsg = const_cast<Message&>(msg);
-        Msg_RegisterDrawbleMeshInst realMsg = static_cast<Msg_RegisterDrawbleMeshInst&>(nonConstMsg);
-        m_MesheInstPtrs.Push_back(realMsg.m_MeshInstPtr);
-        realMsg.m_MeshInstPtr->FindAndSetMeshID(*this);
+        
+        MeshInstance *pMeshInst = static_cast<Msg_RegisterDrawbleMeshInst*>(pMsg.Get())->m_MeshInstPtr;
+        m_MesheInstPtrs.Push_back(pMeshInst);
+        pMeshInst->FindAndSetMeshID(*this);
     }
 }
 
-void MeshManager::HandleMessageQueue()
-{
-    while (!m_MessageQueue.IsEmpty())
-    {
-        this->_HandleMessage(*m_MessageQueue.Front());
-        BroadCastToChildren(*m_MessageQueue.Front());
-        m_MessageQueue.PopFront();
-    }
-}
 
 

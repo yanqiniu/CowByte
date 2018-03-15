@@ -34,6 +34,9 @@ public:
     // void Rotate();
     // void Scale();
 
+    virtual bool Update(const GameContext &context) override;
+    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+
 private:
     Matrix4x4 m_WorldTransform; // Model Space -> World Space, yea this is cached.
     Matrix4x4 m_LocalTransform; // Local Space -> Parent Space
