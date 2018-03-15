@@ -22,8 +22,13 @@ Component::~Component()
 void Component::AcceptMessage(CBRefCountPtr<Message> pMsg)
 {
     m_MessageQueue.Enqueue(pMsg);
-}
 
+    // And then broadcast to all children.
+    for (UINT32 i = 0; i < m_Components.Size(); ++i)
+    {
+        m_Components.at(i)->AcceptMessage(pMsg);
+    }
+}
 
 void Component::PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus)
 {
@@ -86,6 +91,13 @@ void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
     m_pParentComponent = parentPtr;
 }
 
+void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
+{
+    AttachTo_NonSceneNode_Parent(parentPtr);
+    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
+    m_pParentSceneNode = parentPtr;
+}
+
 void Component::AddChild(Component* childPtr)
 {
     // TODO: walk the component tree to make sure there is no cycle.
@@ -93,18 +105,23 @@ void Component::AddChild(Component* childPtr)
     m_Components.Push_back(childPtr);
 }
 
-void Component::BroadcastToChildren(CBRefCountPtr<Message> pMsg)
+// All children should have received their messages when this is called.
+void Component::HandleMessageQueue()
 {
-    for (int i = 0; i < m_Components.Size(); ++i)
+    while (!m_MessageQueue.IsEmpty())
     {
-        m_Components.at(i)->AcceptMessage(pMsg);
+        _HandleMessage(*m_MessageQueue.Front());
+        m_MessageQueue.PopFront();
     }
 }
 
-void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
+void Component::HandleMessagesQueueTree()
 {
-    AttachTo_NonSceneNode_Parent(parentPtr);
-    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
-    m_pParentSceneNode = parentPtr;
+    HandleMessageQueue();
+    for (int i = 0; i < m_Components.Size(); ++i)
+    {
+        m_Components.at(i)->HandleMessageQueue();
+    }
 }
+
 

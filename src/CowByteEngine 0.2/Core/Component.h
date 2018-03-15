@@ -19,22 +19,25 @@ public:
     void AcceptMessage(CBRefCountPtr<Message> pMsg);
     void PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus);
 
-    bool Initialize();
-    bool Update(const GameContext &context);
-    bool Shutdown();
+    virtual bool Initialize();
+    virtual bool Shutdown();
+    bool UpdateTree(const GameContext &context); // A "larger" update function that calls Update on this and offspring.
     void SetActive(bool inBool);
     bool IsActiveSelf();
 
+
     void AttachTo_NonSceneNode_Parent(Component* parentPtr);
     void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
-
     SceneNode *GetParentSceneNode() const;
+
+    void HandleMessagesQueueTree();
+
 
 
 protected:
-    void BroadcastToChildren(CBRefCountPtr<Message> pMsg);
     virtual bool Update(const GameContext &context) = 0;
     virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) = 0;
+    void HandleMessageQueue();
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
     CBVector<Component*> m_Components;

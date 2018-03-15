@@ -16,15 +16,19 @@ MessageBus::~MessageBus()
 
 }
 
-
-
-int MessageBus::AttempBroadCastFrontMsg()
+// Broad cast all messages to all subscribers.
+int MessageBus::Broadcast()
 {
+    int toRet = 0;
     while (!m_MessageQueue.IsEmpty())
-        BroadCastFrontMsg();
-
-    return 0;
+    {
+        toRet += BroadCastFrontMsg();
+    }
+    
+    return toRet;
 }
+
+
 
 int MessageBus::BroadCastFrontMsg()
 {

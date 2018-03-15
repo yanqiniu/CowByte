@@ -15,8 +15,8 @@ public:
     MessageBus();
     ~MessageBus();
     bool EnqueueNewMsg(CBRefCountPtr<Message> pMsg);
-    int AttempBroadCastFrontMsg();
     void AddSubscriber(Component* newSubscbr);
+    int Broadcast();
 
     static MessageBus *& GetEngineBus();
 
