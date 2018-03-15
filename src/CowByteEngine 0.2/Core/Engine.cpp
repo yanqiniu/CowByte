@@ -25,20 +25,20 @@ Engine::~Engine()
 int Engine::Initialize(GameContext &context)
 {
     m_EngineState = EngineState::INITIALIZING;
+    // Construct Engine bus.
+    CB::InitializeEngineBus();
 
+    // Add Game.
     Game* pGame = CreateGame();
     if (!pGame)
         return false;
-    context.pEngineMessageBus->AddSubscriber(pGame);
-    
-    AddSystem(pGame);
 
     // Add Systems.
-    Window *window = new Window(WindowData(640, 480));
-    Graphics *graphics = new Graphics(GraphicsData(window));
-    if (!AddSystem(window))
+    Window *pWindow = new Window(WindowData(640, 480));
+    Graphics *pGraphics = new Graphics(GraphicsData(pWindow));
+    if (!AddSystem(pWindow))
         return false;
-    if (!AddSystem(graphics))
+    if (!AddSystem(pGraphics))
         return false;
 
     //Initialize Systems.
@@ -51,8 +51,10 @@ int Engine::Initialize(GameContext &context)
 
 
     // Subscribe systems to the message bus.
-    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
-    context.pEngineMessageBus->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GAME]);
+
 
 
 
@@ -68,14 +70,12 @@ int Engine::Draw(GameContext& context)
 
 int Engine::Update(GameContext& context)
 {
-    context.pEngineMessageBus->AttempBroadCastFrontMsg();
 
     for (std::pair<SystemType, System*> pSys : m_MapSystems)
     {
         if(!pSys.second)
             continue;
 
-        pSys.second->HandleMessageQueue();
         pSys.second->Update(context);
     }
     return true;
@@ -102,7 +102,6 @@ int Engine::ShutDown()
 int Engine::RunLoop()
 {
     GameContext context;
-    context.pEngineMessageBus = &m_EngineMessageBus;
     if (!this->Initialize(context))
         return 0;
 

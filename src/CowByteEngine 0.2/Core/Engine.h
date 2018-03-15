@@ -51,7 +51,6 @@ public:
 
 private:
     std::map<SystemType, System*> m_MapSystems;
-    MessageBus m_EngineMessageBus;
     static EngineState m_EngineState;
 };
 

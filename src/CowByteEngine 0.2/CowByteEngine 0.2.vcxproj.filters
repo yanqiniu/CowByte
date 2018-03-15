@@ -185,6 +185,9 @@
     <ClCompile Include="Render\MeshInstance.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Message.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">

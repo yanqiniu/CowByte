@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "Message.h"
+#include "MessageBus.h"
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
 #include "../Render/MeshInstance.h"
@@ -33,7 +34,7 @@ bool Game::Initialize()
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
     static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
 
-    PostMessage(msgPtr);
+    PostMessage(msgPtr, MessageBus::GetEngineBus());
 
     return true;
 }

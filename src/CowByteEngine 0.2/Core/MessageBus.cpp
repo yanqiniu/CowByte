@@ -2,7 +2,7 @@
 #include "Component.h"
 
 
-MessageBus MessageBus::s_EngineBus;
+MessageBus* MessageBus::s_pEngineBus;
 
 MessageBus::MessageBus() :
     m_MessageQueue(),
@@ -56,3 +56,7 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
 }
 
 
+void CB::InitializeEngineBus()
+{
+    MessageBus::GetEngineBus() = new MessageBus();
+}

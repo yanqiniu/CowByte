@@ -18,10 +18,10 @@ public:
     int AttempBroadCastFrontMsg();
     void AddSubscriber(Component* newSubscbr);
 
-    MessageBus *GetEngineBus();
+    static MessageBus *& GetEngineBus();
 
 private:
-    static MessageBus s_EngineBus;
+    static MessageBus* s_pEngineBus;
     int BroadCastFrontMsg();
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
@@ -33,10 +33,15 @@ inline bool MessageBus::EnqueueNewMsg(CBRefCountPtr<Message> pMsg)
     return m_MessageQueue.Enqueue(pMsg);
 }
 
-inline MessageBus * MessageBus::GetEngineBus()
+inline MessageBus *& MessageBus::GetEngineBus()
 {
-    return &s_EngineBus;
+    return s_pEngineBus;
 }
 
+namespace  CB
+{
+    void InitializeEngineBus();
+
+}
 
 #endif
