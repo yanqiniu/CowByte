@@ -98,7 +98,6 @@ bool Graphics::Update(GameContext& context)
 {
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     
-    m_pMeshManager->HandleMessageQueue();
     g_pCamNode->UpdateWorldTransform();
     m_pMainCamera->UpdateWToCMatrix();
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);

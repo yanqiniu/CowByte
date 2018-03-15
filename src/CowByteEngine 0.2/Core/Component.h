@@ -29,7 +29,6 @@ public:
     void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
 
     SceneNode *GetParentSceneNode() const;
-    virtual void HandleMessageQueue();
 
 
 protected:

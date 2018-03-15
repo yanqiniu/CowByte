@@ -37,23 +37,7 @@ struct Message
     {
         type = MessageType::MsgType_Default;
     }
-
-    // factory method.
-    static CBRefCountPtr<Message> Create(MessageType type)
-    {
-#define CREATE_FROM_TYPE(typeOfMsg, classnameOfMsg) if (type == typeOfMsg) \
-{\
-            classnameOfMsg *ptr = new classnameOfMsg();\
-            ptr->Initialize();\
-            return CBRefCountPtr<Message>(ptr);\
-}
-
-        // Specify a new type/class pair here.
-        CREATE_FROM_TYPE(MessageType::MsgType_RegisterDrawbleMeshInstance, Msg_RegisterDrawbleMeshInst)
-
-            return CBRefCountPtr<Message>(nullptr);
-#undef CREATE_FROM_TYPE
-    }
+    static CBRefCountPtr<Message> Create(MessageType type);
 
 
     MessageType type;

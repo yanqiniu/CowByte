@@ -16,10 +16,9 @@ public:
     Mesh* AddMesh(const Mesh &toAdd);
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> GetMeshInsts() const;
-    virtual void HandleMessageQueue();
 
 private:
-    virtual void _HandleMessage(const Message &msg) override;
+    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
 
     CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.
     CBVector<MeshInstance*> m_MesheInstPtrs;

@@ -45,15 +45,6 @@ void Component::_HandleMessage(CBRefCountPtr<Message> pMsg)
 
 }
 
-void Component::HandleMessageQueue()
-{
-    while (!m_MessageQueue.IsEmpty())
-    {
-        this->_HandleMessage(*m_MessageQueue.Front());
-        BroadcastToChildren(*m_MessageQueue.Front());
-        m_MessageQueue.PopFront();
-    }
-}
 
 bool Component::Initialize()
 {
