@@ -281,7 +281,7 @@ bool Graphics::SimpleRenderSetup()
 
 
     // Create input layout.
-    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, PS->GetBufferPointer(), PS->GetBufferSize(), &m_pInputLayout);
+    m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
     m_pDeviceContext->IASetInputLayout(m_pInputLayout);
 
     return true;
