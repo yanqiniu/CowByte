@@ -39,7 +39,7 @@ public:
     //void SetCamera();
 
 private:
-    void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+    void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
     bool InitializePipeline();
     bool SimpleRenderSetup(); // TODO: Get rid of this placeholder code piece.
     bool SetupSingleMeshInst(MeshInstance *meshInst);

@@ -89,7 +89,7 @@ bool MeshManager::Update(const GameContext &context)
     return true;
 }
 
-void MeshManager::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void MeshManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
     if (pMsg->type == MessageType::MsgType_RegisterDrawbleMeshInstance)
     {

@@ -20,7 +20,7 @@ public:
     bool Update(const GameContext &context) override;
 
 private:
-    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
+    virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
     CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.
     CBVector<MeshInstance*> m_MesheInstPtrs;

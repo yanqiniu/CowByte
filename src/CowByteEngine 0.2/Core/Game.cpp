@@ -52,7 +52,7 @@ bool Game::Update(const GameContext &context)
     return true;
 }
 
-void Game::_HandleMessage(CBRefCountPtr<Message> pMsg)
+void Game::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
 }
