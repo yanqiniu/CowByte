@@ -287,6 +287,8 @@ bool Graphics::SimpleRenderSetup()
     return true;
 }
 
+// TODO: might not need to do some of these every frame. 
+// look into them.
 bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
 {
     Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());

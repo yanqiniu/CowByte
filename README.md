@@ -17,12 +17,16 @@ Don't worry about the name :D
  - Solution created using Visual Studio 2017.
  - Uses some more recent C++ features like binary literals (C++14) and delete(void* ptr, size_t size) overload (C++17) which should be included with the latest VC++ that comes with VS2017.
 
+### Current State
+ - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
+ - It now renders a "sharpened" (one of the vertex set at <1.2, 1.2, 1.2>) cube in solid purple, properly projected.
+ - It continues moving along +X-axis which is left->right now. Notice this is simulated by Translating SceneNode the MeshInstance is attached to, not raw vertex update in Graphics system.  
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
  - Implements component model with message bus;
  - Custom memory allocator (sets of pools);
- - Custom data containers (Queue, Vector);
+ - Custom data containers (Queue, Vector, reference count pointer);
  - SIMD math (Intel SSE);
  - Scenegraph;
  - Mesh Instancing;  
