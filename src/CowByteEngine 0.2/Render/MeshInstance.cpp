@@ -32,3 +32,13 @@ bool MeshInstance::FindAndSetMeshID(const MeshManager& meshManager)
     return true;  
 }
 
+bool MeshInstance::Update(const GameContext &context)
+{
+    return true;
+}
+
+void MeshInstance::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
+}
+

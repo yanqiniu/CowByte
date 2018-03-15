@@ -94,7 +94,7 @@ bool Graphics::Initialize()
     return true;
 }
 
-bool Graphics::Update(GameContext& context)
+bool Graphics::Update(const GameContext& context)
 {
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     
@@ -135,6 +135,11 @@ bool Graphics::OnRender()
     m_pDeviceContext->DrawIndexed(36, 0, 0);
 
     return true;
+}
+
+void Graphics::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }
 
 bool Graphics::InitializePipeline()

@@ -56,3 +56,13 @@ void SceneNode::Translate(const Vec3& inPos)
 {
     m_LocalTransform *= Matrix4x4::Translate(inPos);
 }
+
+bool SceneNode::Update(const GameContext &context)
+{
+    return true;
+}
+
+void SceneNode::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
+}

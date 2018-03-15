@@ -30,6 +30,7 @@ bool Game::Initialize()
     // TEMP: Create Mesh in the scene.
     SceneNode *cubeSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     MeshInstance *cube1 = new MeshInstance("cube.mesha");
+    cube1->AttachTo_SceneNode_Parent(cubeSceneNode);
 
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
     static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
@@ -39,11 +40,16 @@ bool Game::Initialize()
     return true;
 }
 
-bool Game::Update()
+bool Game::Update(const GameContext &context)
 {
     m_pMainCamera->UpdateWToCMatrix();
 
     return true;
+}
+
+void Game::_HandleMessage(CBRefCountPtr<Message> pMsg)
+{
+
 }
 
 GameData::GameData() :

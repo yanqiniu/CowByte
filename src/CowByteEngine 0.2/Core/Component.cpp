@@ -36,16 +36,6 @@ void Component::PostMessage(CBRefCountPtr<Message> pMsg, MessageBus *msgBus)
 
 }
 
-void Component::_HandleMessage(CBRefCountPtr<Message> pMsg)
-{
-    if (pMsg->type == MessageType::MsgType_Default)
-    {
-        DbgINFO("Message received!");
-    }
-
-}
-
-
 bool Component::Initialize()
 {
     return true;
@@ -64,6 +54,19 @@ bool Component::Shutdown()
     m_pParentSceneNode = nullptr;
 
     return true;
+}
+
+bool Component::UpdateTree(const GameContext &context)
+{
+    bool toRet = true;
+    // Update me and children:
+    toRet &= Update(context);
+    for (int i = 0; i < m_Components.Size(); ++i)
+    {
+        toRet &= m_Components.at(i)->Update(context);
+    }
+
+    return toRet;
 }
 
 void Component::SetActive(bool inBool)

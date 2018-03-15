@@ -84,6 +84,11 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
     return INVALID_UID;
 }
 
+bool MeshManager::Update(const GameContext &context)
+{
+    return true;
+}
+
 void MeshManager::_HandleMessage(CBRefCountPtr<Message> pMsg)
 {
     if (pMsg->type == MessageType::MsgType_RegisterDrawbleMeshInstance)

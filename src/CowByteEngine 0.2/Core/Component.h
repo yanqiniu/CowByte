@@ -32,8 +32,9 @@ public:
 
 
 protected:
-    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg);
     void BroadcastToChildren(CBRefCountPtr<Message> pMsg);
+    virtual bool Update(const GameContext &context) = 0;
+    virtual void _HandleMessage(CBRefCountPtr<Message> pMsg) = 0;
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
     CBVector<Component*> m_Components;

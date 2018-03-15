@@ -33,12 +33,13 @@ public:
     explicit Graphics( const GraphicsData &data);
     virtual ~Graphics();
     virtual bool Initialize();
-    virtual bool Update(GameContext& context);
+    virtual bool Update(const GameContext& context) override;
     virtual bool ShutDown();
     bool OnRender();
     //void SetCamera();
 
 private:
+    void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
     bool InitializePipeline();
     bool SimpleRenderSetup(); // TODO: Get rid of this placeholder code piece.
     bool SetupSingleMeshInst(MeshInstance *meshInst);
