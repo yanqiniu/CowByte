@@ -1,3 +1,5 @@
+#include <ctime>
+
 #include "Engine.h"
 #include "System.h"
 #include "Game.h"
@@ -103,10 +105,14 @@ int Engine::RunLoop()
     MSG msg = {};
 
     m_EngineState = EngineState::RUNNING;
+    context.dTime = 0;
 
-
+    std::clock_t timer;
     while (msg.message != WM_QUIT && m_EngineState == EngineState::RUNNING)
     {
+        // Start Timing this frame:
+        timer = std::clock();
+
         //CheckResize();
         if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
@@ -131,6 +137,9 @@ int Engine::RunLoop()
 
 
         // TODO: Late update.
+
+        // Update deltaTime
+        context.dTime = (std::clock() - timer) / (double)CLOCKS_PER_SEC;
     }
 
     DbgINFO("Ending the program...");

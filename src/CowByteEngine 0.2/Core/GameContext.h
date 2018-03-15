@@ -13,6 +13,12 @@ struct GameContext
 {
     Window* pWnd;
     float dTime; //deltaTime
+    GameContext() :
+        pWnd(nullptr),
+        dTime(0)
+    {
+
+    }
 };
 
 #endif // 

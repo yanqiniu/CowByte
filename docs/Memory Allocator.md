@@ -34,16 +34,21 @@ CBPoolBlock:
 ```C++
 struct CBPoolBlock
 {
+    UINT32 _integrity; // Set to 0xdeadbeef when the block is free. 
+#ifdef _WIN64
+    UINT32 _padding;
+#endif
     CBPoolBlock *_next;
+
 #ifndef _WIN64
-    UINT32 _padding[3]; // x86 padding
-#else
-    UINT32 _padding[2]; // x64 padding
+    UINT32 _padding[2]; // x86 padding
 #endif // !_WIN64
 };
 ```
 - This represents a block in a pool, or just the header of that mem block.
 - _next is overwritten when actual data is filled in. This should be fine, since we do not need pointer to the next block when we are using the data, only before using the data - to update the freelist. After the memory is freed, the pointer is refreshed again when the block is added back to the free list.
+- As you can see, when the block has data, _integrity gets overwritten and doesn't stay as 0xDEADBEEF. This is used to detect data corruption.
+- Mannual paddings inserted for both x86 and x64.
 
 CBMemPool:
 ```C++

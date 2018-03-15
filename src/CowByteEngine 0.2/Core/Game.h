@@ -20,6 +20,7 @@ public:
     void _HandleMessage(CBRefCountPtr<Message> pMsg) override;
 private:
     Camera *m_pMainCamera; // Pointer to current active cam.
+    SceneNode *m_pTestSceneNode;
 };
 
 #endif
