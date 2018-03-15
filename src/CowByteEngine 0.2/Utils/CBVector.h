@@ -18,26 +18,24 @@ public:
 
     size_t Size() const { return m_Size; }
     size_t Capacity() const { return m_Capacity; }
-    void Resize(size_t newCapacity); /* Change capacity of container. */
-    bool IsEmpty() const { return m_Size == 0; }
+    void   Resize(size_t newCapacity); /* Change capacity of container. */
+    bool   IsEmpty() const { return m_Size == 0; }
 
     const T& peekat(size_t index) const { return m_Data[index]; } // const version of at().
     T& at(size_t index) { return m_Data[index]; }
     T& operator[](size_t index) { return m_Data[index]; }
+
     // This is always a copy construct.
-    T* Push_back(const T &toPush);
+    T*   Push_back(const T &toPush);
     bool Pop_back();
-
-    T* Insert(size_t index, const T &value);
+    T*   Insert(size_t index, const T &value);
     bool Erase(size_t index);
-
     void Clear();
 
     T* begin() const
     {
         return &m_Data[0];
     }
-
     T* end() const
     {
         return &m_Data[m_Size - 1];
@@ -124,7 +122,6 @@ CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
 
     return *this;
 }
-
 
 template <class T>
 void CBVector<T>::Clear()
