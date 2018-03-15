@@ -74,7 +74,6 @@ bool Graphics::Initialize()
         return false;
     }
 
-    // TEST: render cube
     // Create mesh manager.
     m_pMeshManager = new MeshManager();
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
@@ -87,6 +86,8 @@ bool Graphics::Initialize()
     g_pCamNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
     g_pCamNode->Translate(Vec3(0, 0, -5.0f));
+
+    // Create vertex/index/constant buffers.
     SimpleRenderSetup();
 
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
@@ -279,6 +280,25 @@ bool Graphics::SimpleRenderSetup()
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
 
+    // Create Vertex buffers.
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
+    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    bufferDesc.ByteWidth = sizeof(Vertex) * 666; // TODO: remove this magic number and use something "large enough"
+    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer));
+
+    // Create Index buffer.
+    // Create and initialize the index buffer.
+    D3D11_BUFFER_DESC indexBufferDesc;
+    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
+    indexBufferDesc.ByteWidth = sizeof(WORD) * 6666;  // TODO: remove this magic number and use something "large enough"
+    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, nullptr, &m_pIndexBuffer));
+
 
     // Create input layout.
     m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
@@ -287,36 +307,28 @@ bool Graphics::SimpleRenderSetup()
     return true;
 }
 
-// TODO: might not need to do some of these every frame. 
-// look into them.
 bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
 {
+    // TODO: group mesh inst by mesh so we don't have to switch often.
     Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
 
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * mesh->GetNumVertices();
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-
-    D3D11_SUBRESOURCE_DATA resourceData;
-    ZeroMemory(&resourceData, sizeof(D3D11_SUBRESOURCE_DATA));
-    resourceData.pSysMem = &mesh->GetVertices()[0];
-    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, &resourceData, &m_pVertexBuffer));
+    // Update vertex buffer.
+    D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
+    ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+    memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
+    m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
 
 
-    // Create and initialize the index buffer.
-    D3D11_BUFFER_DESC indexBufferDesc;
-    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(WORD) * mesh->GetNumTriangles() * 3;
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
-    resourceData.pSysMem = &mesh->GetIndices()[0];
-    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, &resourceData, &m_pIndexBuffer));
+    // Update index buffer.
+    ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
+    ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+    memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3);
+    m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
 
+
+    // Update world matrix.
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &meshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+
     return true;
 }
 
