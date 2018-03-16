@@ -17,12 +17,13 @@ public:
     bool EnqueueNewMsg(CBRefCountPtr<Message> &pMsg);
     void AddSubscriber(Component* newSubscbr);
     int Broadcast();
+    int BroadcastSingle(CBRefCountPtr<Message> &pMsg);
+    void SubsHandleMessagesQueueTree();
 
     static MessageBus *& GetEngineBus();
 
 private:
     static MessageBus* s_pEngineBus;
-    int BroadCastFrontMsg();
 
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
     CBVector<Component*> m_Subscribers;
@@ -38,10 +39,11 @@ inline MessageBus *& MessageBus::GetEngineBus()
     return s_pEngineBus;
 }
 
-namespace  CB
+namespace  CBMessaging
 {
     void InitializeEngineBus();
-
+    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
+    void PostImediateMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
 }
 
 #endif

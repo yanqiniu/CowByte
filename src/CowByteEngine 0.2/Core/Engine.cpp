@@ -28,7 +28,7 @@ int Engine::Initialize(GameContext &context)
 {
     m_EngineState = EngineState::INITIALIZING;
     // Construct Engine bus.
-    CB::InitializeEngineBus();
+    CBMessaging::InitializeEngineBus();
 
     // Add Game.
     Game* pGame = CreateGame();
@@ -53,14 +53,16 @@ int Engine::Initialize(GameContext &context)
 
 
     // Subscribe systems to the message bus.
-    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
-    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    // NOTICE: the order specified here will be the order they get called when 
+    // doing message handling.
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GAME]);
-
     MessageBus::GetEngineBus()->AddSubscriber(&SceneNode::RootNode);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
 
-
-
+    // Finally, process all the messages queued up during initialization.
+    MessageBus::GetEngineBus()->Broadcast();
+    MessageBus::GetEngineBus()->SubsHandleMessagesQueueTree();
     return true;
 }
 
@@ -130,11 +132,7 @@ int Engine::RunLoop()
         MessageBus::GetEngineBus()->Broadcast();
 
         // Process all the messages:
-        m_MapSystems[SystemType::SYS_GAME]->HandleMessagesQueueTree(); // Update game first.
-        SceneNode::RootNode.HandleMessagesQueueTree(); // Update scene.
-        m_MapSystems[SystemType::SYS_GRAPHICS]->HandleMessagesQueueTree();
-        m_MapSystems[SystemType::SYS_WINDOW]->HandleMessagesQueueTree();
-
+        MessageBus::GetEngineBus()->SubsHandleMessagesQueueTree();
 
         // TODO: Late update.
 

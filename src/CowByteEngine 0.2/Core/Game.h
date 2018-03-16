@@ -9,6 +9,14 @@ struct GameData : public SystemData
     GameData();
 };
 
+// A test object. Likely this will be made into a GameObject class.
+struct Cube
+{
+    SceneNode *m_pSceneNode;
+    Cube();
+
+};
+
 class Game : public System
 {
 public:
@@ -20,7 +28,10 @@ public:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
     Camera *m_pMainCamera; // Pointer to current active cam.
-    SceneNode *m_pTestSceneNode;
+
+    // Test game objects
+    Cube *m_pCube0;
+    Cube *m_pCube1;
 };
 
 #endif

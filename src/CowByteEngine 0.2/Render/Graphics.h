@@ -77,6 +77,7 @@ private:
     Window *m_pWindow;
     MeshManager *m_pMeshManager;
     Camera *m_pMainCamera;
+    UID m_LastDrawnMeshID;
 
 
 };
