@@ -25,12 +25,13 @@ private:
     bool ReadIndexBufFile(const char *filepath);
 
     static int g_IDCounter;
-    Filename m_MeshName;
+
+    Filename         m_MeshName;
     CBVector<Vertex> m_Vertices;
     CBVector<WORD>   m_Indices;
-    size_t m_nVertices;
-    size_t m_nTriangles;
-    UID m_UID;
+    size_t           m_nVertices;
+    size_t           m_nTriangles;
+    UID              m_UID;
 };
 
 inline UID Mesh::GetID() const

@@ -65,8 +65,30 @@ Mesh* MeshManager::AddMesh(const Mesh &toAdd)
         }
     }
 
-    // Empty or end of vector.
-    return m_Meshes.Insert(m_Meshes.Size(), toAdd);
+    // Empty or start of vector.
+    return m_Meshes.Insert(0, toAdd);
+}
+
+// Insert MeshInstance pointer to m_MesheInstPtrs so that it is 
+// sorted by MeshID small->large.
+// This is so that MeshInstances with the same mesh references are 
+// grouped together so we have less switching during drawing.
+void MeshManager::AddMeshInstance(MeshInstance* pToAdd)
+{
+    // First acquire the proper MeshID.
+    pToAdd->FindAndSetMeshID(*this);
+
+    // Insert.
+    for (size_t i = 0; i < m_MesheInstPtrs.Size(); ++i)
+    {
+        if (pToAdd->GetMeshID() >= m_MesheInstPtrs.peekat(i)->GetMeshID())
+        {
+            m_MesheInstPtrs.Insert(i + 1, pToAdd);
+            return;
+        }
+    }
+    // Empty of start of vector.
+    m_MesheInstPtrs.Insert(0, pToAdd);
 }
 
 // Used upon MeshInstance creation to identify which Mesh
@@ -95,8 +117,7 @@ void MeshManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
     {
         
         MeshInstance *pMeshInst = static_cast<Msg_RegisterDrawbleMeshInst*>(pMsg.Get())->m_MeshInstPtr;
-        m_MesheInstPtrs.Push_back(pMeshInst);
-        pMeshInst->FindAndSetMeshID(*this);
+        AddMeshInstance(pMeshInst);
     }
 }
 

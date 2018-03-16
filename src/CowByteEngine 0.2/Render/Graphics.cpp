@@ -49,7 +49,8 @@ Graphics::Graphics(const GraphicsData &data):
     m_pDepthStencilBuffer(nullptr),
     m_pInputLayout(nullptr),
     m_pDepthStencilState(nullptr),
-    m_pRasterizerState(nullptr)
+    m_pRasterizerState(nullptr),
+    m_LastDrawnMeshID(INVALID_UID)
 {
 
 }
@@ -82,7 +83,7 @@ bool Graphics::Initialize()
 
     // Camera setup.
     m_pMainCamera = new Camera((float)m_pWindow->GetWidth() / m_pWindow->GetHeight(),
-        1.0472f, 0.01f, 1000.0f);
+        0.698131f, 0.01f, 1000.0f);
     g_pCamNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
     g_pCamNode->Translate(Vec3(0, 0, -5.0f));
@@ -310,21 +311,25 @@ bool Graphics::SimpleRenderSetup()
 
 bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
 {
-    // TODO: group mesh inst by mesh so we don't have to switch often.
-    Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
+    if (m_LastDrawnMeshID != meshInst->GetMeshID()) // Only refresh buffer when needed.
+    {
+        Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
 
-    // Update vertex buffer.
-    D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
-    ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-    memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
-    m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
+        // Update vertex buffer.
+        D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
+        ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+        memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
+        m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
 
 
-    // Update index buffer.
-    ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
-    ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-    memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
-    m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
+        // Update index buffer.
+        ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
+        ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+        memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
+        m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
+
+        m_LastDrawnMeshID = meshInst->GetMeshID();
+    }
 
 
     // Update world matrix.
