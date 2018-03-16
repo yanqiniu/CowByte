@@ -5,8 +5,8 @@ SceneNode SceneNode::RootNode;
 
 SceneNode::SceneNode():
     m_WorldTransform(Matrix4x4::Identity()),
-    m_LocalTransform(Matrix4x4::Identity()),
-    m_ChildrenNodes(4)
+    m_LocalTransform(Matrix4x4::Identity())
+    //m_ChildrenNodes(4)
 {
 
 }
@@ -43,14 +43,14 @@ Vec3 SceneNode::CalculateWorldPosition(const Vec3& inPos)
     return inPos * m_WorldTransform;
 }
 
-void SceneNode::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
-{
-    AttachTo_NonSceneNode_Parent(parentPtr);
-    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
-    m_pParentSceneNode = parentPtr;
-
-    parentPtr->m_ChildrenNodes.Push_back(this);
-}
+//void SceneNode::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
+//{
+//    AttachTo_NonSceneNode_Parent(parentPtr);
+//    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
+//    m_pParentSceneNode = parentPtr;
+//
+//    parentPtr->m_ChildrenNodes.Push_back(this);
+//}
 
 void SceneNode::Translate(const Vec3& inPos)
 {
