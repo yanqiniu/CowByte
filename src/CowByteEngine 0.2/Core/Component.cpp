@@ -30,17 +30,6 @@ void Component::AcceptMessage(CBRefCountPtr<Message> &pMsg)
     }
 }
 
-void Component::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus)
-{
-    if (msgBus == nullptr)
-    {
-        DbgWARNING("Trying to post to null message bus.");
-    }
-
-    msgBus->EnqueueNewMsg(pMsg);
-
-}
-
 bool Component::Initialize()
 {
     return true;

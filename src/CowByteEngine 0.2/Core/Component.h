@@ -17,7 +17,6 @@ public:
     virtual ~Component();
 
     void AcceptMessage(CBRefCountPtr<Message> &pMsg);
-    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus);
 
     virtual bool Initialize();
     virtual bool Shutdown();
