@@ -18,7 +18,7 @@ Cube::Cube()
     // Notify the mesh manager...
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
     static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
-    CB::PostMessage(msgPtr, MessageBus::GetEngineBus());
+    CBMessaging::PostMessage(msgPtr, MessageBus::GetEngineBus());
 }
 
 

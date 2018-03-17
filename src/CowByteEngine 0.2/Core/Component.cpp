@@ -9,7 +9,7 @@ Component::Component() :
     m_Components(4),
     m_bIsActive(true),
     m_pParentComponent(nullptr),
-    m_pParentSceneNode(nullptr)
+    m_bParentIsSceneNode(false)
 {
 
 }
@@ -30,17 +30,6 @@ void Component::AcceptMessage(CBRefCountPtr<Message> &pMsg)
     }
 }
 
-void Component::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus)
-{
-    if (msgBus == nullptr)
-    {
-        DbgWARNING("Trying to post to null message bus.");
-    }
-
-    msgBus->EnqueueNewMsg(pMsg);
-
-}
-
 bool Component::Initialize()
 {
     return true;
@@ -56,7 +45,6 @@ bool Component::Shutdown()
     m_MessageQueue.~CBQueue();
     m_Components.~CBVector();
     m_pParentComponent = nullptr;
-    m_pParentSceneNode = nullptr;
 
     return true;
 }
@@ -94,9 +82,22 @@ void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
 void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
 {
     AttachTo_NonSceneNode_Parent(parentPtr);
-    DbgAssert(parentPtr == m_pParentComponent, "SceneNode pointer component attached to must be the same as parent ptr!");
-    m_pParentSceneNode = parentPtr;
+    m_bParentIsSceneNode = true;
 }
+
+bool Component::HasSceneNodeParent()
+{
+    return m_bParentIsSceneNode;
+}
+
+SceneNode *Component::GetParentSceneNode() const
+{
+    if (m_bParentIsSceneNode)
+        return dynamic_cast<SceneNode*> (m_pParentComponent);
+    else
+        return nullptr;
+}
+
 
 void Component::AddChild(Component* childPtr)
 {

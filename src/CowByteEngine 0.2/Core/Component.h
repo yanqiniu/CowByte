@@ -17,7 +17,6 @@ public:
     virtual ~Component();
 
     void AcceptMessage(CBRefCountPtr<Message> &pMsg);
-    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *msgBus);
 
     virtual bool Initialize();
     virtual bool Shutdown();
@@ -28,6 +27,7 @@ public:
 
     void AttachTo_NonSceneNode_Parent(Component* parentPtr);
     void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
+    bool HasSceneNodeParent();
     SceneNode *GetParentSceneNode() const;
 
     void HandleMessagesQueueTree();
@@ -42,17 +42,13 @@ protected:
     CBQueue<CBRefCountPtr<Message>> m_MessageQueue;
     CBVector<Component*> m_Components;
     Component *m_pParentComponent;
-    SceneNode *m_pParentSceneNode; // Scene node this component is attached to. nullptr if none.
+    bool m_bParentIsSceneNode;
 
 private:
     void AddChild(Component* childPtr);
     bool m_bIsActive;
 };
 
-inline SceneNode *Component::GetParentSceneNode() const
-{
-    return m_pParentSceneNode;
-}
 
 
 #endif
