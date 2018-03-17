@@ -69,6 +69,21 @@ bool Mesh::LoadContent(const char* meshName)
         return false;
     }
 
+    // Read the normal buffer file.
+    temp.Clear();
+    if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting normal buf file in [%s].", meshFilePath.Get());
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (!ReadNormalBufFile(temp.Get()))
+    {
+        DbgERROR("Failed reading in normal buffer [%s].", temp.Get());
+        return false;
+    }
+
+
     m_MeshName = Filename(meshName);
     return true;
 
@@ -198,6 +213,80 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
     for (size_t i = 0; i < m_nTriangles; ++i)
     {
         DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
+    }
+
+    return true;
+}
+
+// This must be called after ReadPosBufFile().
+bool Mesh::ReadNormalBufFile(const char *filepath)
+{
+    Filepath tempPath;
+    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBFile normBufFile(tempPath.Get());
+
+    CBString<64> temp;
+    if (!normBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting file type [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (temp.Compare("NORMAL_BUF") != 0)
+    {
+        DbgERROR("Not a normal_buf file! [%s]\n", filepath);
+        return false;
+    }
+
+    // Get num of normals.
+    temp.Clear();
+    if (!normBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting num of normals [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (static_cast<size_t>(atoi(temp.Get())) != m_nVertices || 
+        m_Vertices.Size() != m_nVertices)
+    {
+        DbgERROR("Num of normals != Num of vertices [%s]!", filepath);
+        return false;
+    }
+
+    // Fill in normals.
+    float tempFloat, tempX, tempY, tempZ;;
+    for (size_t i = 0; i < m_nVertices; ++i)
+    {
+        temp.Clear();
+        if (!normBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+        {
+            DbgERROR("Not enough normals in [%s].", filepath);
+            return false;
+        }
+        temp.Strip();
+        char *marker = temp.Get();
+        for (int j = 0; j < 3; ++j)
+        {
+            if (!CBStringOps::GetNextFloat32(marker, tempFloat, ' '))
+            {
+                DbgERROR("Not enough values for normal[%d] in [%s].", i, filepath);
+                return false;
+            }
+
+            switch (j)
+            {
+            case 0: tempX = tempFloat; break;
+            case 1: tempY = tempFloat; break;
+            case 2: tempZ = tempFloat; break;
+            }
+        }
+
+        m_Vertices.at(i).m_Normal.Set(tempX, tempY, tempZ, 0.0f);
+    }
+
+    for (size_t i = 0; i < m_nVertices; ++i)
+    {
+        DbgINFO("Noamal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
     }
 
     return true;

@@ -1,6 +1,15 @@
-struct VS_Output
+struct VS_Input
+{
+    float4 position : POSITION;
+    float4 normal : NORMAL;
+    float4 color : COLOR;
+};
+
+
+struct PS_Input
 {
     float4 position : SV_POSITION;
+    float4 normal : NORMAL;
     float4 color : COLOR;
 };
 
@@ -20,13 +29,14 @@ cbuffer PerObject : register(b2)
     matrix worldMatrix;
 }
 
-VS_Output VShader(float4 position : POSITION, float4 color : COLOR)
+PS_Input VShader(VS_Input input)
 {
-    VS_Output output;
+    PS_Input output;
     
     float4x4 mvp = mul(mul(worldMatrix, cameraViewMatrix), projectionMatrix);
-    output.position = mul(position, mvp );
-    output.color = color;
+    output.position = mul(input.position, mvp );
+    output.normal = mul(input.normal, worldMatrix); // transform normal and normalize
+    output.color = input.color;
 
     return output;
 }

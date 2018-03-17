@@ -23,6 +23,7 @@ public:
 private:
     bool ReadPosBufFile(const char *filepath);
     bool ReadIndexBufFile(const char *filepath);
+    bool ReadNormalBufFile(const char *filepath);
 
     static int g_IDCounter;
 

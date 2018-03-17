@@ -11,11 +11,14 @@
 struct Vertex
 {
     Vertex();
-    Vertex(float x, float y, float z, float r, float g, float b);
+    Vertex(float px, float py, float pz,
+           float nx, float ny, float nz,
+           float r, float g, float b);
     ~Vertex();
 
-    static D3D11_INPUT_ELEMENT_DESC InputDesc[2];
+    static D3D11_INPUT_ELEMENT_DESC InputDesc[3];
     Vec3 m_Pos;
+    Vec3 m_Normal;
     D3DXCOLOR m_Color;
 };
 
