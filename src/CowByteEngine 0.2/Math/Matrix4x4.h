@@ -156,6 +156,8 @@ __declspec(align(16)) struct Matrix4x4
 
     }
 
+    // This version is not inline and in many cases require you to construct 
+    // a Vec3, so when possible, use Translate(float x, float y, float z).
     static Matrix4x4 Translate(const Vec3 &vec);
 
 #pragma endregion
@@ -208,8 +210,8 @@ __declspec(align(16)) struct Matrix4x4
         }
 
     public: 
-        // Inverse function is the same no matter column major or row major
-        inline Matrix4x4 Inverse() const
+        // Returns the inversed version of this matrix. Does not modify _data.
+        inline Matrix4x4 Inversed() const
         {
           // use block matrix method
           // A is a matrix, then i(A) or iA means inverse of A, A# (or A_ in code) means adjugate of A, |A| (or detA in code) is determinant, tr(A) is trace

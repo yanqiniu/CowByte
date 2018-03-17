@@ -32,7 +32,7 @@ private:
 
 inline void Camera::UpdateWToCMatrix()
 {
-    m_WorldToCamaraSpace = m_pParentSceneNode->GetWorldTransform().Inverse();
+    m_WorldToCamaraSpace = m_pParentSceneNode->GetWorldTransform().Inversed();
 }
 
 inline Matrix4x4 Camera::GetWToCMatrix() const
