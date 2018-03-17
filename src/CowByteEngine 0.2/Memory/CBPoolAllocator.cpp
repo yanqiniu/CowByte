@@ -10,7 +10,7 @@ CBMemPool::CBMemPool(UINT32 blockSize, UINT32 nBlocks) :
     m_nTotalBlocks(nBlocks),
     m_nFreeBlocks(nBlocks)
 {
-    DbgAssert(sizeof(CBPoolBlock) <= 16, "Size of pool block struct can't be larger than 16 bytes!");
+    DbgAssert(sizeof(CBPoolBlock) <= 16, "Size of pool block struct can't be smaller than 16 bytes!");
 }
 
 CBMemPool::~CBMemPool()
