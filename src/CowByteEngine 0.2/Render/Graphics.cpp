@@ -41,7 +41,7 @@ Graphics::Graphics(const GraphicsData &data):
     m_pDeviceContext(nullptr),
     m_pSwapChain(nullptr),
     m_pMeshManager(nullptr),
-    m_pRenderTarget(nullptr),
+    m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
     m_pVertexBuffer(nullptr),
     m_pIndexBuffer(nullptr),
@@ -88,9 +88,6 @@ bool Graphics::Initialize()
     m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
     g_pCamNode->Translate(Vec3(0, 0, -5.0f));
 
-    // Create vertex/index/constant buffers.
-    SimpleRenderSetup();
-
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
 
     return true;
@@ -98,8 +95,9 @@ bool Graphics::Initialize()
 
 bool Graphics::Update(const GameContext& context)
 {
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTarget, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
-    
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+
     g_pCamNode->UpdateWorldTransform();
     m_pMainCamera->UpdateWToCMatrix();
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
@@ -122,7 +120,7 @@ bool Graphics::ShutDown()
     m_pSwapChain->Release();
     m_pDevice->Release();
     m_pDeviceContext->Release();
-    m_pRenderTarget->Release();
+    m_pRenderTargetView->Release();
     return true;
 }
 
@@ -194,9 +192,9 @@ bool Graphics::InitializePipeline()
     // Set render target.
     ID3D11Texture2D *pBackBuffer;
     ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTarget));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
     pBackBuffer->Release();
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTarget, nullptr);
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, nullptr);
 
     // Create a depth stencil buffer and view.
     D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
@@ -239,7 +237,7 @@ bool Graphics::InitializePipeline()
     rasterizerDesc.SlopeScaledDepthBias = 0.0f;
     ThrowIfFailed( m_pDevice->CreateRasterizerState(&rasterizerDesc, &m_pRasterizerState));
 
-    // Set viewport.
+    // Create viewport.
     ZeroMemory(&m_Viewport, sizeof(D3D11_VIEWPORT));
     m_Viewport.TopLeftX = 0;
     m_Viewport.TopLeftY = 0;
@@ -247,13 +245,8 @@ bool Graphics::InitializePipeline()
     m_Viewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
     m_Viewport.MinDepth = 0.0f;
     m_Viewport.MaxDepth = 1.0f;
-    m_pDeviceContext->RSSetViewports(1, &m_Viewport);
 
-    return true;
-}
 
-bool Graphics::SimpleRenderSetup()
-{
     // Load and compile shaders. These will be put into a Mesh class.
     ID3D10Blob *VS, *PS;
     ID3D11VertexShader *pVS;
@@ -304,6 +297,15 @@ bool Graphics::SimpleRenderSetup()
     // Create input layout.
     m_pDevice->CreateInputLayout(Vertex::InputDesc, 2, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
     m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+
+    // Set rasterizer stage.
+    m_pDeviceContext->RSSetState(m_pRasterizerState);
+    m_pDeviceContext->RSSetViewports(1, &m_Viewport);
+
+    // Output merger stage.
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
+
 
     return true;
 }

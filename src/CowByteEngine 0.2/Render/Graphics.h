@@ -41,7 +41,6 @@ public:
 private:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
     bool InitializePipeline();
-    bool SimpleRenderSetup(); // TODO: Get rid of this placeholder code piece.
     bool SetupSingleMeshInst(MeshInstance *meshInst);
 
     static const int NumOfBuffers = 2;
@@ -62,7 +61,7 @@ private:
     IDXGISwapChain *m_pSwapChain;
 
     // Other graphics:
-    ID3D11RenderTargetView *m_pRenderTarget;
+    ID3D11RenderTargetView *m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
 
     ID3D11Buffer *m_pVertexBuffer;
