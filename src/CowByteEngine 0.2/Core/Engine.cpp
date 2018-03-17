@@ -73,8 +73,10 @@ int Engine::Draw(GameContext& context)
 
 bool Engine::Update(const GameContext& context)
 {
-
-
+    // Empty function, this might never get called.
+    // We have this because Engine inherits from Component
+    // which has Update() as a pure virtual.
+    // Engine class mosly operate inside Runloop().
     return true;
 }
 
@@ -86,7 +88,7 @@ int Engine::ShutDown()
     {
         if (!pSysPair.second->Shutdown())
         {
-        	DbgWARNING("Failed to shurdown system [%d]", pSysPair.first);
+        	DbgWARNING("Failed to shutdown system [%d]", pSysPair.first);
         	continue;
         }
 

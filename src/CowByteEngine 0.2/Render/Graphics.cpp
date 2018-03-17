@@ -292,7 +292,6 @@ bool Graphics::SimpleRenderSetup()
     ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer));
 
     // Create Index buffer.
-    // Create and initialize the index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
     indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
