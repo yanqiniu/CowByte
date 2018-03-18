@@ -30,5 +30,6 @@ Don't worry about the name :D
  - SIMD math (Intel SSE);
  - Scenegraph;
  - Mesh Instancing;  
- - Custom string and File that supports commenting.
+ - Custom string and File that supports commenting;
+ - Keyboard and mouse input;
  - ...
