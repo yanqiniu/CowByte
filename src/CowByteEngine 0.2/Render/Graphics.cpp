@@ -134,7 +134,7 @@ bool Graphics::OnRender()
 
 void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
-    if (pMsg->type == MessageType::MsgType_SetMainCamera)
+    if (pMsg->GetInstType() == Msg_SetMainCamera::ClassTypeSpecifier())
     {
         m_pMainCamera = static_cast<Msg_SetMainCamera*>(pMsg.Get())->m_pCamera;
         m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);

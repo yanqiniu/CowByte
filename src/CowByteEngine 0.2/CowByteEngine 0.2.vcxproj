@@ -149,6 +149,7 @@
     <ClInclude Include="Messaging\CBMessaging.h" />
     <ClInclude Include="Messaging\Message.h" />
     <ClInclude Include="Messaging\MessageBus.h" />
+    <ClInclude Include="Messaging\MessageDecl.h" />
     <ClInclude Include="Render\Graphics.h" />
     <ClInclude Include="Render\Mesh.h" />
     <ClInclude Include="Render\MeshInstance.h" />

@@ -113,9 +113,8 @@ bool MeshManager::Update(const GameContext &context)
 
 void MeshManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
-    if (pMsg->type == MessageType::MsgType_RegisterDrawbleMeshInstance)
+    if (pMsg->GetInstType() == Msg_RegisterDrawbleMeshInst::ClassTypeSpecifier())
     {
-        
         MeshInstance *pMeshInst = static_cast<Msg_RegisterDrawbleMeshInst*>(pMsg.Get())->m_MeshInstPtr;
         AddMeshInstance(pMeshInst);
     }

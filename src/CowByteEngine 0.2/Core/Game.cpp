@@ -16,8 +16,8 @@ Cube::Cube()
     cube1->AttachTo_SceneNode_Parent(m_pSceneNode);
 
     // Notify the mesh manager...
-    CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
-    static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
+    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();
+    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = cube1;
     CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());
 }
 
@@ -53,8 +53,8 @@ bool Game::Initialize()
     cameraSceneNode->UpdateWorldTransform();
 
     // Set the game camera as main.
-    CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_SetMainCamera);
-    static_cast<Msg_SetMainCamera*>(msgPtr.Get())->m_pCamera = m_pGameCamera;
+    CBRefCountPtr<Message> msgPtr = Msg_SetMainCamera::Create();
+    MESSAGE_FROM_PTR(msgPtr, Msg_SetMainCamera)->m_pCamera = m_pGameCamera;
     CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());
 
     return true;

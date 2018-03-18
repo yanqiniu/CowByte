@@ -132,6 +132,9 @@
     <ClInclude Include="Messaging\CBMessaging.h">
       <Filter>Messaging</Filter>
     </ClInclude>
+    <ClInclude Include="Messaging\MessageDecl.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
