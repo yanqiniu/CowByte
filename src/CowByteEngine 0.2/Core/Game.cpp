@@ -49,6 +49,8 @@ bool Game::Initialize()
     m_pGameCamera = new Camera((float)800 / 600, 0.698131f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
+    cameraSceneNode->Translate(Vec3(0, 0, -5.0f));
+    cameraSceneNode->UpdateWorldTransform();
 
     // Set the game camera as main.
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_SetMainCamera);
