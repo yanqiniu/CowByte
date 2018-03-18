@@ -39,11 +39,5 @@ inline MessageBus *& MessageBus::GetEngineBus()
     return s_pEngineBus;
 }
 
-namespace  CBMessaging
-{
-    void InitializeEngineBus();
-    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
-    void PostImediateMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
-}
 
 #endif

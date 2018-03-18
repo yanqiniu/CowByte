@@ -4,8 +4,6 @@
 #include "../Utils/CBDebug.h"
 #include "CBPoolAllocator.h"
 
-#define MAX_NUM_POOLS 16
-
 const static size_t g_MaxNumMemPools = 32;
 
 // TODO: yea... this needs to be tweaked.
@@ -49,12 +47,16 @@ private:
     CBMemPool *m_pPools[g_MaxNumMemPools]; // pointers to all pools
     size_t m_TotalByteCapacity;
 
+#ifdef _DEBUG
     size_t m_NumBytesRequested; // sum of data size
     size_t m_NumBytesUsed; // sum of block size
-#ifdef _WIN64
+#ifndef _WIN64
+    int _debugPadding[2];
+#endif
+#endif
+
+#ifndef _WIN64
     int _padding[2];
-#else
-    int _padding[3];
 #endif
 
 };

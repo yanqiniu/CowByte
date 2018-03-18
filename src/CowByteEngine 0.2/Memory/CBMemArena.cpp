@@ -2,6 +2,10 @@
 
 CBMemArena::CBMemArena() :
     m_TotalByteCapacity(0)
+#ifdef _DEBUG
+    , m_NumBytesUsed(0),
+    m_NumBytesRequested(0)
+#endif // _DEBUG
 {
     // Calculate the total amount of bytes the will 
     // be allocated.
@@ -12,8 +16,6 @@ CBMemArena::CBMemArena() :
         m_TotalByteCapacity += (config[0] * config[1]);
     }
 
-    m_NumBytesUsed = 0;
-    m_NumBytesRequested = 0;
     Initialize();
 }
 
@@ -21,7 +23,7 @@ CBMemArena CBMemArena::s_instance;
 
 void CBMemArena::Initialize()
 {
-    // Allocate all mem needed:
+    // Allocate all memory needed:
     m_pMemory = _aligned_malloc(m_TotalByteCapacity, 16);
 
     DbgAssert(m_pMemory, "Failed to allocate requested amount of memory for arena.");
@@ -34,7 +36,7 @@ void CBMemArena::Initialize()
         {
             // TODO: this smells like "somewhere on the heap"...
             // Create pool header. Using placement new because likely new has been 
-            // overridden now.
+            // overridden.
             m_pPools[i] = static_cast<CBMemPool*>(_aligned_malloc(sizeof(CBMemPool), 16));
             m_pPools[i] = new(m_pPools[i]) CBMemPool(config[0], config[1]);
 
@@ -55,8 +57,10 @@ void* CBMemArena::Allocate(size_t size)
     {
         if (size <= pPool->m_blockSize)
         {
+#ifdef _DEBUG            
             m_NumBytesRequested += size;
             m_NumBytesUsed += pPool->m_blockSize;
+#endif // DEBUG
             return pPool->Allocate(size);
         }
     }
@@ -71,8 +75,10 @@ void CBMemArena::Free(void* ptr, size_t size)
     {
         if (size <= pPool->m_blockSize)
         {
+#ifdef _DEBUG            
             m_NumBytesRequested -= size;
             m_NumBytesUsed -= pPool->m_blockSize;
+#endif // DEBUG
             pPool->Free(ptr);
             return;
         }

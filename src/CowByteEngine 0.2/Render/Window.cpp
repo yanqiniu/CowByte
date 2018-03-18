@@ -58,7 +58,7 @@ Window::Window(const WindowData& data) :
     System(data),
     m_hWindow(NULL),
     m_hDC(NULL),
-    m_hInst(NULL),
+    m_hInst(data.m_hInst),
 
     m_Height(data.m_Height),
     m_Width(data.m_Width),
@@ -299,12 +299,13 @@ WindowData::WindowData() :
 
 }
 
-WindowData::WindowData(int w, int h, const std::tstring& title /*= _T("CowByte Engine Ver1.0 - by Roy Niu")*/, int b /*= 32*/, bool fullScreen /*= false*/) :
+WindowData::WindowData(int w, int h, HINSTANCE hInst, const std::tstring& title /*= _T("CowByte Engine Ver1.0 - by Roy Niu")*/, int b /*= 32*/, bool fullScreen /*= false*/) :
     SystemData(SystemType::SYS_WINDOW),
     m_Height(h),
     m_Width(w),
     m_Bits(b),
     m_Title(title),
+    m_hInst(hInst),
     m_isFullScreen(fullScreen)
 
 {

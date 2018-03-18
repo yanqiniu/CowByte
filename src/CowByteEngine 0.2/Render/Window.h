@@ -12,12 +12,13 @@
 struct WindowData : public SystemData
 {
     WindowData();
-    WindowData(int w, int h, const std::tstring& title = _T("CowByte Engine Ver 0.2 - Roy Niu"), int b = 32, bool fullScreen = false);
+    WindowData(int w, int h, HINSTANCE hInst, const std::tstring& title = _T("CowByte Engine Ver 0.2 - Roy Niu"), int b = 32, bool fullScreen = false);
 
+    std::tstring m_Title;
+    HINSTANCE m_hInst;
     int m_Width;
     int m_Height;
     int m_Bits;
-    std::tstring m_Title;
     bool m_isFullScreen;
 };
 
@@ -39,8 +40,8 @@ public:
     int GetHeight() const { return m_Height; }
     HWND GetWindowHandle() const { return m_hWindow; }
     bool GetIsFullScreen() const { return m_bFullScreen; }
-    HDC GetDeviceContext();
-    HINSTANCE GetInstance();
+    HDC GetDeviceContext() const { return m_hDC; }
+    HINSTANCE GetInstance() const { return m_hInst; };
 
     ResizeData& GetResizeData() { return m_ResizeData; }
 

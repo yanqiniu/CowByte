@@ -138,8 +138,7 @@
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\Game.h" />
     <ClInclude Include="Core\GameContext.h" />
-    <ClInclude Include="Core\Message.h" />
-    <ClInclude Include="Core\MessageBus.h" />
+    <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
@@ -147,6 +146,9 @@
     <ClInclude Include="Memory\CBMemArena.h" />
     <ClInclude Include="Memory\CBMemory.h" />
     <ClInclude Include="Memory\CBPoolAllocator.h" />
+    <ClInclude Include="Messaging\CBMessaging.h" />
+    <ClInclude Include="Messaging\Message.h" />
+    <ClInclude Include="Messaging\MessageBus.h" />
     <ClInclude Include="Render\Graphics.h" />
     <ClInclude Include="Render\Mesh.h" />
     <ClInclude Include="Render\MeshInstance.h" />
@@ -157,6 +159,7 @@
     <ClInclude Include="SceneGraph\SceneNode.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
+    <ClInclude Include="Utils\CBHelper.h" />
     <ClInclude Include="Utils\CBPath.h" />
     <ClInclude Include="Utils\CBQueue.h" />
     <ClInclude Include="Utils\CBRefCountPtr.h" />
@@ -164,14 +167,14 @@
     <ClInclude Include="Utils\CBStringOps.h" />
     <ClInclude Include="Utils\CBVector.h" />
     <ClInclude Include="Utils\exceptions.h" />
+    <ClInclude Include="Utils\KeyCodes.h" />
     <ClInclude Include="Utils\typedefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Game.cpp" />
-    <ClCompile Include="Core\Message.cpp" />
-    <ClCompile Include="Core\MessageBus.cpp" />
+    <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
@@ -179,6 +182,9 @@
     <ClCompile Include="Memory\CBMemArena.cpp" />
     <ClCompile Include="Memory\CBMemory.cpp" />
     <ClCompile Include="Memory\CBPoolAllocator.cpp" />
+    <ClCompile Include="Messaging\CBMessaging.cpp" />
+    <ClCompile Include="Messaging\Message.cpp" />
+    <ClCompile Include="Messaging\MessageBus.cpp" />
     <ClCompile Include="Render\Graphics.cpp" />
     <ClCompile Include="Render\Mesh.cpp" />
     <ClCompile Include="Render\MeshInstance.cpp" />

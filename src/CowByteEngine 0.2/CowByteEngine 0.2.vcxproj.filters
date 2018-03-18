@@ -22,6 +22,9 @@
     <Filter Include="Assets">
       <UniqueIdentifier>{3657466d-63fa-4ca7-b5a0-9159fe854f69}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Messaging">
+      <UniqueIdentifier>{255bb608-5e92-4206-982f-0e77086c66b8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Memory\CBMemory.h">
@@ -49,12 +52,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\GameContext.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\MessageBus.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Message.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="Utils\CBQueue.h">
@@ -117,6 +114,24 @@
     <ClInclude Include="Utils\CBRefCountPtr.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBHelper.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\KeyCodes.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\Message.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\MessageBus.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
+    <ClInclude Include="Messaging\CBMessaging.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -132,9 +147,6 @@
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Core\Component.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\MessageBus.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Utils\CBString.cpp">
@@ -185,8 +197,17 @@
     <ClCompile Include="Render\MeshInstance.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Core\Message.cpp">
+    <ClCompile Include="Core\Input.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Messaging\MessageBus.cpp">
+      <Filter>Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Messaging\Message.cpp">
+      <Filter>Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Messaging\CBMessaging.cpp">
+      <Filter>Messaging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

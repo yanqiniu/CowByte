@@ -1,5 +1,4 @@
 #include "Component.h"
-#include "MessageBus.h"
 #include "../Utils/CBQueue.h"
 #include "../Utils/CBDebug.h"
 #include "../SceneGraph/SceneNode.h"

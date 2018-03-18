@@ -30,11 +30,11 @@ SceneNode* SceneNode::CreateSceneNodeThenAttach(SceneNode *parentPtr)
 void SceneNode::UpdateWorldTransform()
 {
     m_WorldTransform = m_LocalTransform;
-    SceneNode *ptr = m_pParentSceneNode;
+    SceneNode *ptr = GetParentSceneNode();
     while (ptr != nullptr)
     {
         m_WorldTransform *= ptr->m_LocalTransform;
-        ptr = m_pParentSceneNode->m_pParentSceneNode;
+        ptr = ptr->GetParentSceneNode();
     }
 }
 

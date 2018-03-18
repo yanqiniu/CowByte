@@ -4,13 +4,11 @@
 #include <Windows.h>
 #include <map>
 #include "../Utils/CBDebug.h"
-#include "MessageBus.h"
+#include "../Messaging/CBMessaging.h"
 #include "Component.h"
 
 enum SystemType;
 class System;
-class Game;
-class MessageBus;
 struct GameContext;
 
 //Enumeration
@@ -24,10 +22,15 @@ enum EngineState
     DESTROYING
 };
 
+struct EngineStartParam
+{
+    HINSTANCE m_hInst;
+};
+
 class Engine : public Component
 {
 public:
-    Engine();
+    Engine(const EngineStartParam& startParam);
     ~Engine();
 
     int Initialize(GameContext &context);
@@ -42,9 +45,6 @@ public:
     template<typename T>
     T* GetSystem(SystemType sysType);
 
-    // Create the game instance.
-    Game* CreateGame();
-
     static EngineState GetEngineState() { return m_EngineState; }
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
@@ -53,6 +53,7 @@ public:
 private:
     std::map<SystemType, System*> m_MapSystems;
     static EngineState m_EngineState;
+    HINSTANCE m_hInst;
 };
 
 template<typename T>
