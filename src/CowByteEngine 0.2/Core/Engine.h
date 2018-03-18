@@ -4,7 +4,7 @@
 #include <Windows.h>
 #include <map>
 #include "../Utils/CBDebug.h"
-#include "../Messaging/MessageBus.h"
+#include "../Messaging/CBMessaging.h"
 #include "Component.h"
 
 enum SystemType;

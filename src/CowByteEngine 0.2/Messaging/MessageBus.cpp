@@ -1,5 +1,5 @@
 #include "MessageBus.h"
-#include "Component.h"
+#include "../Core/Component.h"
 
 
 MessageBus* MessageBus::s_pEngineBus;
@@ -76,35 +76,3 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
     m_Subscribers.Push_back(newSubscbr);
 }
 
-
-void CBMessaging::InitializeEngineBus()
-{
-    MessageBus::GetEngineBus() = new MessageBus();
-}
-
-//void CBMessaging::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
-//{
-//    if (pMsgBus == nullptr)
-//    {
-//        DbgWARNING("Trying to post to null message bus.");
-//        return;
-//    }
-//
-//    pMsgBus->EnqueueNewMsg(pMsg);
-//}
-
-// Post a message that gets broadcast to all subscribers and HANDLED right away, instead 
-// of having to wait until near end of frame.
-// NOTICE: this preempts all queued Messages - in fact, it doesn't even put this Message 
-// into the queue. It also doesn't respect the per-engine-loop messaging processing sequence.
-// Use this when you absolutely have to.
-void CBMessaging::PostImediateMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
-{
-    if (pMsgBus == nullptr)
-    {
-        DbgWARNING("Trying to post to null message bus.");
-        return;
-    }
-
-    pMsgBus->BroadcastSingle(pMsg);
-}

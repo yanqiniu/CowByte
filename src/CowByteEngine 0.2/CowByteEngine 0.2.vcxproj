@@ -146,6 +146,7 @@
     <ClInclude Include="Memory\CBMemArena.h" />
     <ClInclude Include="Memory\CBMemory.h" />
     <ClInclude Include="Memory\CBPoolAllocator.h" />
+    <ClInclude Include="Messaging\CBMessaging.h" />
     <ClInclude Include="Messaging\Message.h" />
     <ClInclude Include="Messaging\MessageBus.h" />
     <ClInclude Include="Render\Graphics.h" />
@@ -181,6 +182,7 @@
     <ClCompile Include="Memory\CBMemArena.cpp" />
     <ClCompile Include="Memory\CBMemory.cpp" />
     <ClCompile Include="Memory\CBPoolAllocator.cpp" />
+    <ClCompile Include="Messaging\CBMessaging.cpp" />
     <ClCompile Include="Messaging\Message.cpp" />
     <ClCompile Include="Messaging\MessageBus.cpp" />
     <ClCompile Include="Render\Graphics.cpp" />

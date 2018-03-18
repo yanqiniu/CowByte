@@ -1,6 +1,6 @@
 #include "MeshManager.h"
 #include "Mesh.h"
-#include "../Messaging/Message.h"
+#include "../Messaging/CBMessaging.h"
 #include "MeshInstance.h"
 
 

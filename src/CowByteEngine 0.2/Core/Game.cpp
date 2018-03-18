@@ -1,7 +1,6 @@
 #include "Game.h"
 #include "Input.h"
-#include "../Messaging/Message.h"
-#include "../Messaging/MessageBus.h"
+#include "../Messaging/CBMessaging.h"
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
 #include "../Render/MeshInstance.h"
@@ -19,7 +18,7 @@ Cube::Cube()
     // Notify the mesh manager...
     CBRefCountPtr<Message> msgPtr = Message::Create(MessageType::MsgType_RegisterDrawbleMeshInstance);
     static_cast<Msg_RegisterDrawbleMeshInst*>(msgPtr.Get())->m_MeshInstPtr = cube1;
-    CBMessaging::PostMessage(msgPtr, MessageBus::GetEngineBus());
+    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());
 }
 
 
@@ -67,8 +66,9 @@ void Game::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 
 }
 
-GameData::GameData() :
-    SystemData(SystemType::SYS_INVALID)
+GameData::GameData(Input* input) :
+    SystemData(SystemType::SYS_INVALID),
+    m_pInput(input)
 {
 
 }

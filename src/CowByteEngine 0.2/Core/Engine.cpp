@@ -45,7 +45,9 @@ int Engine::Initialize(GameContext &context)
         return false;
     if (!AddSystem(pGame))
         return false;
-
+    
+    // Construct Engine bus.
+    CBMessaging::InitializeEngineBus();
 
     //Initialize Systems.
     if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
@@ -56,7 +58,6 @@ int Engine::Initialize(GameContext &context)
         return false;
     if (!m_MapSystems[SystemType::SYS_GAME]->Initialize())
         return false;
-
 
     // Subscribe systems to the message bus.
     // NOTICE: the order specified here will be the order they get called when 
@@ -132,11 +133,11 @@ int Engine::RunLoop()
         }
 
         // Update each system:
-        m_MapSystems[SystemType::SYS_GAME]->UpdateTree(context); // Update game first.
+        m_MapSystems[SystemType::SYS_INPUT]->UpdateTree(context); // ! Update input before Game so Game has current frame input status!
+        m_MapSystems[SystemType::SYS_GAME]->UpdateTree(context); 
         SceneNode::RootNode.UpdateTree(context); // Update scene.
         m_MapSystems[SystemType::SYS_GRAPHICS]->UpdateTree(context);
         m_MapSystems[SystemType::SYS_WINDOW]->UpdateTree(context);
-        m_MapSystems[SystemType::SYS_INPUT]->UpdateTree(context);
 
         // Now broadcast all the messages received in the earlier:
         MessageBus::GetEngineBus()->Broadcast();
@@ -166,20 +167,6 @@ int Engine::AddSystem(System* pSys)
         return true;
 
     return false;
-}
-
-Game* Engine::CreateGame()
-{
-    if (!AddSystem(new Game(GameData())))
-        return nullptr;
-
-    Game* game = GetSystem<Game>(SystemType::SYS_GAME);
-    if (!game)
-        return nullptr;
-    //if (!game->Initialize())
-    //	return nullptr;
-
-    return game;
 }
 
 void Engine::_HandleMessage(CBRefCountPtr<Message> &pMsg)

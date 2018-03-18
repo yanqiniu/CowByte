@@ -129,6 +129,9 @@
     <ClInclude Include="Messaging\MessageBus.h">
       <Filter>Messaging</Filter>
     </ClInclude>
+    <ClInclude Include="Messaging\CBMessaging.h">
+      <Filter>Messaging</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -201,6 +204,9 @@
       <Filter>Messaging</Filter>
     </ClCompile>
     <ClCompile Include="Messaging\Message.cpp">
+      <Filter>Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Messaging\CBMessaging.cpp">
       <Filter>Messaging</Filter>
     </ClCompile>
   </ItemGroup>
