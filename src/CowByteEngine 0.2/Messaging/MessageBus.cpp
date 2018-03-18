@@ -82,16 +82,16 @@ void CBMessaging::InitializeEngineBus()
     MessageBus::GetEngineBus() = new MessageBus();
 }
 
-void CBMessaging::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
-{
-    if (pMsgBus == nullptr)
-    {
-        DbgWARNING("Trying to post to null message bus.");
-        return;
-    }
-
-    pMsgBus->EnqueueNewMsg(pMsg);
-}
+//void CBMessaging::PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
+//{
+//    if (pMsgBus == nullptr)
+//    {
+//        DbgWARNING("Trying to post to null message bus.");
+//        return;
+//    }
+//
+//    pMsgBus->EnqueueNewMsg(pMsg);
+//}
 
 // Post a message that gets broadcast to all subscribers and HANDLED right away, instead 
 // of having to wait until near end of frame.

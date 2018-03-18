@@ -4,13 +4,11 @@
 #include <Windows.h>
 #include <map>
 #include "../Utils/CBDebug.h"
-#include "MessageBus.h"
+#include "../Messaging/MessageBus.h"
 #include "Component.h"
 
 enum SystemType;
 class System;
-class Game;
-class MessageBus;
 struct GameContext;
 
 //Enumeration
@@ -46,9 +44,6 @@ public:
     // Retrieve a core system.
     template<typename T>
     T* GetSystem(SystemType sysType);
-
-    // Create the game instance.
-    Game* CreateGame();
 
     static EngineState GetEngineState() { return m_EngineState; }
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;

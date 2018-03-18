@@ -42,7 +42,16 @@ inline MessageBus *& MessageBus::GetEngineBus()
 namespace  CBMessaging
 {
     void InitializeEngineBus();
-    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
+    void PostMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
+    {
+        if (pMsgBus == nullptr)
+        {
+            DbgWARNING("Trying to post to null message bus.");
+            return;
+        }
+
+        pMsgBus->EnqueueNewMsg(pMsg);
+    }
     void PostImediateMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus);
 }
 

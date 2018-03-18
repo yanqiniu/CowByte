@@ -4,7 +4,7 @@
 #include "../Utils/CBQueue.h"
 #include "../Utils/CBVector.h"
 #include "../Utils/CBRefCountPtr.h"
-#include "Message.h"
+#include "../Messaging/Message.h"
 
 class MessageBus;
 class GameContext;

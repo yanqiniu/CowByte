@@ -14,7 +14,7 @@
 #include "../SceneGraph/SceneNode.h"
 #include "MeshInstance.h"
 #include "../Utils/CBFile.h"
-#include "../Core/MessageBus.h"
+#include "../Messaging/MessageBus.h"
 
 using namespace DirectX;
 

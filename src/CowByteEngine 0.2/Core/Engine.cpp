@@ -29,24 +29,23 @@ Engine::~Engine()
 int Engine::Initialize(GameContext &context)
 {
     m_EngineState = EngineState::INITIALIZING;
-    // Construct Engine bus.
-    CBMessaging::InitializeEngineBus();
 
-    // Add Game.
-    Game* pGame = CreateGame();
-    if (!pGame)
-        return false;
-
-    // Add Systems.
+    // Add Systems and Game.
     Window *pWindow = new Window(WindowData(640, 480, m_hInst));
     Graphics *pGraphics = new Graphics(GraphicsData(pWindow));
     Input *pInput = new Input(InputSystemData(pWindow));
+    Game* pGame = new Game(GameData(pInput));
+
+
     if (!AddSystem(pWindow))
         return false;
     if (!AddSystem(pGraphics))
         return false;
     if (!AddSystem(pInput))
         return false;
+    if (!AddSystem(pGame))
+        return false;
+
 
     //Initialize Systems.
     if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
