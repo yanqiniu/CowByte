@@ -117,6 +117,12 @@
     <ClInclude Include="Utils\CBRefCountPtr.h">
       <Filter>Utils</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\CBHelper.h">
+      <Filter>Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -186,6 +192,9 @@
       <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Core\Message.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

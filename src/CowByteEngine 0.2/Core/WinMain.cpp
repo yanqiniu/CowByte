@@ -25,7 +25,7 @@ int _tmain(int argc, char* argv)
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-    UNREFERENCED_PARAMETER(hInstance);
+    //UNREFERENCED_PARAMETER(hInstance);
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
     UNREFERENCED_PARAMETER(nCmdShow);
@@ -39,7 +39,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #endif
 
     // create the engine
-    Engine *pEngine = new Engine();
+    EngineStartParam startParam;
+    startParam.m_hInst = hInstance;
+    Engine *pEngine = new Engine(startParam);
 
     //kick of the game
     int result = pEngine->RunLoop();

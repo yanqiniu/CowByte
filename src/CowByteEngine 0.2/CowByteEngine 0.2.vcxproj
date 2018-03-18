@@ -138,6 +138,7 @@
     <ClInclude Include="Core\Engine.h" />
     <ClInclude Include="Core\Game.h" />
     <ClInclude Include="Core\GameContext.h" />
+    <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\Message.h" />
     <ClInclude Include="Core\MessageBus.h" />
     <ClInclude Include="Core\System.h" />
@@ -157,6 +158,7 @@
     <ClInclude Include="SceneGraph\SceneNode.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
+    <ClInclude Include="Utils\CBHelper.h" />
     <ClInclude Include="Utils\CBPath.h" />
     <ClInclude Include="Utils\CBQueue.h" />
     <ClInclude Include="Utils\CBRefCountPtr.h" />
@@ -170,6 +172,7 @@
     <ClCompile Include="Core\Component.cpp" />
     <ClCompile Include="Core\Engine.cpp" />
     <ClCompile Include="Core\Game.cpp" />
+    <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\Message.cpp" />
     <ClCompile Include="Core\MessageBus.cpp" />
     <ClCompile Include="Core\System.cpp" />

@@ -24,10 +24,15 @@ enum EngineState
     DESTROYING
 };
 
+struct EngineStartParam
+{
+    HINSTANCE m_hInst;
+};
+
 class Engine : public Component
 {
 public:
-    Engine();
+    Engine(const EngineStartParam& startParam);
     ~Engine();
 
     int Initialize(GameContext &context);
@@ -53,6 +58,7 @@ public:
 private:
     std::map<SystemType, System*> m_MapSystems;
     static EngineState m_EngineState;
+    HINSTANCE m_hInst;
 };
 
 template<typename T>

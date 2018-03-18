@@ -3,6 +3,7 @@
 #include "Engine.h"
 #include "System.h"
 #include "Game.h"
+#include "Input.h"
 
 #include "../Render/Window.h"
 #include "../Render/Graphics.h"
@@ -12,12 +13,13 @@
 
 EngineState Engine::m_EngineState = EngineState::INVALID;
 
-Engine::Engine() :
-    Component()
+
+Engine::Engine(const EngineStartParam& startParam) : 
+    Component(),
+    m_hInst(startParam.m_hInst)
 {
     m_EngineState = EngineState::CONSTRUCTING;
 }
-
 
 Engine::~Engine()
 {
@@ -36,17 +38,22 @@ int Engine::Initialize(GameContext &context)
         return false;
 
     // Add Systems.
-    Window *pWindow = new Window(WindowData(640, 480));
+    Window *pWindow = new Window(WindowData(640, 480, m_hInst));
     Graphics *pGraphics = new Graphics(GraphicsData(pWindow));
+    Input *pInput = new Input(InputSystemData(pWindow));
     if (!AddSystem(pWindow))
         return false;
     if (!AddSystem(pGraphics))
+        return false;
+    if (!AddSystem(pInput))
         return false;
 
     //Initialize Systems.
     if (!m_MapSystems[SystemType::SYS_WINDOW]->Initialize())
         return false;
     if (!m_MapSystems[SystemType::SYS_GRAPHICS]->Initialize())
+        return false;
+    if (!m_MapSystems[SystemType::SYS_INPUT]->Initialize())
         return false;
     if (!m_MapSystems[SystemType::SYS_GAME]->Initialize())
         return false;
@@ -59,6 +66,7 @@ int Engine::Initialize(GameContext &context)
     MessageBus::GetEngineBus()->AddSubscriber(&SceneNode::RootNode);
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
+    MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_INPUT]);
 
     // Finally, process all the messages queued up during initialization.
     MessageBus::GetEngineBus()->Broadcast();
@@ -129,6 +137,7 @@ int Engine::RunLoop()
         SceneNode::RootNode.UpdateTree(context); // Update scene.
         m_MapSystems[SystemType::SYS_GRAPHICS]->UpdateTree(context);
         m_MapSystems[SystemType::SYS_WINDOW]->UpdateTree(context);
+        m_MapSystems[SystemType::SYS_INPUT]->UpdateTree(context);
 
         // Now broadcast all the messages received in the earlier:
         MessageBus::GetEngineBus()->Broadcast();

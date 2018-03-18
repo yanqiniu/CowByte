@@ -24,7 +24,6 @@ struct GraphicsData : SystemData
     GraphicsData();
     GraphicsData(Window *window);
     Window* m_pWindow;
-
 };
 
 class Graphics : public System
