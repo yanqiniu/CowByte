@@ -18,8 +18,15 @@ struct Cube
 {
     SceneNode *m_pSceneNode;
     Cube();
-
 };
+
+// A test object. Likely this will be made into a GameObject class.
+struct Plane
+{
+    SceneNode *m_pSceneNode;
+    Plane();
+};
+
 
 class Game : public System
 {
@@ -37,6 +44,7 @@ private:
     // Test game objects
     Cube *m_pCube0;
     Cube *m_pCube1;
+    Plane *m_pPlane;
 };
 
 #endif

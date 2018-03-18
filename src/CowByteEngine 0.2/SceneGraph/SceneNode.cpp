@@ -57,6 +57,11 @@ void SceneNode::Translate(const Vec3& inPos)
     m_LocalTransform *= Matrix4x4::Translate(inPos);
 }
 
+void SceneNode::Translate(float x, float y, float z)
+{
+    m_LocalTransform *= Matrix4x4::Translate(x, y, z);
+}
+
 bool SceneNode::Update(const GameContext &context)
 {
     return true;

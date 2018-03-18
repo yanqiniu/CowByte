@@ -31,6 +31,7 @@ public:
     //void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
 
     void Translate(const Vec3& inPos);
+    void Translate(float x, float y, float z);
     // void Rotate();
     // void Scale();
 

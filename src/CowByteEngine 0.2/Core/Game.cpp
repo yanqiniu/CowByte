@@ -21,6 +21,19 @@ Cube::Cube()
     CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());
 }
 
+Plane::Plane()
+{
+    // Create MeshInst
+    m_pSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    MeshInstance *plane = new MeshInstance("plane.mesha");
+    plane->AttachTo_SceneNode_Parent(m_pSceneNode);
+
+    // Notify the mesh manager...
+    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();
+    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = plane;
+    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());
+}
+
 
 Game::Game(const GameData& gameData) :
     System(SystemType::SYS_GAME),
@@ -44,6 +57,10 @@ bool Game::Initialize()
 
     m_pCube0 = new Cube();
     m_pCube1 = new Cube();
+    m_pPlane = new Plane();
+    m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
+    m_pPlane->m_pSceneNode->UpdateWorldTransform();
+    
 
     // Create game camera.
     m_pGameCamera = new Camera((float)800 / 600, 0.698131f, 0.01f, 1000.0f);
@@ -66,19 +83,25 @@ bool Game::Update(const GameContext &context)
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
-        m_pCube0->m_pSceneNode->Translate(Vec3(0.5f, 0, 0) * context.dTime);
-        m_pCube0->m_pSceneNode->UpdateWorldTransform();
+        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(1.0f, 0.0f, 0.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
 
-        m_pCube1->m_pSceneNode->Translate(Vec3(0, 0.5f, 0) * context.dTime);
-        m_pCube1->m_pSceneNode->UpdateWorldTransform();
+        //m_pCube0->m_pSceneNode->Translate(Vec3(0.5f, 0, 0) * context.dTime);
+        //m_pCube0->m_pSceneNode->UpdateWorldTransform();
+
+        //m_pCube1->m_pSceneNode->Translate(Vec3(0, 0.5f, 0) * context.dTime);
+        //m_pCube1->m_pSceneNode->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
     {
-        m_pCube0->m_pSceneNode->Translate(Vec3(-0.5f, 0, 0) * context.dTime);
-        m_pCube0->m_pSceneNode->UpdateWorldTransform();
+        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(-1.0f, 0.0f, 0.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
 
-        m_pCube1->m_pSceneNode->Translate(Vec3(0, -0.5f, 0) * context.dTime);
-        m_pCube1->m_pSceneNode->UpdateWorldTransform();
+        //m_pCube0->m_pSceneNode->Translate(Vec3(-0.5f, 0, 0) * context.dTime);
+        //m_pCube0->m_pSceneNode->UpdateWorldTransform();
+
+        //m_pCube1->m_pSceneNode->Translate(Vec3(0, -0.5f, 0) * context.dTime);
+        //m_pCube1->m_pSceneNode->UpdateWorldTransform();
     }
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))

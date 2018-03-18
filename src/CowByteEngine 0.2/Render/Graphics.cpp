@@ -78,6 +78,7 @@ bool Graphics::Initialize()
     m_pMeshManager = new MeshManager();
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
     m_pMeshManager->CPULoadMesh("cube.mesha");
+    m_pMeshManager->CPULoadMesh("plane.mesha");
 
     return true;
 }
@@ -100,7 +101,7 @@ bool Graphics::Update(const GameContext& context)
     {
         SetupSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
         m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
-        OnRender();
+        OnRender(m_pMeshManager->GetMeshPtr(m_pMeshManager->GetMeshInsts().peekat(i)->GetMeshID())->GetNumTriangles() * 3);
 
     }
 
@@ -118,7 +119,7 @@ bool Graphics::ShutDown()
     return true;
 }
 
-bool Graphics::OnRender()
+bool Graphics::OnRender(UINT numIndices)
 {
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
@@ -127,7 +128,7 @@ bool Graphics::OnRender()
     
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pDeviceContext->DrawIndexed(36, 0, 0);
+    m_pDeviceContext->DrawIndexed(numIndices, 0, 0);
 
     return true;
 }

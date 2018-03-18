@@ -148,13 +148,13 @@ bool Mesh::ReadPosBufFile(const char *filepath)
             }
         }
         
-        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(0.5f * tempX, 0.5f * tempY, 0.5f  * tempZ + 0.5f);
+        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
-    //for (size_t i = 0; i < m_nVertices; ++i)
-    //{
-    //    DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
-    //}
+    for (size_t i = 0; i < m_nVertices; ++i)
+    {
+        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
+    }
     
     return true;
 
@@ -212,10 +212,10 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
         }
     }
 
-    //for (size_t i = 0; i < m_nTriangles; ++i)
-    //{
-    //    DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
-    //}
+    for (size_t i = 0; i < m_nTriangles; ++i)
+    {
+        DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
+    }
 
     return true;
 }
@@ -286,10 +286,10 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
         m_Vertices.at(i).m_Normal.Set(tempX, tempY, tempZ, 0.0f);
     }
 
-    //for (size_t i = 0; i < m_nVertices; ++i)
-    //{
-    //    DbgINFO("Noamal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
-    //}
+    for (size_t i = 0; i < m_nVertices; ++i)
+    {
+        DbgINFO("Normal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
+    }
 
     return true;
 }

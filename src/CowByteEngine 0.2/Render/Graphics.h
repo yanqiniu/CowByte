@@ -34,7 +34,7 @@ public:
     virtual bool Initialize();
     virtual bool Update(const GameContext& context) override;
     virtual bool ShutDown();
-    bool OnRender();
+    bool OnRender(UINT numIndices);
     //void SetCamera();
 
 private:
