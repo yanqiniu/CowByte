@@ -12,9 +12,10 @@ CBRefCountPtr<Message> Message::Create(MessageType type)
 }
 
     // Specify a new type/class pair here.
-    CREATE_FROM_TYPE(MessageType::MsgType_RegisterDrawbleMeshInstance, Msg_RegisterDrawbleMeshInst)
+    CREATE_FROM_TYPE(MessageType::MsgType_RegisterDrawbleMeshInstance, Msg_RegisterDrawbleMeshInst);
+    CREATE_FROM_TYPE(MessageType::MsgType_SetMainCamera, Msg_SetMainCamera);
 
-        return CBRefCountPtr<Message>(nullptr);
+    return CBRefCountPtr<Message>(nullptr);
 #undef CREATE_FROM_TYPE
 }
 

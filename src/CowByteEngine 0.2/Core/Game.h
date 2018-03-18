@@ -32,7 +32,7 @@ public:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
     Input  *m_pInput; // This couples Game and Input and is not ideal. But this does provide Game with different input source.
-    Camera *m_pMainCamera; // Pointer to current active cam.
+    Camera *m_pGameCamera; // Pointer to current active cam.
 
     // Test game objects
     Cube *m_pCube0;

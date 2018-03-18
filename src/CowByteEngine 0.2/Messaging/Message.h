@@ -19,7 +19,8 @@ This may be simplified in the future.
 // register a new type here.
 #define MESSAGE_TYPES \
 msgtype(Default), \
-msgtype(RegisterDrawbleMeshInstance)
+msgtype(RegisterDrawbleMeshInstance), \
+msgtype(SetMainCamera)
 
 #define msgtype(x) MsgType_##x
 typedef enum {MESSAGE_TYPES} MessageType; // Now we have the types
@@ -30,6 +31,7 @@ typedef enum {MESSAGE_TYPES} MessageType; // Now we have the types
 
 // Declare different types of messages here.
 struct Msg_RegisterDrawbleMeshInst;
+struct Msg_SetMainCamera;
 
 struct Message
 {
@@ -60,5 +62,21 @@ struct Msg_RegisterDrawbleMeshInst : public Message
 protected:
     DECLARE_MESSAGE_CONSTRUCTORS(Msg_RegisterDrawbleMeshInst);
 };
+
+class Camera;
+struct Msg_SetMainCamera : public Message
+{
+    friend Message;
+    virtual void Initialize()
+    {
+        type = MessageType::MsgType_SetMainCamera;
+    }
+
+    // Data members
+    Camera *m_pCamera;
+protected:
+    DECLARE_MESSAGE_CONSTRUCTORS(Msg_SetMainCamera);
+};
+
 
 #endif // !_MESSAGE_H

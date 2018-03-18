@@ -59,7 +59,6 @@ Graphics::~Graphics()
 {
 }
 
-SceneNode *g_pCamNode;
 bool Graphics::Initialize()
 {
     if (m_pWindow == nullptr)
@@ -80,25 +79,20 @@ bool Graphics::Initialize()
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
     m_pMeshManager->CPULoadMesh("cube.mesha");
 
-
-    // Camera setup.
-    m_pMainCamera = new Camera((float)m_pWindow->GetWidth() / m_pWindow->GetHeight(),
-        0.698131f, 0.01f, 1000.0f);
-    g_pCamNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
-    m_pMainCamera->AttachTo_SceneNode_Parent(g_pCamNode);
-    g_pCamNode->Translate(Vec3(0, 0, -5.0f));
-
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
-
     return true;
 }
 
 bool Graphics::Update(const GameContext& context)
 {
+    if (m_pMainCamera == nullptr)
+    {
+        DbgWARNING("No main camera set (send the message)!");
+        return false;
+    }
+
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
-    g_pCamNode->UpdateWorldTransform();
     m_pMainCamera->UpdateWToCMatrix();
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
 
@@ -140,6 +134,11 @@ bool Graphics::OnRender()
 
 void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
+    if (pMsg->type == MessageType::MsgType_SetMainCamera)
+    {
+        m_pMainCamera = static_cast<Msg_SetMainCamera*>(pMsg.Get())->m_pCamera;
+        m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
+    }
 
 }
 
