@@ -26,8 +26,8 @@ private:
 #endif
 };
 ```
- - This is the memory arena objects that the engine uses. Implemented as a singleton.
- - Initialize(): the mem arena objects malloc() a large chunk of memory on the heap that will be used for almost all dynamic allocation used by the engine. It then segments the chunk by creating all the pools with configs provided in g_poolConfigs[][2]. By the end of Initialize(), m_pMemory will point to the large chunk of mem, m_pPools[] will be filled with pointers to all the pool objects.
+ - This is the memory arena object that the engine uses. Implemented as a singleton.
+ - Initialize(): the mem arena objects malloc() a large chunk of memory on the heap that will be used for almost all dynamic allocation needed by the engine. It then seperates the chunk by creating pools according to configs provided in g_poolConfigs[][2]. By the end of Initialize(), m_pMemory will point to the large chunk of mem, m_pPools[] will be filled with pointers to all the pool objects.
  - Allocate() and Free(): given the size of the allocation, walk through g_poolConfigs[][2] to find the right pool that should handle the request, and call it's Allocate()/Free() function.
 
 CBPoolBlock:
@@ -47,7 +47,7 @@ struct CBPoolBlock
 ```
 - This represents a block in a pool, or just the header of that mem block.
 - _next is overwritten when actual data is filled in. This should be fine, since we do not need pointer to the next block when we are using the data, only before using the data - to update the freelist. After the memory is freed, the pointer is refreshed again when the block is added back to the free list.
-- As you can see, when the block has data, _integrity gets overwritten and doesn't stay as 0xDEADBEEF. This is used to detect data corruption.
+- When the block contains user data, _integrity gets overwritten and doesn't stay as 0xDEADBEEF. This is used to detect data corruption.
 - Mannual paddings inserted for both x86 and x64.
 
 CBMemPool:
@@ -78,7 +78,7 @@ struct CBMemPool
 #endif
 }
 ```
- - Initialize(void *startPtr): startPtr is given by CBMemArena to decide where exactly the pool starts at. The pool places the first block at startPtr, and then the next one at (startPtr + m_blockSize), and so on. It then setup the freelist using these address. Notice that for this setup, the minimum block size the memory arena specify (currently 16 byte) must be >= 16 byte, as that's how much CBPoolBlock takes with padding.
+ - Initialize(void *startPtr): startPtr is given by CBMemArena to decide where exactly the pool starts at. The pool places the first block at startPtr, and then the next one at (startPtr + m_blockSize), and so on. It then setup the freelist using these address. Notice that for this setup, the minimum block size (currently 16 byte) supported must be >= 16 byte, as that's how much CBPoolBlock takes with padding.
  - Allocate() and Free are somewhat standard pool allocator operations. 
 
 
