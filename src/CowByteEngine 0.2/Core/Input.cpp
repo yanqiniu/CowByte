@@ -27,9 +27,7 @@ Input::Input(const InputSystemData &data) :
     m_KeyboardState(),
     m_MouseState(),
     m_WindowWidth(data.m_pWindow->GetWidth()),
-    m_WindowHeight(data.m_pWindow->GetHeight()),
-    m_MouseRawX(0),
-    m_MouseRawY(0)
+    m_WindowHeight(data.m_pWindow->GetHeight())
 {
 
 }
@@ -71,20 +69,26 @@ bool Input::Update(const GameContext &context)
     // Process the changes in the mouse and keyboard.
     ProcessDirectInput();
 
-    for (int i = 0; i < 256; ++i)
-    {
-        if (m_CurInput.Keys[i] == 0x80)
-        {
-            DbgINFO("Key[%#04x] is down!", i);
-        }
-    }
+    ////Some debug info.
+    //for (int i = 0; i < 256; ++i)
+    //{
+    //    KeyCodes code = (KeyCodes)i;
+    //    if (m_InputCur.GetKeyDown(KeyCodes::KEY_W))
+    //    {
+    //        DbgINFO("Key[%#04x] is down!", KeyCodes::KEY_W);
+    //    }
 
+    //    if (GetKeyHeld((KeyCodes)i) == 0x80)
+    //    {
+    //        DbgINFO("Key[%#04x] is held!", i);
+    //    }
 
-    if (m_CurInput.MousePos != m_PrevInput.MousePos)
-    {
-        DbgINFO("MousPos<%d, %d>!", m_MouseState.lX, m_MouseState.lY);
+    //}
 
-    }
+    //if (m_InputCur.m_MouseDelta.X != 0 || m_InputCur.m_MouseDelta.Y != 0)
+    //{
+    //    DbgINFO("MousPos<%d, %d>!", m_InputCur.m_MouseDelta.X, m_InputCur.m_MouseDelta.Y);
+    //}
 
     return true;
 }
@@ -121,6 +125,24 @@ bool Input::Shutdown()
 void Input::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
 
+}
+
+// Key was up last frame and is down this frame.
+bool Input::GetKeyPressed(KeyCodes keyCode)
+{
+    return !m_InputPrev.GetKeyDown(keyCode) && m_InputCur.GetKeyDown(keyCode);
+}
+
+// Key was down last frame and is up this frame.
+bool Input::GetKeyUp(KeyCodes keyCode)
+{
+    return m_InputPrev.GetKeyDown(keyCode) && !m_InputCur.GetKeyDown(keyCode);
+}
+
+// Key was down both last frame and this frame.
+bool Input::GetKeyHeld(KeyCodes keyCode)
+{
+    return m_InputPrev.GetKeyDown(keyCode) && m_InputCur.GetKeyDown(keyCode);
 }
 
 bool Input::ReadKeyboard()
@@ -164,13 +186,10 @@ bool Input::ReadMouse()
 
 void Input::ProcessDirectInput()
 {
-    m_PrevInput = m_CurInput;
+    m_InputPrev = m_InputCur;
 
-    m_MouseRawX += m_MouseState.lX;
-    m_MouseRawY += m_MouseState.lY;
+    m_InputCur.m_MouseDelta.X = m_MouseState.lX;
+    m_InputCur.m_MouseDelta.Y = m_MouseState.lY;
 
-    m_CurInput.MousePos.X = CBHELPER_CLAMP(m_MouseRawX, 0, m_WindowWidth);
-    m_CurInput.MousePos.Y = CBHELPER_CLAMP(m_MouseRawY, 0, m_WindowHeight);
-
-    memcpy(m_CurInput.Keys, m_KeyboardState, sizeof(m_CurInput.Keys));
+    memcpy(m_InputCur.m_Keys, m_KeyboardState, sizeof(m_InputCur.m_Keys));
 }
