@@ -16,7 +16,7 @@ Step-by-Step: How do we create a new Message type?
 */
 
 
-typedef UINT32 MsgTypeID;
+typedef INT32 MsgTypeID;
 
 
 
