@@ -315,20 +315,24 @@ bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
     {
         Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
 
-        // Update vertex buffer.
-        D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
-        ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-        memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
-        m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
+        // TODO: technically we should clear the buffers instead of just not updating them.
+        if (mesh->IsLoaded())
+        {
+            // Update vertex buffer.
+            D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
+            ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+            memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
+            m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
 
 
-        // Update index buffer.
-        ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
-        ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-        memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
-        m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
+            // Update index buffer.
+            ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
+            ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
+            memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
+            m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
 
-        m_LastDrawnMeshID = meshInst->GetMeshID();
+            m_LastDrawnMeshID = meshInst->GetMeshID();
+        }
     }
 
 

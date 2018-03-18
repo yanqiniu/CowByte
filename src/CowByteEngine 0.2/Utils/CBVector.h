@@ -118,7 +118,7 @@ CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
 
     // Copy data
     Resize(rhs.m_Capacity);
-    memcpy(m_Data, rhs.m_Data, m_Size * sizeof(T));
+    memcpy(m_Data, rhs.m_Data, rhs.m_Size * sizeof(T));
     m_Size = rhs.m_Size;
 
     return *this;

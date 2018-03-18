@@ -19,6 +19,7 @@ public:
     CBVector<WORD>&   GetIndices();
     size_t            GetNumVertices() const;
     size_t            GetNumTriangles() const;
+    bool              IsLoaded() const;
 
 private:
     bool ReadPosBufFile(const char *filepath);
@@ -33,6 +34,7 @@ private:
     size_t           m_nVertices;
     size_t           m_nTriangles;
     UID              m_UID;
+    bool             m_bIsLoaded;
 };
 
 inline UID Mesh::GetID() const
@@ -63,6 +65,11 @@ inline size_t Mesh::GetNumVertices() const
 inline size_t Mesh::GetNumTriangles() const
 {
     return m_nTriangles;
+}
+
+inline bool Mesh::IsLoaded() const
+{
+    return m_bIsLoaded;
 }
 
 
