@@ -1,5 +1,4 @@
 #include "SceneNode.h"
-#include "../Math/Vec3.h"
 
 SceneNode SceneNode::RootNode;
 

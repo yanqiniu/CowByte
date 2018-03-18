@@ -63,7 +63,7 @@ bool Game::Initialize()
     
 
     // Create game camera.
-    m_pGameCamera = new Camera((float)800 / 600, 0.698131f, 0.01f, 1000.0f);
+    m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
     cameraSceneNode->Translate(Vec3(0, 0, -5.0f));
