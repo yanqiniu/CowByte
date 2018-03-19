@@ -32,14 +32,14 @@ public:
 
     void Translate(const Vec3& inPos);
     void Translate(float x, float y, float z);
-
     void RotateX(float angle);
     void RotateY(float angle);
     void RotateZ(float angle);
-
     void Rotate(const Vec3 &axis, float angleInDegree);
-
     void Scale(float x, float y, float z);
+
+    const Matrix4x4& GetLocalTransform() const { return m_LocalTransform; }
+    const Matrix4x4& GetWorldTransform() const { return m_WorldTransform; }
 
     virtual bool Update(const GameContext &context) override;
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
