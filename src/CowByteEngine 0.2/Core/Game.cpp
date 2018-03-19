@@ -82,36 +82,46 @@ bool Game::Initialize()
 
 bool Game::Update(const GameContext &context)
 {
-    m_pCube0->m_pSceneNode->Rotate(Vec3(0, 1, 0), 30.0f * context.dTime);
+    m_pCube0->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
     m_pCube0->m_pSceneNode->UpdateWorldTransform();
 
     m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
     m_pCube1->m_pSceneNode->UpdateWorldTransform();
 
-    Matrix4x4 mat = m_pGameCamera->GetParentSceneNode()->GetLocalTransform();
+    Matrix4x4 mat = m_pGameCamera->GetParentSceneNode()->GetWorldTransform();
     Vec3 up = mat.Up();
     Vec3 rt = mat.Right();
     Vec3 fr = mat.Front();
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
-        m_pGameCamera->GetParentSceneNode()->RotateY(-30.0f * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), 30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
     {
-        m_pGameCamera->GetParentSceneNode()->RotateY(30.0f * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), -30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
     {
-        m_pGameCamera->GetParentSceneNode()->Translate(0, 0, 10.0f * context.dTime );
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
     {
-        m_pGameCamera->GetParentSceneNode()->RotateX(30.0f * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, 30.0f * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
+    }
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_SPACE))
+    {
+        m_pGameCamera->GetParentSceneNode()->Translate(fr * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
+    }
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_LSHIFT))
+    {
+        m_pGameCamera->GetParentSceneNode()->Translate(fr * (-context.dTime));
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
 
