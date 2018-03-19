@@ -13,3 +13,10 @@ Quaternion::Quaternion(const Vec3 &axis, float angleInRad)
     _data = _CB_INSERT_SINGLE(_data, std::cosf(angleInRad / 2), 3);
 }
 
+// Converting a vector to a quat.
+Quaternion::Quaternion(const Vec3 &toConvert)
+{
+    _data = toConvert._data;
+    _CB_INSERT_SINGLE(_data, 0.0f, 3);
+}
+

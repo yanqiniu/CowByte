@@ -38,6 +38,8 @@ __declspec(align(16)) struct Quaternion
 
     Quaternion(const Vec3 &axis, float angleInRad);
 
+    Quaternion(const Vec3 &toConvert);
+
     __forceinline Quaternion(const __m128 &inData) :
         _data(inData)
     {
@@ -46,7 +48,7 @@ __declspec(align(16)) struct Quaternion
 
 #pragma region Common operations
 
-    __forceinline Quaternion Conjugate()
+    __forceinline const Quaternion Conjugate() const
     {
         return Quaternion(_mm_mul_ps(_data, _mm_setr_ps(-1.0f, -1.0f, -1.0f, 1.0f)));
     }
@@ -58,19 +60,26 @@ __declspec(align(16)) struct Quaternion
     }
 
     // Return inversed version of this quat, assuming it's unit.
-    __forceinline Quaternion Inversed()
+    __forceinline const Quaternion Inversed() const
     {
         return Conjugate();
     }
 
-    __forceinline float SqrLen()
+    __forceinline float SqrLen() const
     {
         return _mm_dp_ps(_data, _data, 0b11110001).m128_f32[0];
     }
 
-    __forceinline float Len()
+    __forceinline float Len() const
     {
         return _mm_sqrt_ss(_mm_dp_ps(_data, _data, 0b11110001)).m128_f32[0];
+    }
+
+    __forceinline void Normalize()
+    {
+        __m128 temp = _mm_dp_ps(_data, _data, 0b11111111);
+        temp = _mm_rsqrt_ps(temp);
+        _data = _mm_mul_ps(_data, temp);
     }
 
     // P.Mul(Q) means a rotation Q followed by P.
@@ -113,6 +122,11 @@ __declspec(align(16)) struct Quaternion
 
 #pragma endregion
 
+#pragma region Vec3 and Matrix4x4 Contents
+
+
+
+#pragma endregion
 
 
 
