@@ -83,11 +83,23 @@ void SceneNode::Rotate(const Vec3 &axis, float angleInDegree)
 {
     if (axis.SqLen() != 0)
     {
-        m_LocalTransform *= Matrix4x4::FromQuaternion(Quaternion(axis.Normalized(), DEGREE_TO_RAD(angleInDegree)));
+        m_LocalTransform *= Matrix4x4::Rotation(Quaternion(axis.Normalized(), DEGREE_TO_RAD(angleInDegree)));
     }
     else
     {
-        m_LocalTransform *= Matrix4x4::FromQuaternion(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
+        m_LocalTransform *= Matrix4x4::Rotation(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
+    }
+}
+
+void SceneNode::RotateLocal(const Vec3 &axis, float angleInDegree)
+{
+    if (axis.SqLen() != 0)
+    {
+        m_LocalTransform *= m_LocalTransform.LocalRotation(Quaternion(axis.Normalized(), DEGREE_TO_RAD(angleInDegree)));
+    }
+    else
+    {
+        m_LocalTransform *= m_LocalTransform.LocalRotation(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
     }
 }
 

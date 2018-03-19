@@ -36,6 +36,7 @@ public:
     void RotateY(float angle);
     void RotateZ(float angle);
     void Rotate(const Vec3 &axis, float angleInDegree);
+    void RotateLocal(const Vec3 &axis, float angleInDegree);
     void Scale(float x, float y, float z);
 
     const Matrix4x4& GetLocalTransform() const { return m_LocalTransform; }
