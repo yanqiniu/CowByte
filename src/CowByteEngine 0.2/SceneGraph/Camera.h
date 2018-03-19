@@ -2,7 +2,7 @@
 #define _CAMERA_H
 
 #include "../Core/Component.h"
-#include "../Math/Matrix4x4.h"
+#include "../Math/CBMath.h"
 #include "SceneNode.h"
 
 // Projection Camera

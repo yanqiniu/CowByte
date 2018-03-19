@@ -1,5 +1,4 @@
 #include "SceneNode.h"
-#include "../Math/Vec3.h"
 
 SceneNode SceneNode::RootNode;
 
@@ -56,6 +55,30 @@ void SceneNode::Translate(const Vec3& inPos)
 {
     m_LocalTransform *= Matrix4x4::Translate(inPos);
 }
+
+void SceneNode::Translate(float x, float y, float z)
+{
+    m_LocalTransform *= Matrix4x4::Translate(x, y, z);
+}
+
+// Angle in degree.
+void SceneNode::RotateX(float angle)
+{
+    m_LocalTransform *= Matrix4x4::RotationX(DEGREE_TO_RAD(angle));
+}
+
+// Angle in degree.
+void SceneNode::RotateY(float angle)
+{
+    m_LocalTransform *= Matrix4x4::RotationY(DEGREE_TO_RAD(angle));
+}
+
+// Angle in degree.
+void SceneNode::RotateZ(float angle)
+{
+    m_LocalTransform *= Matrix4x4::RotationZ(DEGREE_TO_RAD(angle));
+}
+
 
 bool SceneNode::Update(const GameContext &context)
 {

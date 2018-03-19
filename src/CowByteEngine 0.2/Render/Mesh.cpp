@@ -10,7 +10,8 @@ Mesh::Mesh() :
     m_Indices(8),
     m_nVertices(0),
     m_nTriangles(0),
-    m_UID(g_IDCounter++)
+    m_UID(g_IDCounter++),
+    m_bIsLoaded(false)
 {
 }
 
@@ -83,10 +84,11 @@ bool Mesh::LoadContent(const char* meshName)
         return false;
     }
 
-
     m_MeshName = Filename(meshName);
-    return true;
+    m_bIsLoaded = true;
 
+    DbgINFO("Finished Loading Mesh[%s].", meshName);
+    return true;
 }
 
 bool Mesh::ReadPosBufFile(const char *filepath)
@@ -146,7 +148,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
             }
         }
         
-        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(0.5f * tempX, 0.5f * tempY, 0.5f  * tempZ + 0.5f);
+        m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
     for (size_t i = 0; i < m_nVertices; ++i)
@@ -286,7 +288,7 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
 
     for (size_t i = 0; i < m_nVertices; ++i)
     {
-        DbgINFO("Noamal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
+        DbgINFO("Normal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
     }
 
     return true;

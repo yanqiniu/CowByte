@@ -31,7 +31,7 @@ int Engine::Initialize(GameContext &context)
     m_EngineState = EngineState::INITIALIZING;
 
     // Add Systems and Game.
-    Window *pWindow = new Window(WindowData(640, 480, m_hInst));
+    Window *pWindow = new Window(WindowData(800, 600, m_hInst));
     Graphics *pGraphics = new Graphics(GraphicsData(pWindow));
     Input *pInput = new Input(InputSystemData(pWindow));
     Game* pGame = new Game(GameData(pInput));

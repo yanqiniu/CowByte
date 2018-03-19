@@ -18,9 +18,10 @@ MeshManager::~MeshManager()
 
 Mesh* MeshManager::CPULoadMesh(const char *meshName)
 {
-    Mesh *toRet = AddMesh(Mesh());
-    toRet->LoadContent(meshName);
-    return toRet;
+    Mesh temp;
+    if (!temp.LoadContent(meshName))
+        return false;
+    return AddMesh(temp);
 }
 
 Mesh* MeshManager::GetMeshPtr(UID meshId)
@@ -113,9 +114,8 @@ bool MeshManager::Update(const GameContext &context)
 
 void MeshManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
-    if (pMsg->type == MessageType::MsgType_RegisterDrawbleMeshInstance)
+    if (pMsg->GetInstType() == Msg_RegisterDrawbleMeshInst::ClassTypeSpecifier())
     {
-        
         MeshInstance *pMeshInst = static_cast<Msg_RegisterDrawbleMeshInst*>(pMsg.Get())->m_MeshInstPtr;
         AddMeshInstance(pMeshInst);
     }

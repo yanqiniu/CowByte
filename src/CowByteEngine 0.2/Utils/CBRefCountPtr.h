@@ -15,7 +15,7 @@ class CBRefCountPtr
 {
 public:
     CBRefCountPtr();
-    explicit CBRefCountPtr(DataT* ptr);
+    explicit CBRefCountPtr( DataT* ptr);
     CBRefCountPtr(const CBRefCountPtr& toCopy);
     ~CBRefCountPtr();
     CBRefCountPtr<DataT> & operator=(const CBRefCountPtr<DataT>& other);
@@ -24,6 +24,7 @@ public:
     DataT& operator*();
     DataT* operator->();
     DataT* Get() const;
+    const DataT* Peek() const;
 
 private:
 
@@ -40,7 +41,7 @@ CBRefCountPtr<DataT>::CBRefCountPtr() :
 }
 
 template <typename DataT>
-CBRefCountPtr<DataT>::CBRefCountPtr(DataT* ptr)
+CBRefCountPtr<DataT>::CBRefCountPtr( DataT *ptr)
 {
     m_pData = ptr;
     m_pControlBlock = new CBRefCountPtr_ControlBlock();
@@ -101,6 +102,14 @@ DataT* CBRefCountPtr<DataT>::Get() const
 {
     return m_pData;
 }
+
+
+template <typename DataT>
+const DataT* CBRefCountPtr<DataT>::Peek() const
+{
+    return m_pData;
+}
+
 
 
 

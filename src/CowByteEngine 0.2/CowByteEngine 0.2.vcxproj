@@ -141,7 +141,10 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Math\CBMath.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
+    <ClInclude Include="Math\Quaternion.h" />
+    <ClInclude Include="Math\simdhelper.h" />
     <ClInclude Include="Math\Vec3.h" />
     <ClInclude Include="Memory\CBMemArena.h" />
     <ClInclude Include="Memory\CBMemory.h" />
@@ -149,6 +152,7 @@
     <ClInclude Include="Messaging\CBMessaging.h" />
     <ClInclude Include="Messaging\Message.h" />
     <ClInclude Include="Messaging\MessageBus.h" />
+    <ClInclude Include="Messaging\MessageDecl.h" />
     <ClInclude Include="Render\Graphics.h" />
     <ClInclude Include="Render\Mesh.h" />
     <ClInclude Include="Render\MeshInstance.h" />
@@ -178,6 +182,7 @@
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
+    <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
     <ClCompile Include="Memory\CBMemArena.cpp" />
     <ClCompile Include="Memory\CBMemory.cpp" />

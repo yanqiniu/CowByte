@@ -24,10 +24,34 @@
     <ClInclude Include="..\CowByteEngine\CBMemory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Matrix4x4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Quaternion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\simdhelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Vec3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\CBMath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Test.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Quaternion.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Vec3.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Matrix4x4.cpp">
+      <Filter>Header Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

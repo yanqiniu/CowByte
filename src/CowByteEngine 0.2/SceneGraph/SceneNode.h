@@ -1,7 +1,7 @@
 #ifndef _SCENENODE_H
 #define _SCENENODE_H
 
-#include "../Math/Vec3.h"
+#include "../Math/CBMath.h"
 #include "../Core/Component.h"
 #include "../Utils/CBVector.h"
 
@@ -31,6 +31,12 @@ public:
     //void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
 
     void Translate(const Vec3& inPos);
+    void Translate(float x, float y, float z);
+
+    void RotateX(float angle);
+    void RotateY(float angle);
+    void RotateZ(float angle);
+
     // void Rotate();
     // void Scale();
 

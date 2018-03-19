@@ -7,7 +7,7 @@
 
 ### Where:
  * Where are message data stored?
-    - A single message is always allocated and constructed on the heap, within one of the proper sized memory blocks. To prevent accidental construction, Messages can only be created by Message::Construct() factory method, and all constructors will be declared protected (using macro DECLARE_MESSAGE_CONSTRUCTORS(Msg_SomeMessageClass)).
+    - A single message is always allocated and constructed on the heap, within one of the proper sized memory blocks. To prevent accidental construction, Messages can only be created by Message::Create() method, and all constructors will be declared protected (using macro DECLARE_MESSAGE_CONSTRUCTORS(Msg_SomeMessageClass)).
  * Where are message references stored?
     - Each Component only has a vector of pointers to all messages queued.
 

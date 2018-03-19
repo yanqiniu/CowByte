@@ -69,27 +69,6 @@ bool Input::Update(const GameContext &context)
     // Process the changes in the mouse and keyboard.
     ProcessDirectInput();
 
-    ////Some debug info.
-    //for (int i = 0; i < 256; ++i)
-    //{
-    //    KeyCodes code = (KeyCodes)i;
-    //    if (m_InputCur.GetKeyDown(KeyCodes::KEY_W))
-    //    {
-    //        DbgINFO("Key[%#04x] is down!", KeyCodes::KEY_W);
-    //    }
-
-    //    if (GetKeyHeld((KeyCodes)i) == 0x80)
-    //    {
-    //        DbgINFO("Key[%#04x] is held!", i);
-    //    }
-
-    //}
-
-    //if (m_InputCur.m_MouseDelta.X != 0 || m_InputCur.m_MouseDelta.Y != 0)
-    //{
-    //    DbgINFO("MousPos<%d, %d>!", m_InputCur.m_MouseDelta.X, m_InputCur.m_MouseDelta.Y);
-    //}
-
     return true;
 }
 

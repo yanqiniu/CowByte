@@ -4,6 +4,7 @@
 #include <smmintrin.h>
 #include <exception>
 #include "Matrix4x4.h"
+#include "Quaternion.h"
 
 __declspec(align(16)) struct Vec3
 {
@@ -49,15 +50,15 @@ __declspec(align(16)) struct Vec3
     {
         _data = rhs._data;
     }
-    __forceinline Vec3 operator+(const Vec3 &rhs)
+    __forceinline Vec3 operator+(const Vec3 &rhs) const
     {
         return Vec3(_mm_add_ps(_data, rhs._data));
     }
-    __forceinline Vec3 operator-(const Vec3 &rhs)
+    __forceinline Vec3 operator-(const Vec3 &rhs) const
     {
         return Vec3(_mm_sub_ps(_data, rhs._data));
     }
-    __forceinline Vec3 operator/(float divisor)
+    __forceinline Vec3 operator/(float divisor) const
     {
         if (divisor == 0)
         {
@@ -103,20 +104,19 @@ __declspec(align(16)) struct Vec3
     }
 
     // Squared length of the vector.
-    __forceinline float SqLen()
+    __forceinline float SqLen() const
     {
-        __m128 temp = _mm_dp_ps(_data, _data, 0b01110001);
-        return temp.m128_f32[0];
+        return _mm_dp_ps(_data, _data, 0b01110001).m128_f32[0];
     }
 
     // length of the vector.
-    __forceinline float Len()
+    __forceinline float Len() const
     {
         return _mm_sqrt_ss(_mm_dp_ps(_data, _data, 0b01110001)).m128_f32[0];
     }
 
     // Test to see if it's a zero vector (x, y, z are zero)
-    __forceinline bool IsZero()
+    __forceinline bool IsZero() const
     {
         // Using dot product instead of checking x, y and z individually
         // since the later one introduces around 60% more time according 
@@ -147,7 +147,7 @@ __declspec(align(16)) struct Vec3
     }
     // Return a normalized version of the Vec3.
     // Notice this DOES NOT modify _data.
-    __forceinline Vec3 Normalized()
+    __forceinline const Vec3 Normalized() const
     {
         __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
         temp = _mm_rsqrt_ps(temp);
@@ -174,7 +174,7 @@ __declspec(align(16)) struct Vec3
     }
 #pragma endregion
 
-#pragma region Matrix4x4 operators and operations
+#pragma region Matrix4x4 and Quaterion Contents
 
     __forceinline void Mul(const Matrix4x4 &matrix) 
     {
@@ -198,6 +198,14 @@ __declspec(align(16)) struct Vec3
         return Vec3(temp);
     }
 
+    __forceinline void Rotate(const Quaternion &q)
+    {
+        //v' = q * v * qInversed
+        Quaternion qq = q;
+        qq *= Quaternion(*this); // v
+        qq *= q.Inversed();
+        _data = qq._data;
+    }
 
 
 #pragma endregion

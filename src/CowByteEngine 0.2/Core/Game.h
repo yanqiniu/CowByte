@@ -18,8 +18,15 @@ struct Cube
 {
     SceneNode *m_pSceneNode;
     Cube();
-
 };
+
+// A test object. Likely this will be made into a GameObject class.
+struct Plane
+{
+    SceneNode *m_pSceneNode;
+    Plane();
+};
+
 
 class Game : public System
 {
@@ -32,11 +39,12 @@ public:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
     Input  *m_pInput; // This couples Game and Input and is not ideal. But this does provide Game with different input source.
-    Camera *m_pMainCamera; // Pointer to current active cam.
+    Camera *m_pGameCamera; // Pointer to current active cam.
 
     // Test game objects
     Cube *m_pCube0;
     Cube *m_pCube1;
+    Plane *m_pPlane;
 };
 
 #endif
