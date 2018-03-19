@@ -105,8 +105,7 @@ __declspec(align(16)) struct Vec3
     // Squared length of the vector.
     __forceinline float SqLen()
     {
-        __m128 temp = _mm_dp_ps(_data, _data, 0b01110001);
-        return temp.m128_f32[0];
+        return _mm_dp_ps(_data, _data, 0b01110001).m128_f32[0];
     }
 
     // length of the vector.
