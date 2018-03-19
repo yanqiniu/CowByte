@@ -32,6 +32,11 @@ public:
 
     void Translate(const Vec3& inPos);
     void Translate(float x, float y, float z);
+
+    void RotateX(float angle);
+    void RotateY(float angle);
+    void RotateZ(float angle);
+
     // void Rotate();
     // void Scale();
 

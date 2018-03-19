@@ -19,9 +19,10 @@ Each __m128 in _data represent a column in the matrix.
 
 class Vec3;
 
-#ifndef _SHUFFLE
-    #define _SHUFFLE_R(a, b, c, d) _MM_SHUFFLE(d, c, b, a)
-#endif
+#define _CB_SHUFFLE_R(a, b, c, d) _MM_SHUFFLE(d, c, b, a)
+
+// Example: _CB_INSERT_MASK(3, 1, 0001): insert element 3 of B to index 1 of A, and set element 3 of A to zero.
+#define _CB_INSERT_MASK(indexFromB, indexToA, clearX, clearY, clearZ, clearW) (indexFromB << 6 | indexToA << 4 | 0b##clearW##clearZ##clearY##clearX) 
 
 __declspec(align(16)) struct Matrix4x4
 {
@@ -128,7 +129,7 @@ __declspec(align(16)) struct Matrix4x4
 
 #pragma endregion
 
-#pragma region Useful Matrices
+#pragma region Transformation
 
     __forceinline static Matrix4x4 Identity()
     {
@@ -138,6 +139,24 @@ __declspec(align(16)) struct Matrix4x4
                          0.0f, 0.0f, 0.0f, 1.0f);
     }
 
+    // fovy is in radian here.
+    __forceinline static Matrix4x4 PerspectiveProjection(float ar, float fovy, float np, float fp)
+    {
+        return Matrix4x4(1.0f / (ar * std::tan(fovy / 2)), 0.0f, 0.0f, 0.0f,
+            0.0f, 1.0f / std::tan(fovy / 2), 0.0f, 0.0f,
+            0.0f, 0.0f, fp / (fp - np), 1.0f,
+            0.0f, 0.0f, -(fp * np / (fp - np)), 0.0f);
+
+    }
+    __forceinline static Matrix4x4 Scale(float x, float y, float z)
+    {
+        return Matrix4x4(x,   0.0f, 0.0f, 0.0f,
+                        0.0f, y,    0.0f, 0.0f,
+                        0.0f, 0.0f, z,    0.0f,
+                        0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+
     __forceinline static Matrix4x4 Translate(float x, float y, float z)
     {
         return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -145,20 +164,86 @@ __declspec(align(16)) struct Matrix4x4
                          0.0f, 0.0f, 1.0f, 0.0f,
                          x,    y,    z,    1.0f);
     }
-
-    // fovy is in radian here.
-    __forceinline static Matrix4x4 PerspectiveProjection(float ar, float fovy, float np, float fp)
-    {
-        return Matrix4x4(1.0f/(ar * std::tan(fovy / 2)), 0.0f,                    0.0f,                              0.0f,
-                         0.0f,                           1.0f/std::tan(fovy / 2), 0.0f,                              0.0f,
-                         0.0f,                           0.0f,                    fp / (fp - np),                    1.0f,
-                         0.0f,                           0.0f,                    -(fp * np / (fp - np)),            0.0f);
-
-    }
-
     // This version is not inline and in many cases require you to construct 
     // a Vec3, so when possible, use Translate(float x, float y, float z).
     static Matrix4x4 Translate(const Vec3 &vec);
+
+    __forceinline static Matrix4x4 RotationX(float angle)
+    {
+        return Matrix4x4(1.0f,  0.0f,             0.0f,             0.0f,
+                         0.0f,  std::cosf(angle), std::sinf(angle), 0.0f,
+                         0.0f, -std::sinf(angle), std::cosf(angle), 0.0f,
+                         0.0f,  0.0f,             0.0f,             1.0f);
+    }
+
+    __forceinline static Matrix4x4 RotationY(float angle)
+    {
+        return Matrix4x4(std::cosf(angle), 0.0f, -std::sinf(angle), 0.0f,
+                         0.0f,             1.0f,  0.0f,             0.0f,
+                         std::sinf(angle), 0.0f,  std::cosf(angle), 0.0f,
+                         0.0f,             0.0f,  0.0f,             1.0f);
+    }
+
+    __forceinline static Matrix4x4 RotationZ(float angle)
+    {
+        return Matrix4x4(std::cosf(angle), std::sinf(angle), 0.0f, 0.0f,
+                        -std::sinf(angle), std::cosf(angle), 0.0f, 0.0f,
+                        0.0f,              0.0f,             1.0f, 0.0f,
+                        0.0f,              0.0f,             0.0f, 1.0f);
+    }
+
+    // Extract bottom row to form a new Translation Matrix.
+    __forceinline Matrix4x4 GetTranslation()
+    {
+        return Matrix4x4(1.0f,     0.0f,     0.0f,     0.0f,
+                         0.0f,     1.0f,     0.0f,     0.0f,
+                         0.0f,     0.0f,     1.0f,     0.0f,
+                        _m[0][3], _m[1][3], _m[2][3],  1.0f);
+    }
+
+    // Extract scales and form a new matrix.
+    __forceinline Matrix4x4 GetScale()
+    {
+        // Get length of each column.
+        return Matrix4x4(_mm_sqrt_ss(_mm_dp_ps(_data[0], _data[0], 0b01110001)).m128_f32[0], 0.0f, 0.0f, 0.0f,
+            0.0f, _mm_sqrt_ss(_mm_dp_ps(_data[1], _data[1], 0b01110001)).m128_f32[0], 0.0f, 0.0f,
+            0.0f, 0.0f, _mm_sqrt_ss(_mm_dp_ps(_data[2], _data[2], 0b01110001)).m128_f32[0], 0.0f,
+            0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
+
+    // Extract rotations and form a new matrix.
+    __forceinline Matrix4x4 GetRotation()
+    {
+        Matrix4x4 toRet;
+
+        __m128 temp = _mm_insert_ps(_data[0], _data[0], _CB_INSERT_MASK(0, 0, 0, 0, 0, 1));
+        __m128 divisor = _mm_set1_ps(_mm_sqrt_ss(_mm_dp_ps(_data[0], _data[0], 0b01110001)).m128_f32[0]);
+        temp = _mm_div_ps(temp, divisor);
+        toRet._data[0] = temp;
+
+        temp = _mm_insert_ps(_data[1], _data[1], _CB_INSERT_MASK(0, 0, 0, 0, 0, 1));
+        divisor = _mm_set1_ps(_mm_sqrt_ss(_mm_dp_ps(_data[1], _data[1], 0b01110001)).m128_f32[0]);
+        temp = _mm_div_ps(temp, divisor);
+        toRet._data[1] = temp;
+
+        temp = _mm_insert_ps(_data[2], _data[2], _CB_INSERT_MASK(0, 0, 0, 0, 0, 1));
+        divisor = _mm_set1_ps(_mm_sqrt_ss(_mm_dp_ps(_data[2], _data[2], 0b01110001)).m128_f32[0]);
+        temp = _mm_div_ps(temp, divisor);
+        toRet._data[2] = temp;
+
+        toRet._data[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+
+        return toRet;
+    }
+
+
+
+    __forceinline void RotateLocalEuler(float x, float y, float z)
+    {
+
+    }
+
 
 #pragma endregion
 
@@ -295,5 +380,7 @@ __declspec(align(16)) struct Matrix4x4
 
 };
 
+#undef _CB_SHUFFLE_R
+#undef _CB_INSERT_MASK
 
 #endif // !_MATRIX4x4_H

@@ -7,4 +7,4 @@
 #Standards:
  - Uses Row Vector;
  - Matrix4x4 has 4 m128 for each column, therefore on a linear layout it's a column major Matrix.
- - Left-Handed coordinate system, same as Direct3D, with Z+ "pointing into the screen".
+ - Left-Handed coordinate system, same as Direct3D, with Z+ "pointing into the screen", clockwise positive rotation for all three axes.

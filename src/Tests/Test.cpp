@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../CowByteEngine 0.2/Memory/CBMemArena.h"
-#include "../CowByteEngine 0.2/Math/Matrix4x4.h"
+#include "../CowByteEngine 0.2/Math/CBMath.h"
 
 class TestStruct
 {
@@ -19,12 +19,20 @@ int main()
     start = std::clock();
     //////////////////////////////////////////////////////////////////////////
 
-    Matrix4x4 m1(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 2, 3, 4, 1);
-    Matrix4x4 m2(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 33, 13, 4, 1);
+    Matrix4x4 mat = Matrix4x4::Identity();
+    mat *= Matrix4x4::RotationX(DEGREE_TO_RAD(30.0f));
+    mat *= Matrix4x4::RotationY(DEGREE_TO_RAD(30.0f));
+    mat *= Matrix4x4::RotationZ(DEGREE_TO_RAD(30.0f));
 
-    Matrix4x4 inv = m1.Inverse();
+    Matrix4x4 rotOnly = mat;
 
-    Matrix4x4 m3 = m1 * m2;
+    Matrix4x4 scale = Matrix4x4::Scale(1.11f, 2.22f, 3.33f);
+
+    mat *= scale;
+
+    Matrix4x4 result = mat.GetTranslation();
+    result = mat.GetScale();
+    result = mat.GetRotation();
 
     //////////////////////////////////////////////////////////////////////////
     double duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;

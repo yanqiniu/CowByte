@@ -83,7 +83,7 @@ bool Game::Update(const GameContext &context)
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
-        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(1.0f, 0.0f, 0.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateY(-30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
 
         //m_pCube0->m_pSceneNode->Translate(Vec3(0.5f, 0, 0) * context.dTime);
@@ -94,7 +94,7 @@ bool Game::Update(const GameContext &context)
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
     {
-        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(-1.0f, 0.0f, 0.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateY(30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
 
         //m_pCube0->m_pSceneNode->Translate(Vec3(-0.5f, 0, 0) * context.dTime);
@@ -106,12 +106,12 @@ bool Game::Update(const GameContext &context)
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
     {
-        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(0.0f, 0.0f, 1.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateZ(30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
     {
-        m_pGameCamera->GetParentSceneNode()->Translate(Vec3(0.0f, 0.0f, -1.0f) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->RotateX(30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
 
