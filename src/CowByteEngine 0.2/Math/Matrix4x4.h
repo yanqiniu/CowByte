@@ -19,7 +19,7 @@ Each __m128 in _data represent a column in the matrix.
 //////////////////////////////////////////////////////////////////////////
 
 class Vec3;
-
+class Quaternion;
 
 __declspec(align(16)) struct Matrix4x4
 {
@@ -208,7 +208,6 @@ __declspec(align(16)) struct Matrix4x4
             0.0f, 0.0f, 0.0f, 1.0f);
     }
 
-
     // Extract rotations and form a new matrix.
     __forceinline Matrix4x4 GetRotation()
     {
@@ -234,13 +233,7 @@ __declspec(align(16)) struct Matrix4x4
         return toRet;
     }
 
-
-
-    __forceinline void RotateLocalEuler(float x, float y, float z)
-    {
-
-    }
-
+    static Matrix4x4 FromQuaternion(const Quaternion &quat);
 
 #pragma endregion
 

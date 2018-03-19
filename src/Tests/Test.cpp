@@ -24,7 +24,8 @@ int main()
     //q.Normalize();
     Vec3 pointRes1 = point * Matrix4x4::RotationY(1.1111f);
     Vec3 pointRes2 = point;
-    pointRes2.Rotate(Quaternion(Vec3(0, 1.0f, 0), 1.1111f));
+    Quaternion q = Quaternion(Vec3(0, 1.0f, 0), 1.1111f);
+    pointRes2 *= Matrix4x4::FromQuaternion(q);
 
     //////////////////////////////////////////////////////////////////////////
     double duration = (std::clock() - start) / (double)CLOCKS_PER_SEC;
