@@ -147,7 +147,7 @@ __declspec(align(16)) struct Vec3
     }
     // Return a normalized version of the Vec3.
     // Notice this DOES NOT modify _data.
-    __forceinline Vec3 Normalized()
+    __forceinline const Vec3 Normalized() const
     {
         __m128 temp = _mm_dp_ps(_data, _data, 0b01110111);
         temp = _mm_rsqrt_ps(temp);

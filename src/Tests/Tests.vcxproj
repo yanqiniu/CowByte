@@ -130,11 +130,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\CowByteEngine 0.2\Math\CBMath.h" />
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Matrix4x4.h" />
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Quaternion.h" />
+    <ClInclude Include="..\CowByteEngine 0.2\Math\simdhelper.h" />
+    <ClInclude Include="..\CowByteEngine 0.2\Math\Vec3.h" />
     <ClInclude Include="..\CowByteEngine\CBMemArena.h" />
     <ClInclude Include="..\CowByteEngine\CBMemory.h" />
     <ClInclude Include="..\CowByteEngine\CBPoolAllocator.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Matrix4x4.cpp" />
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Quaternion.cpp" />
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Vec3.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
