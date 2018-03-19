@@ -74,6 +74,10 @@ __declspec(align(16)) struct Matrix4x4
 
     __forceinline ~Matrix4x4() {}
 
+    Vec3 Right() const;
+    Vec3 Up() const;
+    Vec3 Front() const;
+
 #pragma endregion
 
 #pragma region Common Operations

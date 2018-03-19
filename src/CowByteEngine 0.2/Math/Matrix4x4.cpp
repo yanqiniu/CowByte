@@ -2,6 +2,21 @@
 #include "Vec3.h"
 #include "Quaternion.h"
 
+Vec3 Matrix4x4::Right() const
+{
+    return Vec3(_m[0][0], _m[1][0], _m[2][0], 0.0f);
+}
+
+Vec3 Matrix4x4::Up() const
+{
+    return Vec3(_m[0][1], _m[1][1], _m[2][1], 0.0f);
+}
+
+Vec3 Matrix4x4::Front() const
+{
+    return Vec3(_m[0][2], _m[1][2], _m[2][2], 0.0f);
+}
+
 // Is not inline. Prefer Translate (float, float, float).
 Matrix4x4 Matrix4x4::Translate(const Vec3 &vec)
 {

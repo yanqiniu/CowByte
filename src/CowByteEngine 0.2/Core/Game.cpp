@@ -88,6 +88,10 @@ bool Game::Update(const GameContext &context)
     m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
     m_pCube1->m_pSceneNode->UpdateWorldTransform();
 
+    Matrix4x4 mat = m_pGameCamera->GetParentSceneNode()->GetLocalTransform();
+    Vec3 up = mat.Up();
+    Vec3 rt = mat.Right();
+    Vec3 fr = mat.Front();
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
@@ -102,7 +106,7 @@ bool Game::Update(const GameContext &context)
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
     {
-        m_pGameCamera->GetParentSceneNode()->RotateZ(30.0f * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->Translate(0, 0, 10.0f * context.dTime );
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
