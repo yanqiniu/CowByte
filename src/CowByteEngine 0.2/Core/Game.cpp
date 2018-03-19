@@ -58,6 +58,9 @@ bool Game::Initialize()
     m_pCube0 = new Cube();
     m_pCube1 = new Cube();
     m_pPlane = new Plane();
+
+    m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
+    m_pCube0->m_pSceneNode->UpdateWorldTransform();
     m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
     m_pPlane->m_pSceneNode->UpdateWorldTransform();
     
@@ -66,7 +69,7 @@ bool Game::Initialize()
     m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
-    cameraSceneNode->Translate(Vec3(0, 0, -5.0f));
+    cameraSceneNode->Translate(Vec3(0, 0, -10.0f));
     cameraSceneNode->UpdateWorldTransform();
 
     // Set the game camera as main.
@@ -79,29 +82,22 @@ bool Game::Initialize()
 
 bool Game::Update(const GameContext &context)
 {
-    //m_pMainCamera->UpdateWToCMatrix();
+    m_pCube0->m_pSceneNode->Rotate(Vec3(0, 1, 0), 30.0f * context.dTime);
+    m_pCube0->m_pSceneNode->UpdateWorldTransform();
+
+    m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
+    m_pCube1->m_pSceneNode->UpdateWorldTransform();
+
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
         m_pGameCamera->GetParentSceneNode()->RotateY(-30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
-
-        //m_pCube0->m_pSceneNode->Translate(Vec3(0.5f, 0, 0) * context.dTime);
-        //m_pCube0->m_pSceneNode->UpdateWorldTransform();
-
-        //m_pCube1->m_pSceneNode->Translate(Vec3(0, 0.5f, 0) * context.dTime);
-        //m_pCube1->m_pSceneNode->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
     {
         m_pGameCamera->GetParentSceneNode()->RotateY(30.0f * context.dTime);
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
-
-        //m_pCube0->m_pSceneNode->Translate(Vec3(-0.5f, 0, 0) * context.dTime);
-        //m_pCube0->m_pSceneNode->UpdateWorldTransform();
-
-        //m_pCube1->m_pSceneNode->Translate(Vec3(0, -0.5f, 0) * context.dTime);
-        //m_pCube1->m_pSceneNode->UpdateWorldTransform();
     }
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))

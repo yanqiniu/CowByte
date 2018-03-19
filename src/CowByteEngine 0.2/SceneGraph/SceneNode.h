@@ -37,8 +37,9 @@ public:
     void RotateY(float angle);
     void RotateZ(float angle);
 
-    // void Rotate();
-    // void Scale();
+    void Rotate(const Vec3 &axis, float angleInDegree);
+
+    void Scale(float x, float y, float z);
 
     virtual bool Update(const GameContext &context) override;
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
