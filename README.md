@@ -19,15 +19,15 @@ Don't worry about the name :D
 
 ### Current State
  - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
- - It now renders a "sharpened" (one of the vertex set at <1.2, 1.2, 1.2>) cube in solid purple, properly projected.
- - It continues moving along +X-axis which is left->right now. Notice this is simulated by Translating SceneNode the MeshInstance is attached to, not raw vertex update in Graphics system.  
+ - It now renders two purple cubes with Gouraud Shading. Each rotating with different speed
+ - Keyboard control to rotate camera.
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
  - Implements component model with message bus;
  - Custom memory allocator (sets of pools);
  - Custom data containers (Queue, Vector, reference count pointer);
- - SIMD math (Intel SSE);
+ - SIMD math (Intel SSE) including Vec3, Matrix4x4 and Quaternion;
  - Scenegraph;
  - Mesh Instancing;  
  - Custom string and File that supports commenting;

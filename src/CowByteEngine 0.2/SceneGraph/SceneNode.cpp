@@ -79,6 +79,22 @@ void SceneNode::RotateZ(float angle)
     m_LocalTransform *= Matrix4x4::RotationZ(DEGREE_TO_RAD(angle));
 }
 
+void SceneNode::Rotate(const Vec3 &axis, float angleInDegree)
+{
+    if (axis.SqLen() != 0)
+    {
+        m_LocalTransform *= Matrix4x4::FromQuaternion(Quaternion(axis.Normalized(), DEGREE_TO_RAD(angleInDegree)));
+    }
+    else
+    {
+        m_LocalTransform *= Matrix4x4::FromQuaternion(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
+    }
+}
+
+void SceneNode::Scale(float x, float y, float z)
+{
+    m_LocalTransform *= Matrix4x4::Scale(x, y, z);
+}
 
 bool SceneNode::Update(const GameContext &context)
 {
