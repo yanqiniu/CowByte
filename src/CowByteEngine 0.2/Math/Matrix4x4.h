@@ -4,6 +4,7 @@
 #include <smmintrin.h>
 #include <cmath>
 
+#include "simdhelper.h"
 
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -19,10 +20,6 @@ Each __m128 in _data represent a column in the matrix.
 
 class Vec3;
 
-#define _CB_SHUFFLE_R(a, b, c, d) _MM_SHUFFLE(d, c, b, a)
-
-// Example: _CB_INSERT_MASK(3, 1, 0001): insert element 3 of B to index 1 of A, and set element 3 of A to zero.
-#define _CB_INSERT_MASK(indexFromB, indexToA, clearX, clearY, clearZ, clearW) (indexFromB << 6 | indexToA << 4 | 0b##clearW##clearZ##clearY##clearX) 
 
 __declspec(align(16)) struct Matrix4x4
 {
@@ -380,7 +377,5 @@ __declspec(align(16)) struct Matrix4x4
 
 };
 
-#undef _CB_SHUFFLE_R
-#undef _CB_INSERT_MASK
 
 #endif // !_MATRIX4x4_H

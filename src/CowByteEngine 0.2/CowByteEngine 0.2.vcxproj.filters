@@ -138,6 +138,12 @@
     <ClInclude Include="Math\CBMath.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Quaternion.h">
+      <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Math\simdhelper.h">
+      <Filter>Math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -214,6 +220,9 @@
     </ClCompile>
     <ClCompile Include="Messaging\CBMessaging.cpp">
       <Filter>Messaging</Filter>
+    </ClCompile>
+    <ClCompile Include="Math\Quaternion.cpp">
+      <Filter>Math</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
