@@ -20,7 +20,7 @@ Don't worry about the name :D
 ### Current State
  - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
  - It now renders two purple cubes with Gouraud Shading. Each rotating with different speed
- - Keyboard control to rotate camera.
+ - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
