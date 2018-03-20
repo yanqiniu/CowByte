@@ -60,6 +60,7 @@ bool Game::Initialize()
     m_pPlane = new Plane();
 
     m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
+    m_pCube1->m_pSceneNode->Scale(1.2f);
     m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
     
 
@@ -79,54 +80,60 @@ bool Game::Initialize()
 
 bool Game::Update(const GameContext &context)
 {
+    NaviCameraUpdate(context);
+
     m_pCube0->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
-
     m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
-
-    Matrix4x4 mat = m_pGameCamera->GetParentSceneNode()->GetWorldTransform();
-    Vec3 up = mat.Up();
-    Vec3 rt = mat.Right();
-    Vec3 fr = mat.Front();
-
-    if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
-    {
-        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), 30.0f * context.dTime);
-    }
-    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
-    {
-        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), -30.0f * context.dTime);
-    }
-
-    if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
-    {
-        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -30.0f * context.dTime);
-    }
-    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
-    {
-        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, 30.0f * context.dTime);
-    }
-    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_SPACE))
-    {
-        m_pGameCamera->GetParentSceneNode()->Translate(fr * context.dTime);
-    }
-    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_LSHIFT))
-    {
-        m_pGameCamera->GetParentSceneNode()->Translate(fr * (-context.dTime));
-    }
-    if (m_pInput->GetKeyUp(KeyCodes::KEY_F))
-    {
-        m_pGameCamera->GetParentSceneNode()->LookAt(*(m_pCube0->m_pSceneNode), Vec3::Up());
-    }
-    if (m_pInput->GetKeyUp(KeyCodes::KEY_G))
-    {
-        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -16.699244f);
-    }
 
     return true;
 }
 
 void Game::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 {
+
+}
+
+// Navigational camera update. This is made for debugging.
+// Remove for actual game.
+void Game::NaviCameraUpdate(const GameContext &context)
+{
+    Vec3 up = m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Up();
+    Vec3 rt = m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Right();
+    Vec3 fr = m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Front();
+
+#define CAM_MOVE_SPEED 15.0f
+#define CAM_ROTATE_SPEED 30.0f
+#define CAM_RISE_SPEED 15.0f
+
+    // WASD movement:
+    if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
+        m_pGameCamera->GetParentSceneNode()->Translate(fr * (CAM_MOVE_SPEED) * context.dTime);
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
+        m_pGameCamera->GetParentSceneNode()->Translate(fr * (-CAM_MOVE_SPEED) * context.dTime);
+    if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
+        m_pGameCamera->GetParentSceneNode()->Translate(rt * (CAM_MOVE_SPEED) * context.dTime);
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
+        m_pGameCamera->GetParentSceneNode()->Translate(rt * (-CAM_MOVE_SPEED) * context.dTime);
+
+    // Arrows rotation:
+    if (m_pInput->GetKeyHeld(KeyCodes::KEY_LEFT))
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), -CAM_ROTATE_SPEED * context.dTime);
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_RIGHT))
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), CAM_ROTATE_SPEED * context.dTime);
+    if (m_pInput->GetKeyHeld(KeyCodes::KEY_UP))
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -CAM_ROTATE_SPEED * context.dTime);
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_DOWN))
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, CAM_ROTATE_SPEED * context.dTime);
+
+    // Space: rise, LShift: fall:
+    if (m_pInput->GetKeyHeld(KeyCodes::KEY_SPACE))
+        m_pGameCamera->GetParentSceneNode()->Translate(up * (CAM_RISE_SPEED) * context.dTime);
+    else if (m_pInput->GetKeyHeld(KeyCodes::KEY_LSHIFT))
+        m_pGameCamera->GetParentSceneNode()->Translate(up * (-CAM_RISE_SPEED) * context.dTime);
+
+#undef CAM_MOVE_SPEED
+#undef CAM_ROTATE_SPEED
+#undef CAM_RISE_SPEED
 
 }
 

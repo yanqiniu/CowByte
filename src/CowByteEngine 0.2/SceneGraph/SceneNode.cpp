@@ -143,6 +143,11 @@ void SceneNode::Scale(float x, float y, float z)
     UpdateWorldTransform();
 }
 
+void SceneNode::Scale(float scale)
+{
+    Scale(scale, scale, scale);
+}
+
 void SceneNode::LookAt(const SceneNode &target, Vec3 up)
 {
     m_WorldTransform = m_WorldTransform.LookAt(target.GetWorldTransform().GetPosition(), up);
