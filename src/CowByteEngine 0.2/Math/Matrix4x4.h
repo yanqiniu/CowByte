@@ -244,7 +244,7 @@ __declspec(align(16)) struct Matrix4x4
 
     Matrix4x4 LocalRotation(const Quaternion &quat) const;
 
-    Matrix4x4 LookAt( const Vec3 &worldTarget, const Vec3 &up);
+    Matrix4x4 LookAt( const Vec3 &worldTarget, const Vec3 &worldUp);
 
 #pragma endregion
 

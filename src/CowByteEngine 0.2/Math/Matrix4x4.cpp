@@ -97,7 +97,7 @@ Matrix4x4 Matrix4x4::LocalRotation(const Quaternion &quat) const
 }
 
 // Notice that this function should be ASSIGNED to a world space matrix.
-Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &up)
+Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &worldUp)
 {
     Vec3 worldEye = GetPosition();
     Matrix4x4 toRet = this->GetScale();
