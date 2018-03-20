@@ -20,7 +20,8 @@ Vec3 Matrix4x4::Front() const
     return Vec3(_m[0][2], _m[1][2], _m[2][2], 0.0f);
 }
 
-// Is not inline. Prefer Translate (float, float, float).
+// This version is not inline and in many cases require you to construct 
+// a Vec3, so when possible, use Translate(float x, float y, float z).
 Matrix4x4 Matrix4x4::Translate(const Vec3 &vec)
 {
     return Matrix4x4(1.0f, 0.0f, 0.0f, 0.0f,
@@ -102,7 +103,7 @@ Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &worldUp)
     Vec3 worldEye = GetPosition();
     Matrix4x4 toRet = this->GetScale();
     Vec3 k = (worldTarget - worldEye).Normalized();
-    Vec3 i = worldUp.Normalized().Cross(k).Normalized();
+    Vec3 i = worldUp.Cross(k).Normalized();
     Vec3 j = k.Cross(i);
 
     Matrix4x4 r;
