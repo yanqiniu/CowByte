@@ -60,9 +60,7 @@ bool Game::Initialize()
     m_pPlane = new Plane();
 
     m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
-    m_pCube0->m_pSceneNode->UpdateWorldTransform();
     m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
-    m_pPlane->m_pSceneNode->UpdateWorldTransform();
     
 
     // Create game camera.
@@ -70,7 +68,6 @@ bool Game::Initialize()
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
     cameraSceneNode->Translate(Vec3(0, 0, -10.0f));
-    cameraSceneNode->UpdateWorldTransform();
 
     // Set the game camera as main.
     CBRefCountPtr<Message> msgPtr = Msg_SetMainCamera::Create();
@@ -83,10 +80,8 @@ bool Game::Initialize()
 bool Game::Update(const GameContext &context)
 {
     m_pCube0->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
-    m_pCube0->m_pSceneNode->UpdateWorldTransform();
 
     m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
-    m_pCube1->m_pSceneNode->UpdateWorldTransform();
 
     Matrix4x4 mat = m_pGameCamera->GetParentSceneNode()->GetWorldTransform();
     Vec3 up = mat.Up();
@@ -96,33 +91,27 @@ bool Game::Update(const GameContext &context)
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_D))
     {
         m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), 30.0f * context.dTime);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_A))
     {
         m_pGameCamera->GetParentSceneNode()->RotateLocal(Vec3::Up(), -30.0f * context.dTime);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
 
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_W))
     {
         m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -30.0f * context.dTime);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_S))
     {
         m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, 30.0f * context.dTime);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_SPACE))
     {
         m_pGameCamera->GetParentSceneNode()->Translate(fr * context.dTime);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_LSHIFT))
     {
         m_pGameCamera->GetParentSceneNode()->Translate(fr * (-context.dTime));
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
     if (m_pInput->GetKeyUp(KeyCodes::KEY_F))
     {
@@ -131,7 +120,6 @@ bool Game::Update(const GameContext &context)
     if (m_pInput->GetKeyUp(KeyCodes::KEY_G))
     {
         m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -16.699244f);
-        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
 
     return true;

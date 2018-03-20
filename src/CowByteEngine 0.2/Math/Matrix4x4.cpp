@@ -96,7 +96,7 @@ Matrix4x4 Matrix4x4::LocalRotation(const Quaternion &quat) const
     return toRet;
 }
 
-// Notice that this function should be assigned to a world space matrix.
+// Notice that this function should be ASSIGNED to a world space matrix.
 Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &up)
 {
     Vec3 worldEye = GetPosition();

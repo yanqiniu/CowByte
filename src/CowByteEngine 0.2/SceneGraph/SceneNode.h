@@ -21,9 +21,6 @@ public:
     const Matrix4x4 &GetLocalTransform();
     const Matrix4x4 &GetWorldTransform();
 
-    void UpdateWorldTransform();
-    void UpdateLocalTransform();
-
     Vec3 CalculateWorldPosition(const Vec3& inPos);
 
     //void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
@@ -45,6 +42,9 @@ public:
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
 private:
+    void UpdateWorldTransform();
+    void UpdateLocalTransform();
+
     Matrix4x4 m_WorldTransform; // Model Space -> World Space, yea this is cached.
     Matrix4x4 m_LocalTransform; // Local Space -> Parent Space
 };

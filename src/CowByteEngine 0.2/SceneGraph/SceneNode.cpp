@@ -81,29 +81,34 @@ Vec3 SceneNode::CalculateWorldPosition(const Vec3& inPos)
 void SceneNode::Translate(const Vec3& inPos)
 {
     m_LocalTransform *= Matrix4x4::Translate(inPos);
+    UpdateWorldTransform();
 }
 
 void SceneNode::Translate(float x, float y, float z)
 {
     m_LocalTransform *= Matrix4x4::Translate(x, y, z);
+    UpdateWorldTransform();
 }
 
 // Angle in degree.
 void SceneNode::RotateX(float angle)
 {
     m_LocalTransform *= Matrix4x4::RotationX(DEGREE_TO_RAD(angle));
+    UpdateWorldTransform();
 }
 
 // Angle in degree.
 void SceneNode::RotateY(float angle)
 {
     m_LocalTransform *= Matrix4x4::RotationY(DEGREE_TO_RAD(angle));
+    UpdateWorldTransform();
 }
 
 // Angle in degree.
 void SceneNode::RotateZ(float angle)
 {
     m_LocalTransform *= Matrix4x4::RotationZ(DEGREE_TO_RAD(angle));
+    UpdateWorldTransform();
 }
 
 void SceneNode::Rotate(const Vec3 &axis, float angleInDegree)
@@ -116,6 +121,7 @@ void SceneNode::Rotate(const Vec3 &axis, float angleInDegree)
     {
         m_LocalTransform *= Matrix4x4::Rotation(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
     }
+    UpdateWorldTransform();
 }
 
 void SceneNode::RotateLocal(const Vec3 &axis, float angleInDegree)
@@ -128,11 +134,13 @@ void SceneNode::RotateLocal(const Vec3 &axis, float angleInDegree)
     {
         m_LocalTransform *= m_LocalTransform.LocalRotation(Quaternion(axis, DEGREE_TO_RAD(angleInDegree)));
     }
+    UpdateWorldTransform();
 }
 
 void SceneNode::Scale(float x, float y, float z)
 {
     m_LocalTransform *= Matrix4x4::Scale(x, y, z);
+    UpdateWorldTransform();
 }
 
 void SceneNode::LookAt(const SceneNode &target, Vec3 up)
