@@ -102,7 +102,7 @@ Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &worldUp)
     Vec3 worldEye = GetPosition();
     Matrix4x4 toRet = this->GetScale();
     Vec3 k = (worldTarget - worldEye).Normalized();
-    Vec3 i = up.Normalized().Cross(k).Normalized();
+    Vec3 i = worldUp.Normalized().Cross(k).Normalized();
     Vec3 j = k.Cross(i);
 
     Matrix4x4 r;
