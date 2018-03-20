@@ -75,6 +75,19 @@ bool Component::IsActiveSelf()
 
 void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
 {
+    // TODO: add support for attaching to another parent. 
+    // component reference in current parent should be erased!
+    if (m_pParentComponent != nullptr && m_pParentComponent != parentPtr)
+    {
+        for (size_t i = 0; i < m_pParentComponent->m_Components.Size(); ++i)
+        {
+            if (m_pParentComponent->m_Components.peekat(i) == this)
+            {
+                m_pParentComponent->m_Components.Erase(i);
+            }
+        }
+    }
+
     parentPtr->AddChild(this);
     m_pParentComponent = parentPtr;
 }
@@ -101,19 +114,16 @@ SceneNode *Component::GetParentSceneNode() const
 
 bool Component::AddChild(Component* childPtr)
 {
-    m_Components.Push_back(childPtr);
-    // TODO: walk the component tree to make sure there is no cycle.
+    // Check if the pointer already exists.
+    for (size_t i = 0; i < m_Components.Size(); ++i)
+    {
+        if (m_Components.peekat(i) == childPtr)
+            return false;
+    }
 
-    if (false/*cycle*/)
-    {
-        m_Components.Pop_back();
-        return false;
-    }
-    else
-    {
-        IncreNumOffsprings(this, 1 + childPtr->m_nOffsprings);
-        return true;
-    }
+    m_Components.Push_back(childPtr);
+    IncreNumOffsprings(this, 1 + childPtr->m_nOffsprings);
+    return true;
 }
 
 // All children should have received their messages when this is called.
