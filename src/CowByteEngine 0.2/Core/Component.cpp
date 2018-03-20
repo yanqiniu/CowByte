@@ -8,7 +8,8 @@ Component::Component() :
     m_Components(4),
     m_bIsActive(true),
     m_pParentComponent(nullptr),
-    m_bParentIsSceneNode(false)
+    m_bParentIsSceneNode(false),
+    m_nOffsprings(0)
 {
 
 }
@@ -98,11 +99,21 @@ SceneNode *Component::GetParentSceneNode() const
 }
 
 
-void Component::AddChild(Component* childPtr)
+bool Component::AddChild(Component* childPtr)
 {
+    m_Components.Push_back(childPtr);
     // TODO: walk the component tree to make sure there is no cycle.
 
-    m_Components.Push_back(childPtr);
+    if (false/*cycle*/)
+    {
+        m_Components.Pop_back();
+        return false;
+    }
+    else
+    {
+        IncreNumOffsprings(this, 1 + childPtr->m_nOffsprings);
+        return true;
+    }
 }
 
 // All children should have received their messages when this is called.
@@ -112,6 +123,15 @@ void Component::HandleMessageQueue()
     {
         _HandleMessage(*m_MessageQueue.Front());
         m_MessageQueue.PopFront();
+    }
+}
+
+void Component::IncreNumOffsprings(Component* comp, size_t amount)
+{
+    while (comp != nullptr)
+    {
+        comp->m_nOffsprings += amount;
+        comp = comp->m_pParentComponent;
     }
 }
 
