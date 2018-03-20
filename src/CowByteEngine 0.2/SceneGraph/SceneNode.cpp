@@ -1,4 +1,5 @@
 #include "SceneNode.h"
+#include "../Utils/CBVector.h"
 
 SceneNode SceneNode::RootNode;
 
@@ -26,6 +27,7 @@ SceneNode* SceneNode::CreateSceneNodeThenAttach(SceneNode *parentPtr)
     return toRet;
 }
 
+// Walk scene graph branch upwards.
 void SceneNode::UpdateWorldTransform()
 {
     m_WorldTransform = m_LocalTransform;
@@ -37,6 +39,31 @@ void SceneNode::UpdateWorldTransform()
     }
 }
 
+// Given world transform, walk the tree down wards to update local transform to correct value.
+// Notice that this uses a lot of inverse matrices so it's slow.
+void SceneNode::UpdateLocalTransform()
+{
+    CBVector<SceneNode*> vectorFromParentToRoot(8);
+    SceneNode *ptr = GetParentSceneNode();
+    while (ptr != nullptr)
+    {
+        vectorFromParentToRoot.Push_back(ptr);
+        ptr = ptr->GetParentSceneNode();
+    }
+
+    // Now we have walk the path backwards:
+    Matrix4x4 res = m_WorldTransform;
+    for (int i = vectorFromParentToRoot.Size() - 1; i >= 0; --i)
+    {
+        res *= vectorFromParentToRoot.peekat(i)->GetLocalTransform().Inversed();
+    }
+    
+    m_LocalTransform = res;
+}
+
+// Convert a model space position to world space.
+// Notice that this simply uses the cached m_WorldTransform,
+// so make sure it's updated.
 Vec3 SceneNode::CalculateWorldPosition(const Vec3& inPos)
 {
     return inPos * m_WorldTransform;
@@ -106,6 +133,12 @@ void SceneNode::RotateLocal(const Vec3 &axis, float angleInDegree)
 void SceneNode::Scale(float x, float y, float z)
 {
     m_LocalTransform *= Matrix4x4::Scale(x, y, z);
+}
+
+void SceneNode::LookAt(const SceneNode &target, Vec3 up)
+{
+    m_WorldTransform = m_WorldTransform.LookAt(target.GetWorldTransform().GetPosition(), up);
+    UpdateLocalTransform();
 }
 
 bool SceneNode::Update(const GameContext &context)

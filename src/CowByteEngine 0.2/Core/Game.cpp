@@ -124,6 +124,15 @@ bool Game::Update(const GameContext &context)
         m_pGameCamera->GetParentSceneNode()->Translate(fr * (-context.dTime));
         m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
     }
+    if (m_pInput->GetKeyUp(KeyCodes::KEY_F))
+    {
+        m_pGameCamera->GetParentSceneNode()->LookAt(*(m_pCube0->m_pSceneNode), Vec3::Up());
+    }
+    if (m_pInput->GetKeyUp(KeyCodes::KEY_G))
+    {
+        m_pGameCamera->GetParentSceneNode()->RotateLocal(rt, -16.699244f);
+        m_pGameCamera->GetParentSceneNode()->UpdateWorldTransform();
+    }
 
     return true;
 }

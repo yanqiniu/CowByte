@@ -30,6 +30,11 @@ Matrix4x4 Matrix4x4::Translate(const Vec3 &vec)
 }
 
 
+Vec3 Matrix4x4::GetPosition() const
+{
+    return Vec3(_m[0][3], _m[1][3], _m[2][3], 1.0f);
+}
+
 Matrix4x4 Matrix4x4::Rotation(const Quaternion &quat)
 {
     Matrix4x4 toRet;
@@ -88,6 +93,27 @@ Matrix4x4 Matrix4x4::LocalRotation(const Quaternion &quat) const
     toRet *= Matrix4x4::Rotation(quat);
     toRet *= t;
 
+    return toRet;
+}
+
+// Notice that this function should be assigned to a world space matrix.
+Matrix4x4 Matrix4x4::LookAt( const Vec3 &worldTarget, const Vec3 &up)
+{
+    Vec3 worldEye = GetPosition();
+    Matrix4x4 toRet = this->GetScale();
+    Vec3 k = (worldTarget - worldEye).Normalized();
+    Vec3 i = up.Normalized().Cross(k).Normalized();
+    Vec3 j = k.Cross(i);
+
+    Matrix4x4 r;
+    r._data[0] = _CB_INSERT_SINGLE(i._data, 0.0f, 3);
+    r._data[1] = _CB_INSERT_SINGLE(j._data, 0.0f, 3);
+    r._data[2] = _CB_INSERT_SINGLE(k._data, 0.0f, 3);
+    r._data[3] = _mm_setr_ps(0.0f, 0.0f, 0.0f, 1.0f);
+    r.Transpose();
+    toRet *= r;
+    toRet *= Matrix4x4::Translate(worldEye);
+    
     return toRet;
 }
 

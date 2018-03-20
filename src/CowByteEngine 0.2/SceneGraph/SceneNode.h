@@ -22,10 +22,8 @@ public:
     const Matrix4x4 &GetWorldTransform();
 
     void UpdateWorldTransform();
+    void UpdateLocalTransform();
 
-    // Convert a model space position to world space.
-    // Notice that this simply uses the cached m_WorldTransform,
-    // so make sure it's updated.
     Vec3 CalculateWorldPosition(const Vec3& inPos);
 
     //void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
@@ -38,6 +36,7 @@ public:
     void Rotate(const Vec3 &axis, float angleInDegree);
     void RotateLocal(const Vec3 &axis, float angleInDegree);
     void Scale(float x, float y, float z);
+    void LookAt(const SceneNode &target, Vec3 up);
 
     const Matrix4x4& GetLocalTransform() const { return m_LocalTransform; }
     const Matrix4x4& GetWorldTransform() const { return m_WorldTransform; }

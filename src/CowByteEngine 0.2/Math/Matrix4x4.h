@@ -237,9 +237,14 @@ __declspec(align(16)) struct Matrix4x4
         return toRet;
     }
 
+    // Extract bottom row to form a new position vector.
+    Vec3 GetPosition() const;
+
     static Matrix4x4 Rotation(const Quaternion &quat);
 
     Matrix4x4 LocalRotation(const Quaternion &quat) const;
+
+    Matrix4x4 LookAt( const Vec3 &worldTarget, const Vec3 &up);
 
 #pragma endregion
 
