@@ -27,10 +27,7 @@ public:
     static MsgTypeID ClassTypeSpecifier() { return 0; }
 
     // Returns null pointer. Do not call.
-    static CBRefCountPtr<Message> Create() 
-    {
-        return CBRefCountPtr<Message>(nullptr);
-    }
+    static CBRefCountPtr<Message> Create() { return CBRefCountPtr<Message>(nullptr); }
     /* Type of the instance. */
     virtual MsgTypeID GetInstType() = 0;
 protected:

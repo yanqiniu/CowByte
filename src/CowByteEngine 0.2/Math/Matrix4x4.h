@@ -74,6 +74,10 @@ __declspec(align(16)) struct Matrix4x4
 
     __forceinline ~Matrix4x4() {}
 
+    Vec3 Right() const;
+    Vec3 Up() const;
+    Vec3 Front() const;
+
 #pragma endregion
 
 #pragma region Common Operations
@@ -190,7 +194,7 @@ __declspec(align(16)) struct Matrix4x4
     }
 
     // Extract bottom row to form a new Translation Matrix.
-    __forceinline Matrix4x4 GetTranslation()
+    __forceinline Matrix4x4 GetTranslation() const
     {
         return Matrix4x4(1.0f,     0.0f,     0.0f,     0.0f,
                          0.0f,     1.0f,     0.0f,     0.0f,
@@ -199,7 +203,7 @@ __declspec(align(16)) struct Matrix4x4
     }
 
     // Extract scales and form a new matrix.
-    __forceinline Matrix4x4 GetScale()
+    __forceinline Matrix4x4 GetScale() const
     {
         // Get length of each column.
         return Matrix4x4(_mm_sqrt_ss(_mm_dp_ps(_data[0], _data[0], 0b01110001)).m128_f32[0], 0.0f, 0.0f, 0.0f,
@@ -209,7 +213,7 @@ __declspec(align(16)) struct Matrix4x4
     }
 
     // Extract rotations and form a new matrix.
-    __forceinline Matrix4x4 GetRotation()
+    __forceinline Matrix4x4 GetRotation() const
     {
         Matrix4x4 toRet;
 
@@ -233,7 +237,14 @@ __declspec(align(16)) struct Matrix4x4
         return toRet;
     }
 
-    static Matrix4x4 FromQuaternion(const Quaternion &quat);
+    // Extract bottom row to form a new position vector.
+    Vec3 GetPosition() const;
+
+    static Matrix4x4 Rotation(const Quaternion &quat);
+
+    Matrix4x4 LocalRotation(const Quaternion &quat) const;
+
+    Matrix4x4 LookAt( const Vec3 &worldTarget, const Vec3 &worldUp);
 
 #pragma endregion
 

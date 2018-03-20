@@ -28,6 +28,9 @@ struct Plane
 };
 
 
+// This will be polished into a general purpose Game class that
+// custom Game class can inherit from.
+// Right now it's more of a testing entry point.
 class Game : public System
 {
 public:
@@ -38,6 +41,8 @@ public:
     bool Update(const GameContext &context);
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 private:
+    void NaviCameraUpdate(const GameContext &context);
+
     Input  *m_pInput; // This couples Game and Input and is not ideal. But this does provide Game with different input source.
     Camera *m_pGameCamera; // Pointer to current active cam.
 

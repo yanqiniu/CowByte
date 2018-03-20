@@ -156,13 +156,14 @@ __declspec(align(16)) struct Vec3
     }
 
     // Dot product.
-    __forceinline float Dot(const Vec3 &toDot)
+    __forceinline float Dot(const Vec3 &toDot) const
     {
         return _mm_dp_ps(_data, toDot._data, 0b01110001).m128_f32[0];
     }
 
     // Return cross vector. Does not change Data.
-    __forceinline Vec3 Cross(const Vec3 &toCross)
+    // NOTICE: since we use left-handed system, use left hand for cross order.
+    __forceinline Vec3 Cross(const Vec3 &toCross) const
     {
         __m128 temp0 = _mm_shuffle_ps(_data, _data, _MM_SHUFFLE(3, 0, 2, 1));
         __m128 temp1 = _mm_shuffle_ps(toCross._data, toCross._data, _MM_SHUFFLE(3, 1, 0, 2));
@@ -170,9 +171,52 @@ __declspec(align(16)) struct Vec3
 
         temp0 = _mm_shuffle_ps(_data, _data, _MM_SHUFFLE(3, 1, 0, 2));
         temp1 = _mm_shuffle_ps(toCross._data, toCross._data, _MM_SHUFFLE(3, 0, 2, 1));
+
         return Vec3(_mm_sub_ps(result, _mm_mul_ps(temp0, temp1)));
     }
+
 #pragma endregion
+
+#pragma region Useful Helpers
+
+    __forceinline static Vec3 Zero()
+    {
+        return Vec3(0, 0, 0, 0);
+    }
+
+    __forceinline static Vec3 Right()
+    {
+        return Vec3(1.0f, 0, 0, 0);
+    }
+
+    __forceinline static Vec3 Left()
+    {
+        return Vec3(-1.0f, 0, 0, 0);
+    }
+
+    __forceinline static Vec3 Up()
+    {
+        return Vec3(0, 1.0f, 0, 0);
+    }
+
+    __forceinline static Vec3 Down()
+    {
+        return Vec3(0, -1.0f, 0, 0);
+    }
+
+    __forceinline static Vec3 Front()
+    {
+        return Vec3(0, 0, 1.0f, 0);
+    }
+
+    __forceinline static Vec3 Back()
+    {
+        return Vec3(0, 0, -1.0f, 0);
+    }
+
+
+#pragma endregion
+
 
 #pragma region Matrix4x4 and Quaterion Contents
 
