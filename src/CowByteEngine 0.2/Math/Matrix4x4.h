@@ -165,32 +165,30 @@ __declspec(align(16)) struct Matrix4x4
                          0.0f, 0.0f, 1.0f, 0.0f,
                          x,    y,    z,    1.0f);
     }
-    // This version is not inline and in many cases require you to construct 
-    // a Vec3, so when possible, use Translate(float x, float y, float z).
     static Matrix4x4 Translate(const Vec3 &vec);
 
-    __forceinline static Matrix4x4 RotationX(float angle)
+    __forceinline static Matrix4x4 RotationX(float angleInRad)
     {
-        return Matrix4x4(1.0f,  0.0f,             0.0f,             0.0f,
-                         0.0f,  std::cosf(angle), std::sinf(angle), 0.0f,
-                         0.0f, -std::sinf(angle), std::cosf(angle), 0.0f,
-                         0.0f,  0.0f,             0.0f,             1.0f);
+        return Matrix4x4(1.0f,  0.0f,                  0.0f,                  0.0f,
+                         0.0f,  std::cosf(angleInRad), std::sinf(angleInRad), 0.0f,
+                         0.0f, -std::sinf(angleInRad), std::cosf(angleInRad), 0.0f,
+                         0.0f,  0.0f,                  0.0f,                  1.0f);
     }
 
-    __forceinline static Matrix4x4 RotationY(float angle)
+    __forceinline static Matrix4x4 RotationY(float angleInRad)
     {
-        return Matrix4x4(std::cosf(angle), 0.0f, -std::sinf(angle), 0.0f,
-                         0.0f,             1.0f,  0.0f,             0.0f,
-                         std::sinf(angle), 0.0f,  std::cosf(angle), 0.0f,
-                         0.0f,             0.0f,  0.0f,             1.0f);
+        return Matrix4x4(std::cosf(angleInRad), 0.0f, -std::sinf(angleInRad), 0.0f,
+                         0.0f,                  1.0f,  0.0f,                  0.0f,
+                         std::sinf(angleInRad), 0.0f,  std::cosf(angleInRad), 0.0f,
+                         0.0f,                  0.0f,  0.0f,                  1.0f);
     }
 
-    __forceinline static Matrix4x4 RotationZ(float angle)
+    __forceinline static Matrix4x4 RotationZ(float angleInRad)
     {
-        return Matrix4x4(std::cosf(angle), std::sinf(angle), 0.0f, 0.0f,
-                        -std::sinf(angle), std::cosf(angle), 0.0f, 0.0f,
-                        0.0f,              0.0f,             1.0f, 0.0f,
-                        0.0f,              0.0f,             0.0f, 1.0f);
+        return Matrix4x4(std::cosf(angleInRad), std::sinf(angleInRad), 0.0f, 0.0f,
+                        -std::sinf(angleInRad), std::cosf(angleInRad), 0.0f, 0.0f,
+                        0.0f,                   0.0f,                  1.0f, 0.0f,
+                        0.0f,                   0.0f,                  0.0f, 1.0f);
     }
 
     // Extract bottom row to form a new Translation Matrix.
