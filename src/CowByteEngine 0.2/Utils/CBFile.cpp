@@ -2,6 +2,7 @@
 #include "CBFile.h"
 #include "CBStringOps.h"
 #include "CBDebug.h"
+#include "../Memory/CBMemArena.h"
 
 CBFile::CBFile(const char *fileName)
 {
@@ -20,20 +21,22 @@ CBFile::~CBFile()
     fclose(m_pFile);
 }
 
-void CBFile::ReadIntoBuffer(char *&buffer, size_t &size)
+char* CBFile::ReadIntoBuffer(size_t &size)
 {
     // grab size of the file first:
     if (fseek(m_pFile, 0, SEEK_END) != 0)
-        return;
+        return nullptr;
     size = ftell(m_pFile);
 
     fseek(m_pFile, 0, SEEK_SET);
 
-    buffer = (char *)malloc(size * 2); // allow space for "//n" // TODO: use mem arena.
+    char* toRet = static_cast<char*>(CBMemArena::Get().Allocate(size * 2)); // allow space for "//n" 
 
-    size_t read = fread(buffer, 1, size, m_pFile);
-    buffer[read++] = '\n';
+    size_t read = fread(toRet, 1, size, m_pFile);
+    toRet[read++] = '\n';
     size = read;
+
+    return toRet;
 }
 
 bool CBFile::GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripNewLine)
