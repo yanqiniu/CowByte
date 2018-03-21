@@ -60,14 +60,14 @@ Mesh* MeshManager::AddMesh(const Mesh &toAdd)
 {
     for (size_t i = 0; i < m_Meshes.Size(); ++i)
     {
-        if (toAdd.GetID() >= m_Meshes[i].GetID())
+        if (toAdd.GetID() < m_Meshes[i].GetID())
         {
-            return m_Meshes.Insert(i + 1, toAdd);
+            return m_Meshes.Insert(i, toAdd);
         }
     }
 
-    // Empty or start of vector.
-    return m_Meshes.Insert(0, toAdd);
+    // Empty or end of vector.
+    return m_Meshes.Insert(m_Meshes.Size(), toAdd);
 }
 
 // Insert MeshInstance pointer to m_MesheInstPtrs so that it is 
