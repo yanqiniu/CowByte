@@ -1,5 +1,5 @@
 import maya.cmds as cmds
-import pymel.core as pc
+import pymel.core as pm
 
 cowbyte_folder = "F:\\Projects\\CowByte\\"
 tools_folder = cowbyte_folder + "tools\\Maya\\"
@@ -92,10 +92,10 @@ class _shelf():
 ###################################################################################
 # GUI functions
 def show_message_popup(msgtitle, msg):
-    pc.window( title=msgtitle, widthHeight=(350, 125), sizeable = False)
-    pc.rowLayout( numberOfColumns=1, columnWidth1=(350), columnAlign=(1, 'center'))
-    pc.text(msg, width = 350, wordWrap = True)
-    pc.showWindow()
+    pm.window( title=msgtitle, widthHeight=(350, 125), sizeable = False)
+    pm.rowLayout( numberOfColumns=1, columnWidth1=(350), columnAlign=(1, 'center'))
+    pm.text(msg, width = 350, wordWrap = True)
+    pm.showWindow()
 
 ###################################################################################
 # CowByte functions
@@ -116,9 +116,10 @@ def export_pos_buf(faces, filepath):
     for f in faces:
         vertices = f.getPoints()
         assert len(vertices) == 3
-        outfile.write("{0} {1} {2}\n".format(vertices[0].x, vertices[0].y, vertices[0].z))
-        outfile.write("{0} {1} {2}\n".format(vertices[1].x, vertices[1].y, vertices[1].z))
-        outfile.write("{0} {1} {2}\n".format(vertices[2].x, vertices[2].y, vertices[2].z))
+        # flip z because maya uses right-handed system
+        outfile.write("{0} {1} {2}\n".format(vertices[0].x, vertices[0].y, -vertices[0].z))
+        outfile.write("{0} {1} {2}\n".format(vertices[1].x, vertices[1].y, -vertices[1].z))
+        outfile.write("{0} {1} {2}\n".format(vertices[2].x, vertices[2].y, -vertices[2].z))
     outfile.close()
 
 
@@ -145,10 +146,22 @@ def export_normal_buf(faces, filepath):
         outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
         outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
 
+def export_uv(faces, filepath):
+    print("Exporting [{0}]...".format(filepath))
+    outfile = open(filepath, 'w+')
+    outfile.write("UV_BUF\n")
+    outfile.write("{0}\n".format(len(faces)*3))
+    for f in faces:
+        uvs = f.getUVs()
+        outfile.write("{0} {1}\n".format(uvs[0][0], uvs[1][0]))
+        outfile.write("{0} {1}\n".format(uvs[0][1], uvs[1][1]))
+        outfile.write("{0} {1}\n".format(uvs[0][2], uvs[1][2]))
+
+
 
 def export_selected_mesh(meshname):
     print("Exporting [{0}]...".format(meshname))
-    selected = pc.ls(selection=True)
+    selected = pm.ls(selection=True)
     if len(selected) != 1:
         gui_message = "CowByte: Failed to export - nothing/or too many selected! One mesh at a time!"
         show_message_popup("Export Failure", gui_message)
@@ -156,8 +169,8 @@ def export_selected_mesh(meshname):
         return False
 
     # TODO: error checking, this is assuming selected has first child as Mesh.
-    mesh = pc.listRelatives(selected[0])[0]
-    pc.polyTriangulate(mesh) # triangulate the mesh first, since CBE only takes triangles.
+    mesh = pm.listRelatives(selected[0])[0]
+    pm.polyTriangulate(mesh) # triangulate the mesh first, since CBE only takes triangles.
     faces = mesh.faces
     export_meshfile(meshname, export_folder + meshname + ".mesha")
     export_pos_buf(faces, export_folder + meshname + "_pos.bufa")
@@ -171,18 +184,18 @@ def export_selected_mesh(meshname):
 ###################################################################################
 # GUI functions
 def command_export():
-    mesh_name = pc.textField("mesh_name_field", q = True, tx = True)
+    mesh_name = pm.textField("mesh_name_field", q = True, tx = True)
     print("MESHNAME: {0}".format(mesh_name))
     export_selected_mesh(mesh_name)
 
-def ShowExporterWindow():
-    window = pc.window("CowByte Mesh Exporter", sizeable = False)
-    pc.rowColumnLayout( numberOfColumns=2, columnAttach=(1, 'right', 0), columnWidth=[(1, 100), (2, 250)] )
-    pc.text( label='Enter Mesh Name: ' )
-    mesh_name_field = pc.textField("mesh_name_field")
-    pc.button( label='Export!', command= "command_export()" )
+def show_exporter_window():
+    window = pm.window("CowByte Mesh Exporter", sizeable = False)
+    pm.rowColumnLayout( numberOfColumns=2, columnAttach=(1, 'right', 0), columnWidth=[(1, 100), (2, 250)] )
+    pm.text( label='Enter Mesh Name: ' )
+    mesh_name_field = pm.textField("mesh_name_field")
+    pm.button( label='Export!', command= "command_export()" )
 
-    pc.showWindow()
+    pm.showWindow()
 
 
 
@@ -193,7 +206,7 @@ class CowShelf(_shelf):
 
 
     def build(self):
-        self.addButon(label="Export", icon = "export.png", command = "ShowExporterWindow()")
+        self.addButon(label="Export", icon = "export.png", command = "show_exporter_window()")
         # p = cmds.popupMenu(b=1)
         # self.addMenuItem(p, "Export Selected Mesh", command = "ShowExporterWindow()")
 shelf = CowShelf()
