@@ -81,6 +81,7 @@ bool Graphics::Initialize()
     m_pMeshManager->CPULoadMesh("plane.mesha");
     m_pMeshManager->CPULoadMesh("torus.mesha");
     m_pMeshManager->CPULoadMesh("cow.mesha");
+    m_pMeshManager->CPULoadMesh("helicopter.mesha");
 
     return true;
 }
@@ -281,7 +282,7 @@ bool Graphics::InitializePipeline()
     D3D11_BUFFER_DESC bufferDesc;
     ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
     bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * 6666; // TODO: remove this magic number and use something "large enough"
+    bufferDesc.ByteWidth = sizeof(Vertex) * 666666; // TODO: remove this magic number and use something "large enough"
     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer));
@@ -290,7 +291,7 @@ bool Graphics::InitializePipeline()
     D3D11_BUFFER_DESC indexBufferDesc;
     ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
     indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    indexBufferDesc.ByteWidth = sizeof(WORD) * 66666;  // TODO: remove this magic number and use something "large enough"
+    indexBufferDesc.ByteWidth = sizeof(WORD) * 666666;  // TODO: remove this magic number and use something "large enough"
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, nullptr, &m_pIndexBuffer));

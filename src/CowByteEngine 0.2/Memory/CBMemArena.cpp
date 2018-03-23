@@ -55,6 +55,8 @@ void* CBMemArena::Allocate(size_t size)
     // TODO: threading
     for (const auto& pPool : m_pPools)
     {
+        if (pPool == NULL)
+            break;
         if (size <= pPool->m_blockSize)
         {
 #ifdef _DEBUG            
