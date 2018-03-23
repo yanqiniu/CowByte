@@ -1,12 +1,26 @@
-# modified from shelfBase.py by Vasil Shotarov
-# https://gist.github.com/vshotarov/1c3176fe9e38dcaadd1e56c2f15c95d9#file-shelfbase-py
-
 import maya.cmds as cmds
+import pymel.core as pc
+
+cowbyte_folder = "F:\\Projects\\CowByte\\"
+tools_folder = cowbyte_folder + "tools\\Maya\\"
+export_folder = cowbyte_folder + "assets\\AssetsOut\\"
 
 def _null(*args):
     pass
 
+def RemoveShelf(name):
+    if cmds.shelfLayout(name, ex=1):
+        print("Shelf {0} exists.\n".format(name))
+        if cmds.shelfLayout(name, ca=1, q = 1):
+            for each in cmds.shelfLayout(name, ca=1, q = 1):
+                print("Deleting {0}...\n".format(each))
+                cmds.deleteUI(each)
+            cmds.deleteUI(name)
+    else:
+        print("Shelf {0} does not exist.\n".format(name))
 
+# modified from shelfBase.py by Vasil Shotarov
+# https://gist.github.com/vshotarov/1c3176fe9e38dcaadd1e56c2f15c95d9#file-shelfbase-py
 class _shelf():
 
     def __init__(self, name="customShelf", iconPath=""):
@@ -30,7 +44,7 @@ class _shelf():
         cmds.setParent(self.name)
         if icon:
             icon = self.iconPath + icon
-        cmds.shelfButton(width=37, height=37, image=icon, l=label, command=command, dcc=doubleCommand, imageOverlayLabel=label, olb=self.labelBackground, olc=self.labelColour)
+        cmds.shelfButton(width=32, height=32, image=icon, l=label, command=command, dcc=doubleCommand, olb=self.labelBackground, olc=self.labelColour)
 
     def addMenuItem(self, parent, label, command=_null, icon=""):
         '''Adds a shelf button with the specified label, command, double click command and image.'''
@@ -76,3 +90,110 @@ class _shelf():
 #         self.addButon("button3")
 # customShelf()
 ###################################################################################
+# GUI functions
+def show_message_popup(msgtitle, msg):
+    pc.window( title=msgtitle, widthHeight=(350, 125), sizeable = False)
+    pc.rowLayout( numberOfColumns=1, columnWidth1=(350), columnAlign=(1, 'center'))
+    pc.text(msg, width = 350, wordWrap = True)
+    pc.showWindow()
+
+###################################################################################
+# CowByte functions
+
+def export_meshfile(meshname, filepath):
+    outfile = open(filepath, 'w+')
+    outfile.write("MESH\n")
+    outfile.write(meshname + "_pos.bufa\n")
+    outfile.write(meshname + "_index.bufa\n")
+    outfile.write(meshname + "_normal.bufa\n")
+    outfile.close()
+
+def export_pos_buf(faces, filepath):
+    print("Exporting [{0}]...".format(filepath))
+    outfile = open(filepath, 'w+')
+    outfile.write("POS_BUF\n")
+    outfile.write("{0}\n".format(len(faces)*3))
+    for f in faces:
+        vertices = f.getPoints()
+        assert len(vertices) == 3
+        outfile.write("{0} {1} {2}\n".format(vertices[0].x, vertices[0].y, vertices[0].z))
+        outfile.write("{0} {1} {2}\n".format(vertices[1].x, vertices[1].y, vertices[1].z))
+        outfile.write("{0} {1} {2}\n".format(vertices[2].x, vertices[2].y, vertices[2].z))
+    outfile.close()
+
+
+def export_index_buf(faces, filepath):
+    print("Exporting [{0}]...".format(filepath))
+    outfile = open(filepath, 'w+')
+    outfile.write("INDEX_BUF\n")
+    outfile.write("{0}\n".format(len(faces)))
+    i = 0
+    for f in faces:
+        outfile.write("{0} {1} {2}\n".format(i, i + 1, i + 2))
+        i = i + 3
+    outfile.close()
+
+
+def export_normal_buf(faces, filepath):
+    print("Exporting [{0}]...".format(filepath))
+    outfile = open(filepath, 'w+')
+    outfile.write("NORMAL_BUF\n")
+    outfile.write("{0}\n".format(len(faces)*3))
+    for f in faces:
+        normal = f.getNormal() # use face normals for sharp edge?
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
+
+
+def export_selected_mesh(meshname):
+    print("Exporting [{0}]...".format(meshname))
+    selected = pc.ls(selection=True)
+    if len(selected) != 1:
+        gui_message = "CowByte: Failed to export - nothing/or too many selected! One mesh at a time!"
+        show_message_popup("Export Failure", gui_message)
+        print(gui_message)
+        return False
+
+    # TODO: error checking, this is assuming selected has first child as Mesh.
+    mesh = pc.listRelatives(selected[0])[0]
+    pc.polyTriangulate(mesh) # triangulate the mesh first, since CBE only takes triangles.
+    faces = mesh.faces
+    export_meshfile(meshname, export_folder + meshname + ".mesha")
+    export_pos_buf(faces, export_folder + meshname + "_pos.bufa")
+    export_index_buf(faces, export_folder + meshname + "_index.bufa")
+    export_normal_buf(faces, export_folder + meshname + "_normal.bufa")
+
+    print("Finished exporting [{0}].".format(meshname))
+    show_message_popup("Export Success", "Files have been exported to {0}.".format(export_folder))
+    return True
+
+###################################################################################
+# GUI functions
+def command_export():
+    mesh_name = pc.textField("mesh_name_field", q = True, tx = True)
+    print("MESHNAME: {0}".format(mesh_name))
+    export_selected_mesh(mesh_name)
+
+def ShowExporterWindow():
+    window = pc.window("CowByte Mesh Exporter", sizeable = False)
+    pc.rowColumnLayout( numberOfColumns=2, columnAttach=(1, 'right', 0), columnWidth=[(1, 100), (2, 250)] )
+    pc.text( label='Enter Mesh Name: ' )
+    mesh_name_field = pc.textField("mesh_name_field")
+    pc.button( label='Export!', command= "command_export()" )
+
+    pc.showWindow()
+
+
+
+###################################################################################
+class CowShelf(_shelf):
+    def __init__(self):
+        _shelf.__init__(self, "CowByteEngine", "{0}\\art\\".format(tools_folder))
+
+
+    def build(self):
+        self.addButon(label="Export", icon = "export.png", command = "ShowExporterWindow()")
+        # p = cmds.popupMenu(b=1)
+        # self.addMenuItem(p, "Export Selected Mesh", command = "ShowExporterWindow()")
+shelf = CowShelf()

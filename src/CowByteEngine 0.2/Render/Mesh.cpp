@@ -27,7 +27,7 @@ bool Mesh::LoadContent(const char* meshName)
     //DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
 
     CBFile meshFile(meshFilePath.Get());
-    CBString<64> temp;
+    CBString<128> temp;
 
     // Check if it's a Mesh file
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
@@ -97,7 +97,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile posBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
@@ -166,7 +166,7 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile indexBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!indexBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
@@ -227,7 +227,7 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile normBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!normBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
