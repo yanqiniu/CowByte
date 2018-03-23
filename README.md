@@ -19,8 +19,9 @@ Don't worry about the name :D
 
 ### Current State
  - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
- - It now renders two purple cubes with Gouraud Shading. Each rotating with different speed
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
+ - It now renders low-poly cow model exported from Maya:  
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_22_2018.jpg)  
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
@@ -32,4 +33,5 @@ Don't worry about the name :D
  - Mesh Instancing;  
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
+ - Exporting mesh from Maya;
  - ...
