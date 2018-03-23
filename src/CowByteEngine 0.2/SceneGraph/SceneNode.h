@@ -23,8 +23,6 @@ public:
 
     Vec3 CalculateWorldPosition(const Vec3& inPos);
 
-    //void AttachTo_SceneNode_Parent(SceneNode* parentPtr);
-
     void Translate(const Vec3& inPos);
     void Translate(float x, float y, float z);
     void RotateX(float angle);

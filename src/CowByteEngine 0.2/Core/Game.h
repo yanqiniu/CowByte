@@ -3,6 +3,13 @@
 
 #include "System.h"
 
+#define DECLARE_DEBUG_GAME_OBJECT(ClassName) \
+struct ClassName\
+{\
+    SceneNode *m_pSceneNode;\
+    ClassName();\
+};
+
 class Camera;
 class Input;
 
@@ -13,19 +20,10 @@ struct GameData : public SystemData
     Input *m_pInput;
 };
 
-// A test object. Likely this will be made into a GameObject class.
-struct Cube
-{
-    SceneNode *m_pSceneNode;
-    Cube();
-};
-
-// A test object. Likely this will be made into a GameObject class.
-struct Plane
-{
-    SceneNode *m_pSceneNode;
-    Plane();
-};
+DECLARE_DEBUG_GAME_OBJECT(Cube)
+DECLARE_DEBUG_GAME_OBJECT(Plane)
+DECLARE_DEBUG_GAME_OBJECT(Torus)
+DECLARE_DEBUG_GAME_OBJECT(Cow)
 
 
 // This will be polished into a general purpose Game class that
@@ -50,6 +48,8 @@ private:
     Cube *m_pCube0;
     Cube *m_pCube1;
     Plane *m_pPlane;
+    Torus *m_pTorus;
+    Cow *m_pCow;
 };
 
 #endif

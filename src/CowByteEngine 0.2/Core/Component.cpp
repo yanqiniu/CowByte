@@ -8,7 +8,8 @@ Component::Component() :
     m_Components(4),
     m_bIsActive(true),
     m_pParentComponent(nullptr),
-    m_bParentIsSceneNode(false)
+    m_bParentIsSceneNode(false),
+    m_nOffsprings(0)
 {
 
 }
@@ -74,6 +75,19 @@ bool Component::IsActiveSelf()
 
 void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
 {
+    // TODO: add support for attaching to another parent. 
+    // component reference in current parent should be erased!
+    if (m_pParentComponent != nullptr && m_pParentComponent != parentPtr)
+    {
+        for (size_t i = 0; i < m_pParentComponent->m_Components.Size(); ++i)
+        {
+            if (m_pParentComponent->m_Components.peekat(i) == this)
+            {
+                m_pParentComponent->m_Components.Erase(i);
+            }
+        }
+    }
+
     parentPtr->AddChild(this);
     m_pParentComponent = parentPtr;
 }
@@ -98,11 +112,18 @@ SceneNode *Component::GetParentSceneNode() const
 }
 
 
-void Component::AddChild(Component* childPtr)
+bool Component::AddChild(Component* childPtr)
 {
-    // TODO: walk the component tree to make sure there is no cycle.
+    // Check if the pointer already exists.
+    for (size_t i = 0; i < m_Components.Size(); ++i)
+    {
+        if (m_Components.peekat(i) == childPtr)
+            return false;
+    }
 
     m_Components.Push_back(childPtr);
+    IncreNumOffsprings(this, 1 + childPtr->m_nOffsprings);
+    return true;
 }
 
 // All children should have received their messages when this is called.
@@ -112,6 +133,15 @@ void Component::HandleMessageQueue()
     {
         _HandleMessage(*m_MessageQueue.Front());
         m_MessageQueue.PopFront();
+    }
+}
+
+void Component::IncreNumOffsprings(Component* comp, size_t amount)
+{
+    while (comp != nullptr)
+    {
+        comp->m_nOffsprings += amount;
+        comp = comp->m_pParentComponent;
     }
 }
 

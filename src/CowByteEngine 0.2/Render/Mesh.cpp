@@ -27,7 +27,7 @@ bool Mesh::LoadContent(const char* meshName)
     //DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
 
     CBFile meshFile(meshFilePath.Get());
-    CBString<64> temp;
+    CBString<128> temp;
 
     // Check if it's a Mesh file
     if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
@@ -97,7 +97,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile posBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!posBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
@@ -151,10 +151,10 @@ bool Mesh::ReadPosBufFile(const char *filepath)
         m_Vertices.Push_back(Vertex())->m_Pos = Vec3(tempX, tempY, tempZ);
     }
 
-    for (size_t i = 0; i < m_nVertices; ++i)
-    {
-        DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
-    }
+    //for (size_t i = 0; i < m_nVertices; ++i)
+    //{
+    //    DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
+    //}
     
     return true;
 
@@ -166,7 +166,7 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile indexBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!indexBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
@@ -212,10 +212,10 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
         }
     }
 
-    for (size_t i = 0; i < m_nTriangles; ++i)
-    {
-        DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
-    }
+    //for (size_t i = 0; i < m_nTriangles; ++i)
+    //{
+    //    DbgINFO("Triangle %d [%d, %d, %d]", i, m_Indices[i * 3], m_Indices[i * 3 + 1], m_Indices[i * 3 + 2]);
+    //}
 
     return true;
 }
@@ -227,7 +227,7 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
     Path::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile normBufFile(tempPath.Get());
 
-    CBString<64> temp;
+    CBString<128> temp;
     if (!normBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
     {
         DbgERROR("Failed getting file type [%s]", filepath);
@@ -286,10 +286,10 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
         m_Vertices.at(i).m_Normal.Set(tempX, tempY, tempZ, 0.0f);
     }
 
-    for (size_t i = 0; i < m_nVertices; ++i)
-    {
-        DbgINFO("Normal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
-    }
+    //for (size_t i = 0; i < m_nVertices; ++i)
+    //{
+    //    DbgINFO("Normal %d [%f, %f, %f]", i, m_Vertices[i].m_Normal.X(), m_Vertices[i].m_Normal.Y(), m_Vertices[i].m_Normal.Z());
+    //}
 
     return true;
 }

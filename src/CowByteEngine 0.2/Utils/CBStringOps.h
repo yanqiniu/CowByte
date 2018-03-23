@@ -137,8 +137,8 @@ namespace CBStringOps
     // to see if it can convert to a float.
     inline bool GetNextFloat32(char *&str, float &buf, char seperator)
     {
-        char strbuf[16];
-        if (!GetNextSubstring(str, strbuf, 16, ' '))
+        char strbuf[64];
+        if (!GetNextSubstring(str, strbuf, 64, ' '))
             return false;
         buf = static_cast<float>(atof(strbuf));
         return true;
@@ -148,8 +148,8 @@ namespace CBStringOps
     // to see if it can convert to a int.
     inline bool GetNextInt32(char *&str, int &buf, char seperator)
     {
-        char strbuf[16];
-        if (!GetNextSubstring(str, strbuf, 16, ' '))
+        char strbuf[64];
+        if (!GetNextSubstring(str, strbuf, 64, ' '))
             return false;
         buf = atoi(strbuf);
         return true;

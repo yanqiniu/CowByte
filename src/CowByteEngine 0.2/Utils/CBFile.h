@@ -12,7 +12,7 @@ public:
     explicit CBFile(const char *fileName);
     ~CBFile();
 
-    void ReadIntoBuffer(char *&buffer, size_t &size);
+    char* ReadIntoBuffer(size_t &size);
     bool GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripNewLine);
 
 private:

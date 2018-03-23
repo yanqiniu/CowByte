@@ -45,6 +45,15 @@ int Engine::Initialize(GameContext &context)
         return false;
     if (!AddSystem(pGame))
         return false;
+
+    // Add systems to engine as component. Engine should be the root node of component tree.
+    // (Not root node of scene graph).
+    m_MapSystems[SystemType::SYS_WINDOW]->AttachTo_NonSceneNode_Parent(this);
+    SceneNode::RootNode.AttachTo_NonSceneNode_Parent(this);
+    m_MapSystems[SystemType::SYS_GRAPHICS]->AttachTo_NonSceneNode_Parent(this);
+    m_MapSystems[SystemType::SYS_INPUT]->AttachTo_NonSceneNode_Parent(this);
+    m_MapSystems[SystemType::SYS_GAME]->AttachTo_NonSceneNode_Parent(this);
+
     
     // Construct Engine bus.
     CBMessaging::InitializeEngineBus();
@@ -58,6 +67,7 @@ int Engine::Initialize(GameContext &context)
         return false;
     if (!m_MapSystems[SystemType::SYS_GAME]->Initialize())
         return false;
+
 
     // Subscribe systems to the message bus.
     // NOTICE: the order specified here will be the order they get called when 

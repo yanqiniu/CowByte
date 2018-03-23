@@ -12,7 +12,7 @@ D3D11_INPUT_ELEMENT_DESC Vertex::InputDesc[3] =
 Vertex::Vertex() :
     m_Pos(0, 0, 0, 1.0f),
     m_Normal(0, 0, 0, 1.0f),
-    m_Color(D3DXCOLOR(1.0f, 0.0f, 1.0f, 1.0f)) // Initialize to purple.
+    m_Color(D3DXCOLOR(0.7f, 0.7f, 0.7f, 1.0f)) // Initialize to purple.
 {
 
 }
