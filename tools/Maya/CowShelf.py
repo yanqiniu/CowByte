@@ -3,7 +3,8 @@ import pymel.core as pm
 
 cowbyte_folder = "F:\\Projects\\CowByte\\"
 tools_folder = cowbyte_folder + "tools\\Maya\\"
-export_folder = cowbyte_folder + "assets\\AssetsOut\\"
+# export_folder = cowbyte_folder + "assets\\AssetsOut\\"
+export_folder = cowbyte_folder + "assets\\meshes\\"
 
 def _null(*args):
     pass
@@ -130,7 +131,8 @@ def export_index_buf(faces, filepath):
     outfile.write("{0}\n".format(len(faces)))
     i = 0
     for f in faces:
-        outfile.write("{0} {1} {2}\n".format(i, i + 1, i + 2))
+        # flip winding order cuz we flipped z
+        outfile.write("{0} {1} {2}\n".format(i + 2, i + 1, i))
         i = i + 3
     outfile.close()
 
@@ -142,9 +144,9 @@ def export_normal_buf(faces, filepath):
     outfile.write("{0}\n".format(len(faces)*3))
     for f in faces:
         normal = f.getNormal() # use face normals for sharp edge?
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, normal.z))
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
 
 def export_uv(faces, filepath):
     print("Exporting [{0}]...".format(filepath))
