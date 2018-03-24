@@ -20,6 +20,14 @@ Mesh::~Mesh()
 {
 }
 
+// This should be called after cpu load.
+bool Mesh::InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext)
+{
+    return m_VertexBuf.InitFromVertexVector(pDevice, pDeviceContext, m_Vertices) &&
+           m_IndexBuf.InitFromWORDVector(pDevice, pDeviceContext, m_Indices);
+}
+
+// CPU  read and load.
 bool Mesh::LoadContent(const char* meshName)
 {
     Filepath meshFilePath;

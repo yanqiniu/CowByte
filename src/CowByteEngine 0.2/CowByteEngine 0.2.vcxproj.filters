@@ -60,9 +60,6 @@
     <ClInclude Include="Utils\CBStringOps.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="Utils\exceptions.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
     <ClInclude Include="Utils\typedefs.h">
       <Filter>Utils</Filter>
     </ClInclude>
@@ -146,6 +143,8 @@
     <ClInclude Include="Render\GeometryCPU\MeshInstance.h">
       <Filter>Render</Filter>
     </ClInclude>
+    <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -227,6 +226,8 @@
     <ClCompile Include="Render\GeometryCPU\MeshInstance.cpp">
       <Filter>Render</Filter>
     </ClCompile>
+    <ClCompile Include="Render\GeometryGPU\VertexBufferGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">
