@@ -3,7 +3,7 @@
 #include "../Messaging/CBMessaging.h"
 #include "../SceneGraph/SceneNode.h"
 #include "../SceneGraph/Camera.h"
-#include "../Render/MeshInstance.h"
+#include "../Render/GeometryCPU/MeshInstance.h"
 #include "../Utils/CBRefCountPtr.h"
 
 #define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)\

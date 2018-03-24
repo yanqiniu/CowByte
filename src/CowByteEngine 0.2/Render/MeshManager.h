@@ -2,7 +2,7 @@
 #define _MESH_MANAGER_H
 
 #include "../Core/Component.h"
-#include "Mesh.h"
+#include "GeometryCPU/Mesh.h"
 #include "../Utils/typedefs.h"
 
 class MeshManager : public Component

@@ -1,7 +1,7 @@
 #include "Mesh.h"
-#include "../Utils/CBPath.h"
-#include "../Utils/CBFile.h"
-#include "../Utils/CBDebug.h"
+#include "../../Utils/CBPath.h"
+#include "../../Utils/CBFile.h"
+#include "../../Utils/CBDebug.h"
 
 int Mesh::g_IDCounter = 0;
 

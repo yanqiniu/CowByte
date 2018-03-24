@@ -1,9 +1,9 @@
 #ifndef _MESH_H
 #define _MESH_H
-#include "../Utils/CBString.h"
-#include "../Utils/CBVector.h"
-#include "../Utils/typedefs.h"
-#include "../Memory/CBMemory.h"
+#include "../../Utils/CBString.h"
+#include "../../Utils/CBVector.h"
+#include "../../Utils/typedefs.h"
+#include "../../Memory/CBMemory.h"
 #include "Vertex.h"
 
 class Mesh

@@ -141,7 +141,6 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
-    <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Math\CBMath.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Quaternion.h" />
@@ -155,11 +154,12 @@
     <ClInclude Include="Messaging\Message.h" />
     <ClInclude Include="Messaging\MessageBus.h" />
     <ClInclude Include="Messaging\MessageDecl.h" />
+    <ClInclude Include="Render\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Render\Graphics.h" />
-    <ClInclude Include="Render\Mesh.h" />
-    <ClInclude Include="Render\MeshInstance.h" />
+    <ClInclude Include="Render\GeometryCPU\Mesh.h" />
+    <ClInclude Include="Render\GeometryCPU\MeshInstance.h" />
     <ClInclude Include="Render\MeshManager.h" />
-    <ClInclude Include="Render\Vertex.h" />
+    <ClInclude Include="Render\GeometryCPU\Vertex.h" />
     <ClInclude Include="Render\Window.h" />
     <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />
@@ -183,7 +183,6 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
-    <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
@@ -193,11 +192,12 @@
     <ClCompile Include="Messaging\CBMessaging.cpp" />
     <ClCompile Include="Messaging\Message.cpp" />
     <ClCompile Include="Messaging\MessageBus.cpp" />
+    <ClCompile Include="Render\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Render\Graphics.cpp" />
-    <ClCompile Include="Render\Mesh.cpp" />
-    <ClCompile Include="Render\MeshInstance.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Mesh.cpp" />
+    <ClCompile Include="Render\GeometryCPU\MeshInstance.cpp" />
     <ClCompile Include="Render\MeshManager.cpp" />
-    <ClCompile Include="Render\Vertex.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Vertex.cpp" />
     <ClCompile Include="Render\Window.cpp" />
     <ClCompile Include="SceneGraph\Camera.cpp" />
     <ClCompile Include="SceneGraph\SceneNode.cpp" />

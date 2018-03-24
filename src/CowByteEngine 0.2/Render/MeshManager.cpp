@@ -1,7 +1,7 @@
 #include "MeshManager.h"
-#include "Mesh.h"
+#include "GeometryCPU/Mesh.h"
 #include "../Messaging/CBMessaging.h"
-#include "MeshInstance.h"
+#include "GeometryCPU/MeshInstance.h"
 
 
 MeshManager::MeshManager() :

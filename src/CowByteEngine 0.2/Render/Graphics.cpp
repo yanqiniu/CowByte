@@ -4,7 +4,7 @@
 #include "Graphics.h"
 #include "Window.h"
 #include "../Utils/exceptions.h"
-#include "Vertex.h"
+#include "GeometryCPU/Vertex.h"
 #include "../Math/Vec3.h"
 #include "../Utils/CBString.h"
 #include "../Utils/CBPath.h"
@@ -12,11 +12,11 @@
 #include "../Utils/typedefs.h"
 #include "../SceneGraph/Camera.h"
 #include "../SceneGraph/SceneNode.h"
-#include "MeshInstance.h"
+#include "GeometryCPU/MeshInstance.h"
 #include "../Utils/CBFile.h"
 #include "../Messaging/CBMessaging.h"
 
-#include "../DDSTextureLoader/DDSTextureLoader.h"
+#include "DDSTextureLoader/DDSTextureLoader.h"
 
 
 using namespace DirectX;

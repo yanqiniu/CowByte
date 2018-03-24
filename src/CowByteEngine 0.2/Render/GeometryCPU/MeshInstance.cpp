@@ -1,5 +1,5 @@
 #include "MeshInstance.h"
-#include "MeshManager.h"
+#include "../MeshManager.h"
 
 MeshInstance::MeshInstance() :
     m_MeshFileName(),

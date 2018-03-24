@@ -45,9 +45,6 @@
     <ClInclude Include="Core\WinMain.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Vertex.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Component.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
     <ClInclude Include="Core\Game.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Render\Mesh.h">
-      <Filter>Render</Filter>
-    </ClInclude>
     <ClInclude Include="Render\Window.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -107,9 +101,6 @@
     </ClInclude>
     <ClInclude Include="SceneGraph\Camera.h">
       <Filter>SceneGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\MeshInstance.h">
-      <Filter>Render</Filter>
     </ClInclude>
     <ClInclude Include="Utils\CBRefCountPtr.h">
       <Filter>Utils</Filter>
@@ -145,7 +136,16 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="Math\Vec2.h" />
-    <ClInclude Include="DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="Render\DDSTextureLoader\DDSTextureLoader.h" />
+    <ClInclude Include="Render\GeometryCPU\Mesh.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GeometryCPU\Vertex.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\GeometryCPU\MeshInstance.h">
+      <Filter>Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -156,9 +156,6 @@
     </ClCompile>
     <ClCompile Include="Core\WinMain.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Vertex.cpp">
-      <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Core\Component.cpp">
       <Filter>Core</Filter>
@@ -180,9 +177,6 @@
     </ClCompile>
     <ClCompile Include="Core\Game.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\Mesh.cpp">
-      <Filter>Render</Filter>
     </ClCompile>
     <ClCompile Include="Render\Window.cpp">
       <Filter>Render</Filter>
@@ -208,9 +202,6 @@
     <ClCompile Include="SceneGraph\Camera.cpp">
       <Filter>SceneGraph</Filter>
     </ClCompile>
-    <ClCompile Include="Render\MeshInstance.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Input.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -226,7 +217,16 @@
     <ClCompile Include="Math\Quaternion.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="DDSTextureLoader\DDSTextureLoader.cpp" />
+    <ClCompile Include="Render\DDSTextureLoader\DDSTextureLoader.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Mesh.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\GeometryCPU\Vertex.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\GeometryCPU\MeshInstance.cpp">
+      <Filter>Render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">
