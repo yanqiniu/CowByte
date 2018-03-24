@@ -26,7 +26,7 @@ typedef INT32 MsgTypeID;
 class Message
 {
 public:
-    CBMEM_OVERLOAD_NEW_DELETE(Message)
+    CBMEM_OVERLOAD_NEW_DELETE(Message);
     static MsgTypeID ClassTypeSpecifier() { return 0; }
 
     // Returns null pointer. Do not call.
