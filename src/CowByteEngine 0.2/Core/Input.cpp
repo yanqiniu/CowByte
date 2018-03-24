@@ -44,13 +44,13 @@ bool Input::Initialize()
     ThrowIfFailed(m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, nullptr));
     ThrowIfFailed(m_pKeyboard->SetDataFormat(&c_dfDIKeyboard));
     ThrowIfFailed(m_pKeyboard->SetCooperativeLevel(m_pWindow->GetWindowHandle(), DISCL_EXCLUSIVE | DISCL_FOREGROUND)); // Do not share with other programs.
-    ThrowIfFailed(m_pKeyboard->Acquire());
+    m_pKeyboard->Acquire();
 
     // Setup mouse.
     ThrowIfFailed(m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr));
     ThrowIfFailed(m_pMouse->SetDataFormat(&c_dfDIMouse));
     ThrowIfFailed(m_pMouse->SetCooperativeLevel(m_pWindow->GetWindowHandle(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)); // Have to check for when it goes in and out of focus and re-acquire it each time.
-    ThrowIfFailed(m_pMouse->Acquire());
+    m_pMouse->Acquire();
 
     return true;
 }
