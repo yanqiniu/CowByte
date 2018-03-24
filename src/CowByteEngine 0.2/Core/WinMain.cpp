@@ -2,6 +2,7 @@
 #include "../Memory/CBMemory.h"
 #include "Engine.h"
 #include "../Utils/CBDebug.h"
+#include "../Utils/CBPath.h"
 #include <crtdbg.h>
 
 //#include <map>
@@ -37,6 +38,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
     _CrtSetBreakAlloc(0);
 #endif
+
+    Path::SetWorkingDirectory();
 
     // create the engine
     EngineStartParam startParam;
