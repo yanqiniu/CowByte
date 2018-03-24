@@ -66,6 +66,7 @@ private:
     ID3D11InputLayout *m_pInputLayout;
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
+    ID3D11SamplerState* m_pSamplerState;
 
     // Other members:
     Window *m_pWindow;

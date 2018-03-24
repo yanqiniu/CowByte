@@ -16,6 +16,9 @@
 #include "../Utils/CBFile.h"
 #include "../Messaging/CBMessaging.h"
 
+#include "../DDSTextureLoader/DDSTextureLoader.h"
+
+
 using namespace DirectX;
 
 GraphicsData::GraphicsData() :
@@ -50,6 +53,7 @@ Graphics::Graphics(const GraphicsData &data):
     m_pInputLayout(nullptr),
     m_pDepthStencilState(nullptr),
     m_pRasterizerState(nullptr),
+    m_pSamplerState(nullptr),
     m_LastDrawnMeshID(INVALID_UID)
 {
 
@@ -81,7 +85,6 @@ bool Graphics::Initialize()
     m_pMeshManager->CPULoadMesh("plane.mesha");
     m_pMeshManager->CPULoadMesh("torus.mesha");
     m_pMeshManager->CPULoadMesh("cow.mesha");
-    m_pMeshManager->CPULoadMesh("helicopter.mesha");
 
     return true;
 }
@@ -94,7 +97,8 @@ bool Graphics::Update(const GameContext& context)
         return false;
     }
 
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, D3DXCOLOR(0.0f, 0.2f, 0.4f, 1.0f));
+    FLOAT color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pMainCamera->UpdateWToCMatrix();
@@ -255,10 +259,10 @@ bool Graphics::InitializePipeline()
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
 
-    D3DReadFileToBlob(L"../x64/Debug/default_vs.cso", &VS);
+    D3DReadFileToBlob(L"src\\x64\\Debug\\default_vs.cso", &VS);
     ThrowIfFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS));
 
-    D3DReadFileToBlob(L"../x64/Debug/default_ps.cso", &PS);
+    D3DReadFileToBlob(L"src\\x64\\Debug\\default_ps.cso", &PS);
     ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS));
 
     // set the shader objects
@@ -304,6 +308,28 @@ bool Graphics::InitializePipeline()
     // Set rasterizer stage.
     m_pDeviceContext->RSSetState(m_pRasterizerState);
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
+
+    // Set sampler state.
+    D3D11_SAMPLER_DESC sampDesc;
+    ZeroMemory(&sampDesc, sizeof(sampDesc));
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+    m_pSamplerState = nullptr;
+    ThrowIfFailed(m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerState));
+    m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
+
+    // TEMP:
+    Filepath texturepath;
+    ID3D11ShaderResourceView* tempTexture;
+    Path::GenerateAssetPath(texturepath, "textures", "cube.dds");
+    const wchar_t *newPath = CBStringOps::CharToWChar(texturepath.Get());
+    CreateDDSTextureFromFile(m_pDevice, newPath, nullptr, &tempTexture);
+    m_pDeviceContext->PSSetShaderResources(0, 1, &tempTexture);
 
     // Output merger stage.
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
