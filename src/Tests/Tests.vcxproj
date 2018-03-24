@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClCompile Include="..\CowByteEngine 0.2\Math\Matrix4x4.cpp" />
     <ClCompile Include="..\CowByteEngine 0.2\Math\Quaternion.cpp" />
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Vec2.cpp" />
     <ClCompile Include="..\CowByteEngine 0.2\Math\Vec3.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
