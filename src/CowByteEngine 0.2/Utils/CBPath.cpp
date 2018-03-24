@@ -31,8 +31,7 @@ namespace Path
                 }
             }
         }
-        // Set working directory assets folder.
-        lstrcat(path, "\\assets");
+        // Set working directory at CowByte\ folder.
         bool didSucceed = SetCurrentDirectory(path) != 0;
     }
 }
