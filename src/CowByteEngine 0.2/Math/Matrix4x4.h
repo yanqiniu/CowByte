@@ -5,6 +5,7 @@
 #include <cmath>
 
 #include "simdhelper.h"
+#include "../Memory/CBMemory.h"
 
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -23,6 +24,8 @@ class Quaternion;
 
 __declspec(align(16)) struct Matrix4x4
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Matrix4x4)
+
     union
     {
         __m128 _data[4]; // 4 columns, row vector

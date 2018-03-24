@@ -6,11 +6,13 @@
 
 namespace Path
 {
-    static const char AssetsFolder[256] = "../../assets/";
-    static const char MeshFolder[256] = "../../assets/meshes/";
+    static const char AssetsFolder[256] = "assets\\";
+    static const char MeshFolder[256] = "assets\\meshes\\";
+    static const char TextureFolder[256] = "assets\\textures\\";
 
     // className: mesh, shader...etc.
     void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName);
+    void SetWorkingDirectory();
 }
 
 

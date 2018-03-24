@@ -4,6 +4,7 @@
 #include "../Utils/CBQueue.h"
 #include "../Utils/CBVector.h"
 #include "../Utils/CBRefCountPtr.h"
+#include "../Memory/CBMemory.h"
 #include "Message.h"
 
 class Component;
@@ -11,7 +12,7 @@ class Component;
 class MessageBus
 {
 public:
-
+    CBMEM_OVERLOAD_NEW_DELETE(MessageBus)
     MessageBus();
     ~MessageBus();
     bool EnqueueNewMsg(CBRefCountPtr<Message> &pMsg);

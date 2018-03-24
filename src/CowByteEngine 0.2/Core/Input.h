@@ -6,6 +6,7 @@
 #include "../Render/Window.h"
 #include "../Utils/typedefs.h"
 #include "../Utils/KeyCodes.h"
+#include "../Memory/CBMemory.h"
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
@@ -15,6 +16,8 @@
 // TODO: move this to a more proper place.
 struct Point
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Point)
+
     INT32 X;
     INT32 Y;
 

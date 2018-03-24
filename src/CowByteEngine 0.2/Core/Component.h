@@ -5,6 +5,7 @@
 #include "../Utils/CBVector.h"
 #include "../Utils/CBRefCountPtr.h"
 #include "../Messaging/CBMessaging.h"
+#include "../Memory/CBMemory.h"
 
 class MessageBus;
 class GameContext;
@@ -13,6 +14,7 @@ class SceneNode;
 class Component
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(Component)
     Component();
     virtual ~Component();
 

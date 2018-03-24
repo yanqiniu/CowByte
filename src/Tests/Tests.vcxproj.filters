@@ -53,5 +53,8 @@
     <ClCompile Include="..\CowByteEngine 0.2\Math\Matrix4x4.cpp">
       <Filter>Header Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CowByteEngine 0.2\Math\Vec2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

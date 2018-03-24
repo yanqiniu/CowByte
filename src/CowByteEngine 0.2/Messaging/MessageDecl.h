@@ -1,14 +1,18 @@
 #ifndef _MESSAGE_DECL_H
 #define _MESSAGE_DECL_H
 #include "../Utils/typedefs.h"
+#include "../Memory/CBMemory.h"
 
 // Used to hide constructor so no one outside can use them
 #define DECLARE_MESSAGE_CONSTRUCTORS(MessageClassName)  MessageClassName() {} \
                                                         MessageClassName(const Message &toCopy) {} \
                                                         MessageClassName& operator=(const Message &rhs);
 
+
+
 #define DECLARE_MESSAGE_CLASS(ClassName, MsgClassID)                    \
 public:                                                                 \
+    CBMEM_OVERLOAD_NEW_DELETE(ClassName);                               \
     static MsgTypeID ClassTypeSpecifier() { return MsgClassID; }        \
     static CBRefCountPtr<Message> Create()                              \
     {                                                                   \

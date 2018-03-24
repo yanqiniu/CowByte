@@ -3,14 +3,10 @@
 
 #include <windows.h>
 #include <windowsx.h>
-#include <d3d11.h>
-#include <D3DX10.h>
-#include <D3DX11.h>
+#include <d3d11_1.h>
 #include <d3dcompiler.h>
 
 #pragma comment (lib, "d3d11.lib")
-#pragma comment (lib, "d3dx11.lib")
-#pragma comment (lib, "d3dx10.lib")
 #pragma comment (lib, "d3dcompiler.lib")
 
 #include "../Core/System.h"
@@ -35,12 +31,12 @@ public:
     virtual bool Update(const GameContext& context) override;
     virtual bool ShutDown();
     bool OnRender(UINT numIndices);
-    //void SetCamera();
+    bool DrawSingleMeshInst(const MeshInstance* pMeshInst);
+    //void SetCamera();;
 
 private:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
     bool InitializePipeline();
-    bool SetupSingleMeshInst(MeshInstance *meshInst);
 
     static const int NumOfBuffers = 2;
     enum ConstantBufferType
@@ -63,21 +59,18 @@ private:
     ID3D11RenderTargetView *m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
 
-    ID3D11Buffer *m_pVertexBuffer;
-    ID3D11Buffer *m_pIndexBuffer;
     ID3D11Buffer *m_pConstantBuffers[NUM_CBUFFER];
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11InputLayout *m_pInputLayout;
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
+    ID3D11SamplerState* m_pSamplerState;
 
     // Other members:
     Window *m_pWindow;
     MeshManager *m_pMeshManager;
     Camera *m_pMainCamera;
     UID m_LastDrawnMeshID;
-
-
 };
 
 #endif

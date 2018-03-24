@@ -70,19 +70,19 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.16299.0\um\x86;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.16299.0\um\x86;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x86;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.16299.0\um\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Program Files %28x86%29\Windows Kits\10\Include\10.0.16299.0\um;$(IncludePath)</IncludePath>
     <LibraryPath>C:\Program Files %28x86%29\Windows Kits\10\Lib\10.0.16299.0\um\x64;C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Lib\x64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -141,10 +141,12 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
     <ClInclude Include="Math\CBMath.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
     <ClInclude Include="Math\Quaternion.h" />
     <ClInclude Include="Math\simdhelper.h" />
+    <ClInclude Include="Math\Vec2.h" />
     <ClInclude Include="Math\Vec3.h" />
     <ClInclude Include="Memory\CBMemArena.h" />
     <ClInclude Include="Memory\CBMemory.h" />
@@ -153,11 +155,12 @@
     <ClInclude Include="Messaging\Message.h" />
     <ClInclude Include="Messaging\MessageBus.h" />
     <ClInclude Include="Messaging\MessageDecl.h" />
+    <ClInclude Include="Render\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Render\Graphics.h" />
-    <ClInclude Include="Render\Mesh.h" />
-    <ClInclude Include="Render\MeshInstance.h" />
+    <ClInclude Include="Render\GeometryCPU\Mesh.h" />
+    <ClInclude Include="Render\GeometryCPU\MeshInstance.h" />
     <ClInclude Include="Render\MeshManager.h" />
-    <ClInclude Include="Render\Vertex.h" />
+    <ClInclude Include="Render\GeometryCPU\Vertex.h" />
     <ClInclude Include="Render\Window.h" />
     <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />
@@ -170,9 +173,9 @@
     <ClInclude Include="Utils\CBString.h" />
     <ClInclude Include="Utils\CBStringOps.h" />
     <ClInclude Include="Utils\CBVector.h" />
-    <ClInclude Include="Utils\exceptions.h" />
     <ClInclude Include="Utils\KeyCodes.h" />
     <ClInclude Include="Utils\typedefs.h" />
+    <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Core\Component.cpp" />
@@ -181,6 +184,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
+    <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
     <ClCompile Include="Math\Vec3.cpp" />
@@ -190,17 +194,19 @@
     <ClCompile Include="Messaging\CBMessaging.cpp" />
     <ClCompile Include="Messaging\Message.cpp" />
     <ClCompile Include="Messaging\MessageBus.cpp" />
+    <ClCompile Include="Render\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Render\Graphics.cpp" />
-    <ClCompile Include="Render\Mesh.cpp" />
-    <ClCompile Include="Render\MeshInstance.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Mesh.cpp" />
+    <ClCompile Include="Render\GeometryCPU\MeshInstance.cpp" />
     <ClCompile Include="Render\MeshManager.cpp" />
-    <ClCompile Include="Render\Vertex.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Vertex.cpp" />
     <ClCompile Include="Render\Window.cpp" />
     <ClCompile Include="SceneGraph\Camera.cpp" />
     <ClCompile Include="SceneGraph\SceneNode.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />
     <ClCompile Include="Utils\CBString.cpp" />
+    <ClCompile Include="Render\GeometryGPU\VertexBufferGPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube.mesha" />

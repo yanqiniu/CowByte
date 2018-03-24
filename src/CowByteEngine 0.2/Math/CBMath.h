@@ -4,6 +4,7 @@
 #include "Matrix4x4.h"
 #include "Quaternion.h"
 #include "Vec3.h"
+#include "Vec2.h"
 
 #define PI_VAL 3.1415926535897f
 

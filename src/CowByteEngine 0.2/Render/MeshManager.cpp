@@ -1,7 +1,7 @@
 #include "MeshManager.h"
-#include "Mesh.h"
+#include "GeometryCPU/Mesh.h"
 #include "../Messaging/CBMessaging.h"
-#include "MeshInstance.h"
+#include "GeometryCPU/MeshInstance.h"
 
 
 MeshManager::MeshManager() :
@@ -13,7 +13,7 @@ MeshManager::MeshManager() :
 
 MeshManager::~MeshManager()
 {
-
+    ReleaseMeshesGPU();
 }
 
 Mesh* MeshManager::CPULoadMesh(const char *meshName)
@@ -105,6 +105,23 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
     }
 
     return INVALID_UID;
+}
+
+void MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+{
+    for (size_t i = 0; i < m_Meshes.Size(); ++i)
+    {
+        m_Meshes.at(i).InitializeGPU(pD3DDevice, pDeviceContext);
+    }
+}
+
+void MeshManager::ReleaseMeshesGPU()
+{
+    for (size_t i = 0; i < m_Meshes.Size(); ++i)
+    {
+        m_Meshes.at(i).ReleaseGPU();
+    }
+
 }
 
 bool MeshManager::Update(const GameContext &context)

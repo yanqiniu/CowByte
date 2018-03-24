@@ -6,6 +6,7 @@
 #include <cmath>
 
 #include "simdhelper.h"
+#include "../Memory/CBMemory.h"
 
 //////////////////////////////////////////////////////////////////////////
 /*
@@ -21,6 +22,8 @@ class Vec3;
 
 __declspec(align(16)) struct Quaternion
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Quaternion)
+
     union
     {
         __m128 _data;

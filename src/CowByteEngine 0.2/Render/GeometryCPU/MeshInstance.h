@@ -1,8 +1,8 @@
 #ifndef _MESH_INSTANCE_H
 #define _MESH_INSTANCE_H
 
-#include "../Utils/typedefs.h"
-#include "../Core/Component.h"
+#include "../../Utils/typedefs.h"
+#include "../../Core/Component.h"
 
 class MeshManager;
 
@@ -15,7 +15,7 @@ public:
 
     void SetFileName( const char *filename);
     bool FindAndSetMeshID(const MeshManager& meshManager);
-    UID GetMeshID() { return m_MeshID; }
+    UID GetMeshID() const { return m_MeshID; }
 
     virtual bool Update(const GameContext &context) override;
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;

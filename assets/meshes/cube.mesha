@@ -1,4 +1,5 @@
-MESH   
+MESH
 cube_pos.bufa
 cube_index.bufa
 cube_normal.bufa
+cube_uv.bufa

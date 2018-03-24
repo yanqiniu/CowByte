@@ -2,6 +2,7 @@
 #define _CBREFCOUNT_PTR_H
 
 #include "typedefs.h"
+#include "../Memory/CBMemory.h"
 
 // ControlBlock for RefCount Ptr.
 struct CBRefCountPtr_ControlBlock
@@ -14,6 +15,8 @@ template <typename DataT>
 class CBRefCountPtr
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(CBRefCountPtr)
+
     CBRefCountPtr();
     explicit CBRefCountPtr( DataT* ptr);
     CBRefCountPtr(const CBRefCountPtr& toCopy);

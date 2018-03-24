@@ -1,13 +1,21 @@
 #ifndef _MESH_H
 #define _MESH_H
-#include "../Utils/CBString.h"
-#include "../Utils/CBVector.h"
-#include "../Utils/typedefs.h"
+#include "../../Utils/CBString.h"
+#include "../../Utils/CBVector.h"
+#include "../../Utils/typedefs.h"
+#include "../../Memory/CBMemory.h"
+#include "../GeometryGPU/VertexBufferGPU.h"
+#include "../GeometryGPU/IndexBufferGPU.h"
 #include "Vertex.h"
+
+class ID3D11Device;
+class ID3D11DeviceContext;
 
 class Mesh
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(Mesh)
+
     Mesh();
     ~Mesh();
 
@@ -21,10 +29,17 @@ public:
     size_t            GetNumTriangles() const;
     bool              IsLoaded() const;
 
+    const VertexBufferGPU&  GetVertexBuffer() const;
+    const IndexBufferGPU&   GetIndexBuffer() const;
+
+    bool InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    void ReleaseGPU();
+
 private:
     bool ReadPosBufFile(const char *filepath);
     bool ReadIndexBufFile(const char *filepath);
     bool ReadNormalBufFile(const char *filepath);
+    bool ReadUVBufFile(const char *filepath);
 
     static int g_IDCounter;
 
@@ -33,6 +48,8 @@ private:
     CBVector<WORD>   m_Indices;
     size_t           m_nVertices;
     size_t           m_nTriangles;
+    VertexBufferGPU  m_VertexBuf;
+    IndexBufferGPU   m_IndexBuf;
     UID              m_UID;
     bool             m_bIsLoaded;
 };
@@ -66,6 +83,17 @@ inline size_t Mesh::GetNumTriangles() const
 {
     return m_nTriangles;
 }
+
+inline const VertexBufferGPU&  Mesh::GetVertexBuffer() const
+{
+    return m_VertexBuf;
+}
+inline const IndexBufferGPU&  Mesh::GetIndexBuffer() const
+{
+    return m_IndexBuf;
+}
+
+
 
 inline bool Mesh::IsLoaded() const
 {

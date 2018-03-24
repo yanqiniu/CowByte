@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "GameContext.h"
+#include "../Memory/CBMemory.h"
 
 enum SystemType
 {
@@ -17,6 +18,8 @@ enum SystemType
 
 struct SystemData
 {
+    CBMEM_OVERLOAD_NEW_DELETE(SystemData)
+
     SystemData();
     SystemData(const SystemType type);
     SystemType m_Type;

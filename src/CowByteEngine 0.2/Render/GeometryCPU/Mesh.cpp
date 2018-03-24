@@ -1,7 +1,7 @@
 #include "Mesh.h"
-#include "../Utils/CBPath.h"
-#include "../Utils/CBFile.h"
-#include "../Utils/CBDebug.h"
+#include "../../Utils/CBPath.h"
+#include "../../Utils/CBFile.h"
+#include "../../Utils/CBDebug.h"
 
 int Mesh::g_IDCounter = 0;
 
@@ -20,6 +20,20 @@ Mesh::~Mesh()
 {
 }
 
+// This should be called after cpu load.
+bool Mesh::InitializeGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+{
+    return m_VertexBuf.InitFromVertexVector(pD3DDevice, pDeviceContext, m_Vertices) &&
+           m_IndexBuf.InitFromWORDVector(pD3DDevice, pDeviceContext, m_Indices);
+}
+
+void Mesh::ReleaseGPU()
+{
+    m_VertexBuf.Release();
+    m_IndexBuf.Release();
+}
+
+// CPU  read and load.
 bool Mesh::LoadContent(const char* meshName)
 {
     Filepath meshFilePath;
@@ -81,6 +95,20 @@ bool Mesh::LoadContent(const char* meshName)
     if (!ReadNormalBufFile(temp.Get()))
     {
         DbgERROR("Failed reading in normal buffer [%s].", temp.Get());
+        return false;
+    }
+
+    // Read the normal buffer file.
+    temp.Clear();
+    if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting uv buf file in [%s].", meshFilePath.Get());
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (!ReadUVBufFile(temp.Get()))
+    {
+        DbgERROR("Failed reading in uv buffer [%s].", temp.Get());
         return false;
     }
 
@@ -292,4 +320,71 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
     //}
 
     return true;
+}
+
+bool Mesh::ReadUVBufFile(const char *filepath)
+{
+    Filepath tempPath;
+    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBFile uvBufFile(tempPath.Get());
+
+    CBString<128> temp;
+    if (!uvBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting file type [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (temp.Compare("UV_BUF") != 0)
+    {
+        DbgERROR("Not a normal_buf file! [%s]\n", filepath);
+        return false;
+    }
+
+    // Get num of textcoord.
+    temp.Clear();
+    if (!uvBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting num of textcoords [%s]", filepath);
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    if (static_cast<size_t>(atoi(temp.Get())) != m_nVertices ||
+        m_Vertices.Size() != m_nVertices)
+    {
+        DbgERROR("Num of textcoords != Num of vertices [%s]!", filepath);
+        return false;
+    }
+
+    // Fill in normals.
+    float tempFloat, tempX, tempY;
+    for (size_t i = 0; i < m_nVertices; ++i)
+    {
+        temp.Clear();
+        if (!uvBufFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+        {
+            DbgERROR("Not enough textcoords in [%s].", filepath);
+            return false;
+        }
+        temp.Strip();
+        char *marker = temp.Get();
+        for (int j = 0; j < 2; ++j)
+        {
+            if (!CBStringOps::GetNextFloat32(marker, tempFloat, ' '))
+            {
+                DbgERROR("Not enough values for normal[%d] in [%s].", i, filepath);
+                return false;
+            }
+
+            switch (j)
+            {
+            case 0: tempX = tempFloat; break;
+            case 1: tempY = tempFloat; break;
+            }
+        }
+
+        m_Vertices.at(i).m_TexCoord.X = tempX;
+        m_Vertices.at(i).m_TexCoord.Y = tempY;
+    }
+
 }

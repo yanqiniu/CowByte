@@ -5,9 +5,12 @@
 #include <exception>
 #include "Matrix4x4.h"
 #include "Quaternion.h"
+#include "../Memory/CBMemory.h"
 
 __declspec(align(16)) struct Vec3
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Vec3)
+
     __m128 _data;
 
 #pragma region Con/Destructor, Getter/Setter
