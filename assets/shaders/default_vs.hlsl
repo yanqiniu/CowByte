@@ -2,7 +2,7 @@ struct VS_Input
 {
     float4 position : POSITION;
     float4 normal : NORMAL;
-    float4 color : COLOR;
+    float2 texcoord : TEXCOORD;
 };
 
 
@@ -10,7 +10,7 @@ struct PS_Input
 {
     float4 position : SV_POSITION;
     float4 normal : NORMAL;
-    float4 color : COLOR;
+    float2 texcoord : TEXCOORD;
 };
 
 
@@ -36,7 +36,8 @@ PS_Input VShader(VS_Input input)
     float4x4 mvp = mul(mul(worldMatrix, cameraViewMatrix), projectionMatrix);
     output.position = mul(input.position, mvp );
     output.normal = mul(input.normal, worldMatrix); // transform normal and normalize
-    output.color = input.color;
+    //output.color = input.color;
+    output.texcoord = input.texcoord;
 
     return output;
 }

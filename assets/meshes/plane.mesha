@@ -1,4 +1,5 @@
-MESH   
+MESH
 plane_pos.bufa
 plane_index.bufa
 plane_normal.bufa
+plane_uv.bufa
