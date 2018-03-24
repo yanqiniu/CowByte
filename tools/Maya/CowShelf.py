@@ -107,6 +107,7 @@ def export_meshfile(meshname, filepath):
     outfile.write(meshname + "_pos.bufa\n")
     outfile.write(meshname + "_index.bufa\n")
     outfile.write(meshname + "_normal.bufa\n")
+    outfile.write(meshname + "_uv.bufa\n")
     outfile.close()
 
 def export_pos_buf(faces, filepath):
@@ -178,6 +179,7 @@ def export_selected_mesh(meshname):
     export_pos_buf(faces, export_folder + meshname + "_pos.bufa")
     export_index_buf(faces, export_folder + meshname + "_index.bufa")
     export_normal_buf(faces, export_folder + meshname + "_normal.bufa")
+    export_uv(faces, export_folder + meshname + "_uv.bufa")
 
     print("Finished exporting [{0}].".format(meshname))
     show_message_popup("Export Success", "Files have been exported to {0}.".format(export_folder))
