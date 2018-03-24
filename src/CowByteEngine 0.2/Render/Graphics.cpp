@@ -187,6 +187,7 @@ bool Graphics::InitializePipeline()
 
     D3D_FEATURE_LEVEL featureLevels[] =
     {
+        D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0,
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
