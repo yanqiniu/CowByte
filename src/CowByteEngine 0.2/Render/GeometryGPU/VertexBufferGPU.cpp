@@ -2,17 +2,19 @@
 
 using namespace DirectX;
 
-VertexBufferGPU::VertexBufferGPU()
+VertexBufferGPU::VertexBufferGPU() :
+    m_pVertexBuffer(nullptr)
 {
 }
 
 
 VertexBufferGPU::~VertexBufferGPU()
 {
+
 }
 
 // Create the vertex buffer and fill it with vertices
-bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, CBVector<Vertex> &vertices)
+bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext, CBVector<Vertex> &vertices)
 {
     // Create Vertex buffers.
     D3D11_BUFFER_DESC bufferDesc;
@@ -21,7 +23,7 @@ bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pDevice, ID3D11DeviceCo
     bufferDesc.ByteWidth = sizeof(Vertex) * vertices.Size();
     bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    if (!ResultNotFailed(pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer)))
+    if (!ResultNotFailed(pD3DDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer)))
     {
         return false;
     }

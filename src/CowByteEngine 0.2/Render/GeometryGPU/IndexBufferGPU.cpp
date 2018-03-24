@@ -3,16 +3,20 @@
 
 using namespace DirectX;
 
-IndexBufferGPU::IndexBufferGPU()
+IndexBufferGPU::IndexBufferGPU():
+    m_pIndexBuffer(nullptr),
+    m_IndexCount(0)
 {
+
 }
+
 
 
 IndexBufferGPU::~IndexBufferGPU()
 {
 }
 
-bool IndexBufferGPU::InitFromWORDVector(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, CBVector<WORD> &indices)
+bool IndexBufferGPU::InitFromWORDVector(ID3D11Device *pD3Device, ID3D11DeviceContext *pDeviceContext, CBVector<WORD> &indices)
 {
     // Create Index buffer.
     D3D11_BUFFER_DESC indexBufferDesc;
@@ -21,7 +25,7 @@ bool IndexBufferGPU::InitFromWORDVector(ID3D11Device *pDevice, ID3D11DeviceConte
     indexBufferDesc.ByteWidth = sizeof(WORD) * indices.Size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    if (!ResultNotFailed(pDevice->CreateBuffer(&indexBufferDesc, nullptr, &m_pIndexBuffer)))
+    if (!ResultNotFailed(pD3Device->CreateBuffer(&indexBufferDesc, nullptr, &m_pIndexBuffer)))
     {
         return false;
     }
@@ -33,8 +37,10 @@ bool IndexBufferGPU::InitFromWORDVector(ID3D11Device *pDevice, ID3D11DeviceConte
     {
         return false;
     }
-    memcpy(mappedSubrcs.pData, &indices[0], sizeof(WORD) * indices.Size() * 3 );
+    memcpy(mappedSubrcs.pData, &indices[0], sizeof(WORD) * indices.Size());
     pDeviceContext->Unmap(m_pIndexBuffer, NULL);
+
+    m_IndexCount = indices.Size();
 
     return true;
 }

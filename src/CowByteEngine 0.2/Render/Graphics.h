@@ -31,12 +31,12 @@ public:
     virtual bool Update(const GameContext& context) override;
     virtual bool ShutDown();
     bool OnRender(UINT numIndices);
-    //void SetCamera();
+    bool DrawSingleMeshInst(const MeshInstance* pMeshInst);
+    //void SetCamera();;
 
 private:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
     bool InitializePipeline();
-    bool SetupSingleMeshInst(MeshInstance *meshInst);
 
     static const int NumOfBuffers = 2;
     enum ConstantBufferType
@@ -59,8 +59,6 @@ private:
     ID3D11RenderTargetView *m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
 
-    ID3D11Buffer *m_pVertexBuffer;
-    ID3D11Buffer *m_pIndexBuffer;
     ID3D11Buffer *m_pConstantBuffers[NUM_CBUFFER];
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11InputLayout *m_pInputLayout;
@@ -73,8 +71,6 @@ private:
     MeshManager *m_pMeshManager;
     Camera *m_pMainCamera;
     UID m_LastDrawnMeshID;
-
-
 };
 
 #endif

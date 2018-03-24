@@ -21,10 +21,16 @@ Mesh::~Mesh()
 }
 
 // This should be called after cpu load.
-bool Mesh::InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext)
+bool Mesh::InitializeGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
 {
-    return m_VertexBuf.InitFromVertexVector(pDevice, pDeviceContext, m_Vertices) &&
-           m_IndexBuf.InitFromWORDVector(pDevice, pDeviceContext, m_Indices);
+    return m_VertexBuf.InitFromVertexVector(pD3DDevice, pDeviceContext, m_Vertices) &&
+           m_IndexBuf.InitFromWORDVector(pD3DDevice, pDeviceContext, m_Indices);
+}
+
+void Mesh::ReleaseGPU()
+{
+    m_VertexBuf.Release();
+    m_IndexBuf.Release();
 }
 
 // CPU  read and load.

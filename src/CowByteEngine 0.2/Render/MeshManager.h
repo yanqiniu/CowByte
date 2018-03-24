@@ -4,6 +4,8 @@
 #include "../Core/Component.h"
 #include "GeometryCPU/Mesh.h"
 #include "../Utils/typedefs.h"
+class ID3D11Device;
+class ID3D11DeviceContext;
 
 class MeshManager : public Component
 {
@@ -17,6 +19,9 @@ public:
     void AddMeshInstance(MeshInstance* pToAdd);
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> &GetMeshInsts() const;
+
+    void LoadMeshesGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    void ReleaseMeshesGPU();
 
     bool Update(const GameContext &context) override;
 

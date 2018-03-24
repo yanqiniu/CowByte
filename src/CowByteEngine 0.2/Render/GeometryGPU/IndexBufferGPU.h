@@ -14,9 +14,11 @@ public:
     bool InitFromWORDVector(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, CBVector<WORD> &indices);
     void Release();
     void SetAsActive(ID3D11DeviceContext *pDeviceContext) const;
+    UINT Count() const { return m_IndexCount; }
 
 private:
     ID3D11Buffer * m_pIndexBuffer;
+    UINT m_IndexCount;
 };
 
 //////////////////////////////////////////////////////////////////////////

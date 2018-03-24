@@ -33,6 +33,7 @@ public:
     const IndexBufferGPU&   GetIndexBuffer() const;
 
     bool InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    void ReleaseGPU();
 
 private:
     bool ReadPosBufFile(const char *filepath);

@@ -45,8 +45,6 @@ Graphics::Graphics(const GraphicsData &data):
     m_pMeshManager(nullptr),
     m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
-    m_pVertexBuffer(nullptr),
-    m_pIndexBuffer(nullptr),
     m_pConstantBuffers(),
     m_pDepthStencilBuffer(nullptr),
     m_pInputLayout(nullptr),
@@ -77,7 +75,7 @@ bool Graphics::Initialize()
         return false;
     }
 
-    // Create mesh manager.
+    // Setup mesh manager and load meshes.
     m_pMeshManager = new MeshManager();
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
     m_pMeshManager->CPULoadMesh("cube.mesha");
@@ -85,6 +83,7 @@ bool Graphics::Initialize()
     m_pMeshManager->CPULoadMesh("torus.mesha");
     m_pMeshManager->CPULoadMesh("cow.mesha");
 
+    m_pMeshManager->LoadMeshesGPU(m_pDevice, m_pDeviceContext);
     return true;
 }
 
@@ -105,12 +104,9 @@ bool Graphics::Update(const GameContext& context)
 
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
-        SetupSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
         m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
-        OnRender(m_pMeshManager->GetMeshPtr(m_pMeshManager->GetMeshInsts().peekat(i)->GetMeshID())->GetNumTriangles() * 3);
-
+        DrawSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
     }
-
 
     m_pSwapChain->Present(0, 0);
     return true;
@@ -127,14 +123,35 @@ bool Graphics::ShutDown()
 
 bool Graphics::OnRender(UINT numIndices)
 {
-    UINT stride = sizeof(Vertex);
-    UINT offset = 0;
-    m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-    m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    
-    m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    //UINT stride = sizeof(Vertex);
+    //UINT offset = 0;
+    //m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
+    //m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
+    //
+    //m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    m_pDeviceContext->DrawIndexed(numIndices, 0, 0);
+    //m_pDeviceContext->DrawIndexed(numIndices, 0, 0);
+
+    return true;
+}
+
+bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
+{
+    Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());;
+    if (m_LastDrawnMeshID != pMeshInst->GetMeshID() && mesh->IsLoaded())
+    {
+        mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
+        mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
+        m_LastDrawnMeshID = pMeshInst->GetMeshID();
+    }
+
+    if (mesh == nullptr || m_LastDrawnMeshID == INVALID_UID)
+        return false;
+
+    // Update world matrix.
+    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
 
     return true;
 }
@@ -281,24 +298,6 @@ bool Graphics::InitializePipeline()
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
 
-    // Create Vertex buffers.
-    D3D11_BUFFER_DESC bufferDesc;
-    ZeroMemory(&bufferDesc, sizeof(D3D11_BUFFER_DESC));
-    bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    bufferDesc.ByteWidth = sizeof(Vertex) * 666666; // TODO: remove this magic number and use something "large enough"
-    bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    ThrowIfFailed(m_pDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer));
-
-    // Create Index buffer.
-    D3D11_BUFFER_DESC indexBufferDesc;
-    ZeroMemory(&indexBufferDesc, sizeof(D3D11_BUFFER_DESC));
-    indexBufferDesc.Usage = D3D11_USAGE_DYNAMIC;
-    indexBufferDesc.ByteWidth = sizeof(WORD) * 666666;  // TODO: remove this magic number and use something "large enough"
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    ThrowIfFailed(m_pDevice->CreateBuffer(&indexBufferDesc, nullptr, &m_pIndexBuffer));
-
 
     // Create input layout.
     m_pDevice->CreateInputLayout(Vertex::InputDesc, 3, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
@@ -334,39 +333,6 @@ bool Graphics::InitializePipeline()
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
-
-    return true;
-}
-
-bool Graphics::SetupSingleMeshInst(MeshInstance *meshInst)
-{
-    if (m_LastDrawnMeshID != meshInst->GetMeshID()) // Only refresh buffer when needed.
-    {
-        Mesh* mesh = m_pMeshManager->GetMeshPtr(meshInst->GetMeshID());
-
-        // TODO: technically we should clear the buffers instead of just not updating them.
-        if (mesh->IsLoaded())
-        {
-            // Update vertex buffer.
-            D3D11_MAPPED_SUBRESOURCE mappedSubrcs; // information about buffer once mapped, including location of the buffer.
-            ThrowIfFailed(m_pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-            memcpy(mappedSubrcs.pData, &mesh->GetVertices()[0], mesh->GetNumVertices() * sizeof(Vertex));
-            m_pDeviceContext->Unmap(m_pVertexBuffer, NULL);
-
-
-            // Update index buffer.
-            ZeroMemory(&mappedSubrcs, sizeof(D3D11_MAPPED_SUBRESOURCE));
-            ThrowIfFailed(m_pDeviceContext->Map(m_pIndexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs));
-            memcpy(mappedSubrcs.pData, &mesh->GetIndices()[0], mesh->GetNumTriangles() * 3 * sizeof(WORD));
-            m_pDeviceContext->Unmap(m_pIndexBuffer, NULL);
-
-            m_LastDrawnMeshID = meshInst->GetMeshID();
-        }
-    }
-
-
-    // Update world matrix.
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &meshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
 
     return true;
 }
