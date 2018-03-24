@@ -5,10 +5,12 @@
 
 #include "../Math/Vec3.h"
 #include "../Math/Vec2.h"
-
+#include "../Memory/CBMemory.h"
 
 struct Vertex
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Vertex)
+
     Vertex();
     ~Vertex();
 

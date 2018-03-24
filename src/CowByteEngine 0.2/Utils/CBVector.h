@@ -2,7 +2,7 @@
 #define _CBVECTOR_H
 
 #include <cstring>
-#include "../Memory/CBMemArena.h"
+#include "../Memory/CBMemory.h"
 
 // Unlike CBQueue who implement a block based linked list, 
 // CBVector implement a contiguous array in a single block.
@@ -10,6 +10,8 @@ template <class T>
 class CBVector
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(CBVector)
+
     CBVector();
     CBVector(const CBVector &toCopy);
     CBVector(size_t size); // Initialize the container to a size.

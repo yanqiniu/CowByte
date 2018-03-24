@@ -3,6 +3,8 @@
 #include "../Utils/CBRefCountPtr.h"
 #include "../Utils/typedefs.h"
 #include "MessageDecl.h"
+#include "../Memory/CBMemory.h"
+
 class MeshInstance;
 class Camera;
 /*
@@ -24,6 +26,7 @@ typedef INT32 MsgTypeID;
 class Message
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(Message)
     static MsgTypeID ClassTypeSpecifier() { return 0; }
 
     // Returns null pointer. Do not call.

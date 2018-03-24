@@ -2,12 +2,13 @@
 #define _CBQUEUE_H
 
 #include "typedefs.h"
-#include "../Memory/CBMemArena.h"
+#include "../Memory/CBMemory.h"
 
 template<typename DataT>
 class CBQueue
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(CBQueue)
     CBQueue() :
         m_Size(0),
         m_Head(nullptr),
@@ -64,6 +65,7 @@ public:
 
     struct CBQueueNode
     {
+        CBMEM_OVERLOAD_NEW_DELETE(CBQueueNode)
         CBQueueNode() : _next(nullptr) {}
 
         DataT _data;

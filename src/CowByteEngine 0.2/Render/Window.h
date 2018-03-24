@@ -24,6 +24,8 @@ struct WindowData : public SystemData
 
 struct ResizeData
 {
+    CBMEM_OVERLOAD_NEW_DELETE(ResizeData)
+
     ResizeData();
     ResizeData(bool resize, int nw, int nh);
 

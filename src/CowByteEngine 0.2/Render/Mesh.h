@@ -3,11 +3,14 @@
 #include "../Utils/CBString.h"
 #include "../Utils/CBVector.h"
 #include "../Utils/typedefs.h"
+#include "../Memory/CBMemory.h"
 #include "Vertex.h"
 
 class Mesh
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(Mesh)
+
     Mesh();
     ~Mesh();
 

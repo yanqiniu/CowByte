@@ -7,8 +7,11 @@
                                                         MessageClassName(const Message &toCopy) {} \
                                                         MessageClassName& operator=(const Message &rhs);
 
+
+
 #define DECLARE_MESSAGE_CLASS(ClassName, MsgClassID)                    \
 public:                                                                 \
+    CBMEM_OVERLOAD_NEW_DELETE(ClassName)                                \
     static MsgTypeID ClassTypeSpecifier() { return MsgClassID; }        \
     static CBRefCountPtr<Message> Create()                              \
     {                                                                   \

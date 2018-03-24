@@ -2,6 +2,7 @@
 #define _CBSTRING_H
 #include <stdio.h>
 #include <cstring>
+
 #include "CBStringOps.h"
 
 using namespace CBStringOps;
@@ -11,7 +12,7 @@ template <size_t len>
 class CBString
 {
 public:
-
+    // TODO: for whatever reason this file doesn't let me include memory management files.
 
     CBString();
     CBString(const char* cstring);

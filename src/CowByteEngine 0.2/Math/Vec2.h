@@ -2,9 +2,12 @@
 #define _VEC2_H
 
 #include "../Utils/typedefs.h"
+#include "../Memory/CBMemory.h"
 
 struct Vec2
 {
+    CBMEM_OVERLOAD_NEW_DELETE(Vec2)
+
     FLOAT32 X;
     FLOAT32 Y;
 

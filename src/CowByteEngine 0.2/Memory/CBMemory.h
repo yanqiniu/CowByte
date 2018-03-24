@@ -29,7 +29,7 @@ delete[]. Even an empty destructor def does the trick.
 *********************************************************************/
 
 // Use this at public section of a class.
-#define CBMEM_OVERLOAD_NEW_DELETE(ClassName)\
+#define CBMEM_OVERLOAD_NEW_DELETE(ClassName) \
 static void* operator new(size_t size)\
 {\
     return CBMemArena::Get().Allocate(size);\
@@ -38,7 +38,6 @@ static void* operator new[](size_t size)\
 {\
     return CBMemArena::Get().Allocate(size);\
 }\
-\
 static void operator delete(void* ptr, size_t size)\
 {\
     CBMemArena::Get().Free(ptr, size);\
