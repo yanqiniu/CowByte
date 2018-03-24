@@ -3,7 +3,6 @@
 
 #include "Graphics.h"
 #include "Window.h"
-#include "../Utils/exceptions.h"
 #include "GeometryCPU/Vertex.h"
 #include "../Math/Vec3.h"
 #include "../Utils/CBString.h"
