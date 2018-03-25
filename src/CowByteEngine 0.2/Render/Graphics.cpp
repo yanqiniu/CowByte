@@ -325,7 +325,7 @@ bool Graphics::InitializePipeline()
     // TEMP:
     Filepath texturepath;
     ID3D11ShaderResourceView* tempTexture;
-    Path::GenerateAssetPath(texturepath, "textures", "cube.dds");
+    CBPath::GenerateAssetPath(texturepath, "textures", "cube.dds");
     const wchar_t *newPath = CBStringOps::CharToWChar(texturepath.Get());
     CreateDDSTextureFromFile(m_pDevice, newPath, nullptr, &tempTexture);
     m_pDeviceContext->PSSetShaderResources(0, 1, &tempTexture);

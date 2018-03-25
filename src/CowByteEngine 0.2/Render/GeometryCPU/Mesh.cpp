@@ -37,7 +37,7 @@ void Mesh::ReleaseGPU()
 bool Mesh::LoadContent(const char* meshName)
 {
     Filepath meshFilePath;
-    Path::GenerateAssetPath(meshFilePath, "meshes", meshName);
+    CBPath::GenerateAssetPath(meshFilePath, "meshes", meshName);
     //DbgINFO("Mesh path set to: [%s]", m_MeshFilePath.Get());
 
     CBFile meshFile(meshFilePath.Get());
@@ -122,7 +122,7 @@ bool Mesh::LoadContent(const char* meshName)
 bool Mesh::ReadPosBufFile(const char *filepath)
 {
     Filepath tempPath;
-    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBPath::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile posBufFile(tempPath.Get());
 
     CBString<128> temp;
@@ -191,7 +191,7 @@ bool Mesh::ReadPosBufFile(const char *filepath)
 bool Mesh::ReadIndexBufFile(const char *filepath)
 {
     Filepath tempPath;
-    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBPath::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile indexBufFile(tempPath.Get());
 
     CBString<128> temp;
@@ -252,7 +252,7 @@ bool Mesh::ReadIndexBufFile(const char *filepath)
 bool Mesh::ReadNormalBufFile(const char *filepath)
 {
     Filepath tempPath;
-    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBPath::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile normBufFile(tempPath.Get());
 
     CBString<128> temp;
@@ -325,7 +325,7 @@ bool Mesh::ReadNormalBufFile(const char *filepath)
 bool Mesh::ReadUVBufFile(const char *filepath)
 {
     Filepath tempPath;
-    Path::GenerateAssetPath(tempPath, "meshes", filepath);
+    CBPath::GenerateAssetPath(tempPath, "meshes", filepath);
     CBFile uvBufFile(tempPath.Get());
 
     CBString<128> temp;
