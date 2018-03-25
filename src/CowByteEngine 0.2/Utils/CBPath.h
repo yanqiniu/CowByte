@@ -12,8 +12,8 @@ namespace CBPath
 
     static Filepath g_BuildDir;
 
-    // className: mesh, shader...etc.
     void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName);
+    LPCWSTR GetShaderPath(const char *shaderFileName);
     void SetWorkingDirectory();
 }
 

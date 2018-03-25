@@ -276,10 +276,10 @@ bool Graphics::InitializePipeline()
     ID3D11VertexShader *pVS;
     ID3D11PixelShader *pPS;
 
-    D3DReadFileToBlob(L"src\\x64\\Debug\\default_vs.cso", &VS);
+    D3DReadFileToBlob(CBPath::GetShaderPath("default_vs.cso"), &VS);
     ThrowIfFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS));
 
-    D3DReadFileToBlob(L"src\\x64\\Debug\\default_ps.cso", &PS);
+    D3DReadFileToBlob(CBPath::GetShaderPath("default_ps.cso"), &PS);
     ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS));
 
     // set the shader objects

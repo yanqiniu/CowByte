@@ -1,6 +1,7 @@
-#include "CBPath.h"
 #include <Windows.h>
 
+#include "CBPath.h"
+#include "CBStringOps.h"
 namespace CBPath
 {
     // className: mesh, shader...etc.
@@ -13,7 +14,15 @@ namespace CBPath
         buf.Append(fileName);
     }
 
-    //move to the executable directory and then the Data folder
+    LPCWSTR GetShaderPath(const char *shaderFileName)
+    {
+        Filepath temp = g_BuildDir;
+        temp.Append("\\");
+        temp.Append(shaderFileName);
+        return CBStringOps::CharToWChar(temp.Get());
+    }
+
+    //Move to the executable directory and then the Data folder
     void SetWorkingDirectory()
     {
         char path[4096];
