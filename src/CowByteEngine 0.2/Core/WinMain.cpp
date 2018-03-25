@@ -39,7 +39,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     _CrtSetBreakAlloc(0);
 #endif
 
-    Path::SetWorkingDirectory();
+    CBPath::SetWorkingDirectory();
 
     // create the engine
     EngineStartParam startParam;

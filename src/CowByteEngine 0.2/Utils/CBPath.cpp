@@ -1,7 +1,7 @@
 #include "CBPath.h"
 #include <Windows.h>
 
-namespace Path
+namespace CBPath
 {
     // className: mesh, shader...etc.
     void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName)

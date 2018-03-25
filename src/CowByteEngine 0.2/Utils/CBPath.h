@@ -4,7 +4,7 @@
 #include "CBString.h"
 #include "typedefs.h"
 
-namespace Path
+namespace CBPath
 {
     static const char AssetsFolder[256] = "assets\\";
     static const char MeshFolder[256] = "assets\\meshes\\";
