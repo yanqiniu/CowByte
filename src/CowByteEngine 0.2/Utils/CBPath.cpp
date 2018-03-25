@@ -7,7 +7,7 @@ namespace CBPath
     void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName)
     {
         buf.Clear();
-        buf.Set(AssetsFolder);
+        buf.Set(_assetsFolder);
         buf.Append(className);
         buf.Append("\\");
         buf.Append(fileName);
@@ -18,13 +18,22 @@ namespace CBPath
     {
         char path[4096];
         GetModuleFileName(nullptr, path, 4096);
+
+
         int length = lstrlen(path);
         int componentsFound = 0;
         for (int i = length - 1; i >= 0; --i)
         {
             if (path[i] == '\\')
             {
-                if (++componentsFound == 4)
+                ++componentsFound;
+                if (componentsFound == 1)
+                {
+                    // Set build directory:
+                    path[i] = '\0';
+                    g_BuildDir.Set(path);
+                }
+                else if (componentsFound == 4)
                 {
                     path[i] = '\0';
                     break;
