@@ -145,6 +145,10 @@
     </ClInclude>
     <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h" />
     <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\MaterialGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\TextureGPU.h" />
+    <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
+    <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
     <ClInclude Include="Render\Other\CBColor.h" />
   </ItemGroup>
   <ItemGroup>
@@ -229,6 +233,9 @@
     </ClCompile>
     <ClCompile Include="Render\GeometryGPU\VertexBufferGPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
+    <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">
