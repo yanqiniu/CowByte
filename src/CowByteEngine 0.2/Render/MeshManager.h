@@ -7,6 +7,7 @@
 #include "../Utils/CBMap.h"
 class ID3D11Device;
 class ID3D11DeviceContext;
+class TextureManager;
 
 class MeshManager : public Component
 {
@@ -21,7 +22,7 @@ public:
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> &GetMeshInsts() const;
 
-    bool LoadMeshesGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    bool GPULoadMeshes(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager);
     void ReleaseMeshesGPU();
 
     bool Update(const GameContext &context) override;

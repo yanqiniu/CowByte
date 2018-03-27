@@ -65,25 +65,25 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
 {
     for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        if (m_Meshes.Peek(i) != nullptr && 
-            m_Meshes.Peek(i)->GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
+        if (m_Meshes.PeekAt(i) != nullptr && 
+            m_Meshes.PeekAt(i)->GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
         {
-            return m_Meshes.Peek(i)->GetID();
+            return m_Meshes.PeekAt(i)->GetID();
         }
     }
 
     return INVALID_UID;
 }
 
-bool MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+bool MeshManager::GPULoadMeshes(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager)
 {
     bool res = true;
     for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        if(m_Meshes.Peek(i) == nullptr)
+        if(m_Meshes.PeekAt(i) == nullptr)
             continue;
-
-        res &= m_Meshes.Get(i)->InitializeGPU(pD3DDevice, pDeviceContext);
+        Mesh* temp = m_Meshes.At(i);
+        res &= m_Meshes.At(i)->InitializeGPU(pD3DDevice, pDeviceContext, pTexManager);
     }
 
     return res;
@@ -93,10 +93,10 @@ void MeshManager::ReleaseMeshesGPU()
 {
     for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        if (m_Meshes.Peek(i) == nullptr)
+        if (m_Meshes.PeekAt(i) == nullptr)
             continue;
 
-        m_Meshes.Get(i)->ReleaseGPU();
+        m_Meshes.At(i)->ReleaseGPU();
     }
 }
 

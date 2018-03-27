@@ -50,6 +50,7 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
 
     static UID uidCounter = 0;
     m_UID = uidCounter++;
+    m_TexFileName.Set(filename);
     return true;
 }
 

@@ -43,11 +43,11 @@ Graphics::Graphics(const GraphicsData &data):
     m_pDeviceContext(nullptr),
     m_pSwapChain(nullptr),
     m_pMeshManager(nullptr),
+    m_pTexManager(nullptr),
     m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
     m_pConstantBuffers(),
     m_pDepthStencilBuffer(nullptr),
-    m_pInputLayout(nullptr),
     m_pDepthStencilState(nullptr),
     m_pRasterizerState(nullptr),
     m_pSamplerState(nullptr),
@@ -86,7 +86,8 @@ bool Graphics::Initialize()
         return false;
     }
 
-    if (!m_pMeshManager->LoadMeshesGPU(m_pDevice, m_pDeviceContext))
+    m_pTexManager = new TextureManager();
+    if (!m_pMeshManager->GPULoadMeshes(m_pDevice, m_pDeviceContext, m_pTexManager))
         return false;
     return true;
 }
@@ -146,7 +147,7 @@ bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
     {
         mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
         mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
-        mesh->GetMaterial().SetAsActive(m_pDeviceContext);
+        mesh->GetMaterial().SetAsActive(m_pDeviceContext, m_pTexManager);
         m_LastDrawnMeshID = pMeshInst->GetMeshID();
     }
 

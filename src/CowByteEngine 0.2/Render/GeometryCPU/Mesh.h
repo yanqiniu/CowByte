@@ -11,6 +11,7 @@
 
 class ID3D11Device;
 class ID3D11DeviceContext;
+class TextureManager;
 
 class Mesh
 {
@@ -34,7 +35,7 @@ public:
     const IndexBufferGPU&   GetIndexBuffer() const;
     const MaterialGPU&      GetMaterial() const;
 
-    bool InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    bool InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager);
     void ReleaseGPU();
 
 private:

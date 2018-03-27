@@ -3,14 +3,13 @@
 #include "../../Utils/CBFile.h"
 #include "../../Utils/CBDebug.h"
 
-int Mesh::g_IDCounter = 0;
 
 Mesh::Mesh() :
     m_Vertices(8),
     m_Indices(8),
     m_nVertices(0),
     m_nTriangles(0),
-    m_UID(g_IDCounter++),
+    m_UID(INVALID_UID),
     m_bIsLoaded(false)
 {
 }
@@ -21,12 +20,12 @@ Mesh::~Mesh()
 }
 
 // This should be called after cpu load.
-bool Mesh::InitializeGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+bool Mesh::InitializeGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager)
 {
     bool result = true;
     result &= m_VertexBuf.InitFromVertexVector(pD3DDevice, pDeviceContext, m_Vertices);
     result &= m_IndexBuf.InitFromWORDVector(pD3DDevice, pDeviceContext, m_Indices);
-    result &= m_MaterialGPU.LoadFromMaterialCPU(pD3DDevice, pDeviceContext, m_MaterialCPU);
+    result &= m_MaterialGPU.LoadFromMaterialCPU(pD3DDevice, pDeviceContext, m_MaterialCPU, pTexManager);
 
     return result;
 }
@@ -203,6 +202,9 @@ bool Mesh::ReadPosBufFile(const char *filepath)
     //{
     //    DbgINFO ("Vertex %d [%f, %f, %f]", i, m_Vertices[i].m_Pos.X(), m_Vertices[i].m_Pos.Y(), m_Vertices[i].m_Pos.Z());
     //}
+
+    static UID uidCounter = 0;
+    m_UID = uidCounter++;
     
     return true;
 

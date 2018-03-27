@@ -11,6 +11,7 @@
 
 #include "../Core/System.h"
 #include "MeshManager.h"
+#include "GeometryGPU/TextureManager.h"
 
 class Window;
 class Camera;
@@ -61,7 +62,6 @@ private:
 
     ID3D11Buffer *m_pConstantBuffers[NUM_CBUFFER];
     ID3D11Texture2D* m_pDepthStencilBuffer;
-    ID3D11InputLayout *m_pInputLayout;
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
     ID3D11SamplerState* m_pSamplerState;
@@ -69,6 +69,7 @@ private:
     // Other members:
     Window *m_pWindow;
     MeshManager *m_pMeshManager;
+    TextureManager *m_pTexManager;
     Camera *m_pMainCamera;
     UID m_LastDrawnMeshID;
 };
