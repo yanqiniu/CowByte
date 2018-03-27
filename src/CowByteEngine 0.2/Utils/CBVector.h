@@ -26,6 +26,7 @@ public:
     const T& peekat(size_t index) const { return m_Data[index]; } // const version of at().
     T& at(size_t index) { return m_Data[index]; }
     T& operator[](size_t index) { return m_Data[index]; }
+    T* Back();
 
     // This is always a copy construct.
     T*   Push_back(const T &toPush);
@@ -124,6 +125,15 @@ CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
     m_Size = rhs.m_Size;
 
     return *this;
+}
+
+template <class T>
+T* CBVector<T>::Back()
+{
+    if (m_Size == 0)
+        return nullptr;
+    else
+        return &m_Data[m_Size - 1];
 }
 
 template <class T>
