@@ -16,11 +16,8 @@ struct MapBlock
 
     MapBlock(): isEmpty(true), key(INVALID_UID) {}
 
-    union
-    {
-        T _data;
-        bool isEmpty;
-    };
+    T _data;
+    bool isEmpty;
     UID key;
 };
 
@@ -37,9 +34,11 @@ public:
     explicit CBMap(size_t strtCap);
 
     T* Insert(const T& toInsert, UID id);
-    T* Get(UID id);
+    T* Get(explicit UID id);
+    T* At(size_t index);
     size_t Capacity() const { return m_Capacity; }
-    const T* Peek(UID id) const;
+    const T* Peek(explicit UID id) const;
+    const T* PeekAt(size_t index) const;
 
 private:
     size_t UIDToIndex(UID id) const;
@@ -48,12 +47,29 @@ private:
     size_t m_Capacity;
 };
 
+template<typename T>
+const T* CBMap<T>::PeekAt(size_t index) const
+{
+    if (m_Data[index].isEmpty)
+        return nullptr;
+    return &m_Data[index]._data;
+}
+
+// Used solely for iterating.
+template<typename T>
+T* CBMap<T>::At(size_t index)
+{
+    if (m_Data[index].isEmpty)
+        return nullptr;
+    return &m_Data[index]._data;
+}
+
 // Initialize data array to startCp capacity.
 // Make sure this enough to reduce collision.
 template<typename T>
 CBMap<T>::CBMap(size_t strtCap)
 {
-    m_Data = new MapBlock<T>();
+    m_Data = new MapBlock<T>[strtCap];
     m_Capacity = strtCap;
 
 }
@@ -73,6 +89,7 @@ T* CBMap<T>::Insert(const T& toInsert, UID id)
     {
         m_Data[index].key = id;
         m_Data[index]._data = toInsert;
+        m_Data[index].isEmpty = false;
         return &m_Data[index]._data;
     }
     else // Hash collision
@@ -84,6 +101,7 @@ T* CBMap<T>::Insert(const T& toInsert, UID id)
             {
                 m_Data[i].key = id;
                 m_Data[i]._data = toInsert;
+                m_Data[index].isEmpty = false;
                 return &m_Data[index]._data;
             }
         }
