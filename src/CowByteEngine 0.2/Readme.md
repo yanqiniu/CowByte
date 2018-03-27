@@ -12,6 +12,8 @@
     * Graphics related files. Including graphics system and Geometry.
 - SceneGraph
     * Scene management related files. Everything that sits in scene scope, including SceneNode, Camera, GameObject (TODO).
+- Utils
+    * Utility and Logistics headers and Classes, including file reader, string operation, data containers, etc.
 
 ### Other
 This is a refactoring of 0.1 version.  
