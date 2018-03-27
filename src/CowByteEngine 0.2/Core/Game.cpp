@@ -45,7 +45,7 @@ bool Game::Initialize()
     m_pCube0 = new Cube();
     m_pCube1 = new Cube();
     m_pPlane = new Plane();
-    m_pTorus = new Torus();
+    //m_pTorus = new Torus();
     //m_pCow = new Cow();
 
     m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
@@ -74,7 +74,7 @@ bool Game::Update(const GameContext &context)
     NaviCameraUpdate(context);
 
     //m_pCow->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
-    //m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
+    m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
 
     return true;
 }
