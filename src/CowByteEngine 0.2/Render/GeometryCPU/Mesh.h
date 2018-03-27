@@ -6,6 +6,7 @@
 #include "../../Memory/CBMemory.h"
 #include "../GeometryGPU/VertexBufferGPU.h"
 #include "../GeometryGPU/IndexBufferGPU.h"
+#include "../GeometryGPU/MaterialGPU.h"
 #include "Vertex.h"
 
 class ID3D11Device;
@@ -20,7 +21,7 @@ public:
     ~Mesh();
 
 
-    bool              LoadContent(const char* meshName);
+    bool              LoadCPU(const char* meshName);
     UID               GetID() const;
     const Filename&   GetMeshName() const;
     CBVector<Vertex>& GetVertices();
@@ -31,6 +32,7 @@ public:
 
     const VertexBufferGPU&  GetVertexBuffer() const;
     const IndexBufferGPU&   GetIndexBuffer() const;
+    const MaterialGPU&      GetMaterial() const;
 
     bool InitializeGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
     void ReleaseGPU();
@@ -46,10 +48,12 @@ private:
     Filename         m_MeshName;
     CBVector<Vertex> m_Vertices;
     CBVector<WORD>   m_Indices;
-    size_t           m_nVertices;
-    size_t           m_nTriangles;
     VertexBufferGPU  m_VertexBuf;
     IndexBufferGPU   m_IndexBuf;
+    MaterialCPU      m_MaterialCPU;
+    MaterialGPU      m_MaterialGPU;
+    size_t           m_nVertices;
+    size_t           m_nTriangles;
     UID              m_UID;
     bool             m_bIsLoaded;
 };
@@ -93,7 +97,10 @@ inline const IndexBufferGPU&  Mesh::GetIndexBuffer() const
     return m_IndexBuf;
 }
 
-
+inline const MaterialGPU& Mesh::GetMaterial() const
+{
+    return m_MaterialGPU;
+}
 
 inline bool Mesh::IsLoaded() const
 {
