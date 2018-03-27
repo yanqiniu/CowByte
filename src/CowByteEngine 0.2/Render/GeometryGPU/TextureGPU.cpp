@@ -28,7 +28,8 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
         return false;
     }
 
-    // Create sampler state, currently the same for all textures.
+    // Create sampler state, 
+    // TODO: currently the same sampler state for all textures.
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

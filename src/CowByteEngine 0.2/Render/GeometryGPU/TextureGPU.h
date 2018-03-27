@@ -11,8 +11,8 @@ public:
     bool LoadFromFile(ID3D11Device *pDevice, const char *filename);
     void Release();
 
-    ID3D11SamplerState*& GetSamplerState() { return m_pSamplerState; }
-    ID3D11ShaderResourceView*& GetShaderResourceView() { return m_pShaderRscView; }
+    ID3D11SamplerState*const & GetSamplerState() const { return m_pSamplerState; }
+    ID3D11ShaderResourceView*const & GetShaderResourceView() const { return m_pShaderRscView; }
 
 private:
     ID3D11SamplerState       *m_pSamplerState;
