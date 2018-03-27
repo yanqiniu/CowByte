@@ -161,6 +161,7 @@
     <ClInclude Include="Render\GeometryCPU\MeshInstance.h" />
     <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="Render\GeometryCPU\Vertex.h" />
+    <ClInclude Include="Render\Other\CBColor.h" />
     <ClInclude Include="Render\Window.h" />
     <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />

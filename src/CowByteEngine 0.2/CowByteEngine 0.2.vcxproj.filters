@@ -145,6 +145,7 @@
     </ClInclude>
     <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h" />
     <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
+    <ClInclude Include="Render\Other\CBColor.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
