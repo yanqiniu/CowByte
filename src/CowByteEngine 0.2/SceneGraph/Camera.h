@@ -5,7 +5,7 @@
 #include "../Math/CBMath.h"
 #include "SceneNode.h"
 
-// Projection Camera
+// Perspective Camera
 class Camera : public Component
 {
 public:
@@ -21,8 +21,7 @@ public:
 
 private:
     Matrix4x4 m_ViewProjMatrix;     // World->Clip
-                                    //TODO: add message handler to update this when m_WorldTransform has been changed.
-    Matrix4x4 m_ProjectionMatrix;
+    Matrix4x4 m_ProjectionMatrix;   // View->Clip
 
     float m_AspectRatio;
     float m_FOVy;
