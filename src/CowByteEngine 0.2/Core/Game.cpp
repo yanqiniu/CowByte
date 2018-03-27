@@ -42,15 +42,16 @@ bool Game::Initialize()
     //m_pMainCamera->AttachTo_SceneNode_Parent(pCameraSceneNode);
     DbgAssert(m_pInput != nullptr, "Null input used by game!");
 
-    m_pCube0 = new Cube();
+    //m_pCube0 = new Cube();
     m_pCube1 = new Cube();
     m_pPlane = new Plane();
     //m_pTorus = new Torus();
-    //m_pCow = new Cow();
+    m_pCow = new Cow();
 
-    m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
-    m_pCube0->m_pSceneNode->Scale(2.0f);
+    //m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
+    //m_pCube0->m_pSceneNode->Scale(2.0f);
     m_pCube1->m_pSceneNode->Scale(1.2f);
+    m_pCube1->m_pSceneNode->Translate(-3.0f, 1.0f, 0.0f);
     //m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
     m_pPlane->m_pSceneNode->Scale(3.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
@@ -74,7 +75,7 @@ bool Game::Update(const GameContext &context)
     NaviCameraUpdate(context);
 
     //m_pCow->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
-    m_pCube1->m_pSceneNode->Rotate(Vec3(0, 1, 0), -30.0f * context.dTime);
+    m_pCube1->m_pSceneNode->RotateLocal(Vec3(0, 1, 0), -30.0f * context.dTime);
 
     return true;
 }

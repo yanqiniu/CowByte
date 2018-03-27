@@ -5,10 +5,12 @@
 #include "../../Utils/CBVector.h"
 #include "TextureGPU.h"
 #include "../../Utils/CBMap.h"
+#include "../../Memory/CBMemory.h"
 
 class TextureManager
 {
 public:
+    CBMEM_OVERLOAD_NEW_DELETE(TextureManager)
     TextureManager();
     ~TextureManager();
 

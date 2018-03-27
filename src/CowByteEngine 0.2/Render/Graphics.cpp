@@ -81,7 +81,9 @@ bool Graphics::Initialize()
 
 
     if(!m_pMeshManager->CPULoadMesh("cube.mesha") ||
-        !m_pMeshManager->CPULoadMesh("plane.mesha"))
+        !m_pMeshManager->CPULoadMesh("plane.mesha") ||
+        !m_pMeshManager->CPULoadMesh("cow.mesha")
+        )
     {
         return false;
     }
