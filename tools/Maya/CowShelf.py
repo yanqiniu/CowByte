@@ -9,7 +9,7 @@ export_folder = cowbyte_folder + "assets\\meshes\\"
 def _null(*args):
     pass
 
-def RemoveShelf(name):
+def remove_shelf(name):
     if cmds.shelfLayout(name, ex=1):
         print("Shelf {0} exists.\n".format(name))
         if cmds.shelfLayout(name, ca=1, q = 1):
