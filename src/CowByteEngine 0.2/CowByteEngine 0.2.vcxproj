@@ -172,6 +172,7 @@
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBHelper.h" />
+    <ClInclude Include="Utils\CBMap.h" />
     <ClInclude Include="Utils\CBPath.h" />
     <ClInclude Include="Utils\CBQueue.h" />
     <ClInclude Include="Utils\CBRefCountPtr.h" />

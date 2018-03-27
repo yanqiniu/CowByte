@@ -150,6 +150,7 @@
     <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
     <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
     <ClInclude Include="Render\Other\CBColor.h" />
+    <ClInclude Include="Utils\CBMap.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">

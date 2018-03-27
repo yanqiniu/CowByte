@@ -4,6 +4,7 @@
 #include "../Core/Component.h"
 #include "GeometryCPU/Mesh.h"
 #include "../Utils/typedefs.h"
+#include "../Utils/CBMap.h"
 class ID3D11Device;
 class ID3D11DeviceContext;
 
@@ -28,7 +29,7 @@ public:
 private:
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
-    CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.
+    CBMap<Mesh> m_Meshes;
     CBVector<MeshInstance*> m_MesheInstPtrs;
 };
 
