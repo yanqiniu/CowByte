@@ -17,7 +17,6 @@ namespace CBPath
     LPCWSTR GetShaderPath(const char *shaderFileName)
     {
         Filepath temp = g_BuildDir;
-        temp.Append("\\");
         temp.Append(shaderFileName);
         return CBStringOps::CharToWChar(temp.Get());
     }
@@ -25,9 +24,11 @@ namespace CBPath
     //Move to the executable directory and then the Data folder
     void SetWorkingDirectory()
     {
-        char path[4096];
-        GetModuleFileName(nullptr, path, 4096);
-
+        char path[1024];
+        char* buildPath = new char[1024];
+        char* marker = buildPath;
+        GetModuleFileName(nullptr, path, 1024);
+        strcpy(buildPath, path);
 
         int length = lstrlen(path);
         int componentsFound = 0;
@@ -38,12 +39,13 @@ namespace CBPath
                 ++componentsFound;
                 if (componentsFound == 1)
                 {
-                    // Set build directory:
-                    path[i] = '\0';
-                    g_BuildDir.Set(path);
+                    buildPath[i] = '\0';
                 }
-                else if (componentsFound == 4)
+                if (componentsFound == 4)
                 {
+                    marker = buildPath + i + 1;
+                    g_BuildDir.Set(marker);
+                    g_BuildDir.Append("\\");
                     path[i] = '\0';
                     break;
                 }
@@ -51,5 +53,8 @@ namespace CBPath
         }
         // Set working directory at CowByte\ folder.
         bool didSucceed = SetCurrentDirectory(path) != 0;
+
+
+        delete buildPath;
     }
 }
