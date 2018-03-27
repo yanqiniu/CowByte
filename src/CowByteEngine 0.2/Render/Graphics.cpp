@@ -225,12 +225,6 @@ bool Graphics::InitializePipeline()
     ));
 
 
-    // Set render target.
-    ID3D11Texture2D *pBackBuffer;
-    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
-    pBackBuffer->Release();
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, nullptr);
 
     // Create a depth stencil buffer and view.
     D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
@@ -300,6 +294,11 @@ bool Graphics::InitializePipeline()
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
 
     // Output merger stage.
+    // Set render target.
+    ID3D11Texture2D *pBackBuffer;
+    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
+    pBackBuffer->Release();
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
