@@ -9,6 +9,12 @@
 #define CBHELPER_CEIL_CHECK(inVal, ceilVal)  ((inVal) > (ceilVal) ? (ceilVal) : (inVal))
 #define CBHELPER_CLAMP(inVal, lowBound, highBound)  (CBHELPER_FLOOR_CHECK(CBHELPER_CEIL_CHECK(inVal, highBound), lowBound))
 
+#define CBHELPER_RETURN_FALSE_IF_FALSE(expression) \
+if((expression) == false)                          \
+{                                                  \
+    return false;                                  \
+};
+
 namespace CBHelper
 {
 }
