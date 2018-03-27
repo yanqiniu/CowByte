@@ -20,7 +20,7 @@ public:
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> &GetMeshInsts() const;
 
-    void LoadMeshesGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    bool LoadMeshesGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
     void ReleaseMeshesGPU();
 
     bool Update(const GameContext &context) override;
