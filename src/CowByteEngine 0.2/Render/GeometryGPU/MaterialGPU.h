@@ -15,6 +15,7 @@ public:
 
     bool LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, const MaterialCPU &matcpu);
     void SetAsActive(ID3D11DeviceContext *pDeviceContext) const;
+    void Release();
 
 private:
     CBVector<TextureGPU> m_Textures;

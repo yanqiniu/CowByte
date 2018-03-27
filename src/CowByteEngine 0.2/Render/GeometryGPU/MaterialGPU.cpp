@@ -33,6 +33,7 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     if (!ResultNotFailed(pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf)))
     {
         DbgERROR("Failed creating per mat constant buffer!");
+        Release();
         return false;
     }
     pDeviceContext->UpdateSubresource(m_pConstBuf, 0, nullptr, &matcpu.GetConstBufferCPU(), 0, 0);
@@ -54,16 +55,19 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     if (VS == nullptr || PS == nullptr)
     {
         DbgERROR("Failed reading shader files.");
+        Release();
         return false;
     }
     if (!ResultNotFailed(pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &m_pShaderVertex)))
     {
         DbgERROR("Filed creating vertex shader!");
+        Release();
         return false;
     }
     if (!ResultNotFailed(pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &m_pShaderPixel)))
     {
         DbgERROR("Filed creating pixel shader!");
+        Release();
         return false;
     }
 
@@ -71,6 +75,7 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     if (!ResultNotFailed(pDevice->CreateInputLayout(Vertex::InputDesc, 3, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout)))
     {
         DbgERROR("Filed creating input layout!");
+        Release();
         return false;
     }
 
@@ -95,4 +100,33 @@ void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext) const
 
     // Set input layout.
     pDeviceContext->IASetInputLayout(m_pInputLayout);
+}
+
+void MaterialGPU::Release()
+{    // Set textures
+    for (size_t i = 0; i < m_Textures.Size(); ++i)
+    {
+        m_Textures.at(i).Release();
+    }
+
+    if (m_pShaderVertex != nullptr)
+    {
+        m_pShaderVertex->Release();
+        m_pShaderVertex = nullptr;
+    }
+    if (m_pShaderPixel != nullptr)
+    {
+        m_pShaderPixel->Release();
+        m_pShaderPixel = nullptr;
+    }
+    if (m_pInputLayout != nullptr)
+    {
+        m_pInputLayout->Release();
+        m_pInputLayout = nullptr;
+    }
+    if (m_pConstBuf != nullptr)
+    {
+        m_pConstBuf->Release();
+        m_pConstBuf = nullptr;
+    }
 }
