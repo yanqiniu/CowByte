@@ -169,6 +169,7 @@
     <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />
     <ClInclude Include="Render\GeometryGPU\TextureGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\TextureManager.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBHelper.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="SceneGraph\Camera.cpp" />
     <ClCompile Include="SceneGraph\SceneNode.cpp" />
     <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\TextureManager.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />
     <ClCompile Include="Utils\CBString.cpp" />
