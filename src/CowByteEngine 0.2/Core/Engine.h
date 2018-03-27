@@ -33,11 +33,10 @@ public:
     Engine(const EngineStartParam& startParam);
     ~Engine();
 
-    int Initialize(GameContext &context);
-    int Draw(GameContext& context);
+    int  Initialize(GameContext &context);
     bool Update(const GameContext& context);
-    int ShutDown();
-    int RunLoop();
+    bool  Shutdown();
+    int  RunLoop();
 
     // Add a core system to the engine.
     int AddSystem(System* sys);

@@ -84,24 +84,18 @@ int Engine::Initialize(GameContext &context)
     return true;
 }
 
-int Engine::Draw(GameContext& context)
-{
-    return true;
-}
-
 bool Engine::Update(const GameContext& context)
 {
     // Empty function, this might never get called.
     // We have this because Engine inherits from Component
     // which has Update() as a pure virtual.
-    // Engine class mosly operate inside Runloop().
+    // Engine class mostly operate inside Runloop().
     return true;
 }
 
-int Engine::ShutDown()
+bool Engine::Shutdown()
 {
     m_EngineState = EngineState::SHUTTINGDOWN;
-
     for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
     {
         if (!pSysPair.second->Shutdown())
@@ -112,6 +106,8 @@ int Engine::ShutDown()
 
         delete (pSysPair.second);
     }
+
+    SceneNode::RootNode.Shutdown();
 
     return true;
 }
@@ -162,9 +158,7 @@ int Engine::RunLoop()
     }
 
     DbgINFO("Ending the program...");
-    //Logger::WriteLogToFile();
-
-    if (!this->ShutDown())
+    if (!this->Shutdown())
         return 0;
 
     return msg.wParam;
