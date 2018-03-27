@@ -21,7 +21,8 @@ Don't worry about the name :D
  - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
  - It now renders low-poly cow model exported from Maya:  
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_22_2018.jpg)  
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_22_2018.jpg)
+ - Also suppots different material and textures for different meshes. (Screenshot available soon.)
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
@@ -30,7 +31,8 @@ Don't worry about the name :D
  - Custom data containers (Queue, Vector, reference count pointer);
  - SIMD math (Intel SSE) including Vec3, Matrix4x4 and Quaternion;
  - Scenegraph;
- - Mesh Instancing;  
+ - Mesh Instancing;
+ - Material and Texture support;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;
