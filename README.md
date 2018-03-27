@@ -18,11 +18,11 @@ Don't worry about the name :D
  - Uses some more recent C++ features like binary literals (C++14) and delete(void* ptr, size_t size) overload (C++17) which should be included with the latest VC++ that comes with VS2017.
 
 ### Current State
- - Although it doesn't render much fancy stuff, all features in the list mentioned bellow are implemented already.
+ - All features in the list mentioned bellow are implemented already.
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
- - It now renders low-poly cow model exported from Maya:  
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_22_2018.jpg)
- - Also suppots different material and textures for different meshes. (Screenshot available soon.)
+ - It now renders low-poly cow model exported from Maya.
+  - Also suppots different material and textures for different meshes:
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_26_2018.jpg)
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
