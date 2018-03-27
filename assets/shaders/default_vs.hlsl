@@ -16,12 +16,11 @@ struct PS_Input
 
 cbuffer PerApplication : register(b0)
 {
-    matrix projectionMatrix;
 }
 
 cbuffer PerFrame : register(b1)
 {
-    matrix cameraViewMatrix;
+    matrix viewProjectionMatrix;
 }
 
 cbuffer PerObject : register(b2)
@@ -33,8 +32,8 @@ PS_Input VShader(VS_Input input)
 {
     PS_Input output;
     
-    float4x4 mvp = mul(mul(worldMatrix, cameraViewMatrix), projectionMatrix);
-    output.position = mul(input.position, mvp );
+    float4x4 mvp = mul(worldMatrix, viewProjectionMatrix);
+    output.position = mul(input.position, mvp);
     output.normal = mul(input.normal, worldMatrix); // transform normal and normalize
     output.texcoord = input.texcoord;
 

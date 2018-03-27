@@ -102,14 +102,16 @@ bool Graphics::Update(const GameContext& context)
         DbgWARNING("No main camera set (send the message)!");
         return false;
     }
+    else
+    {
+        m_pMainCamera->UpdateVPMatrix();
+        m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
+        m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerFrame, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]);
+    }
 
     FLOAT color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
-
-    m_pMainCamera->UpdateWToCMatrix();
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
-    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerFrame, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]);
 
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
@@ -172,8 +174,6 @@ void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
     if (pMsg->GetInstType() == Msg_SetMainCamera::ClassTypeSpecifier())
     {
         m_pMainCamera = MESSAGE_FROM_PTR(pMsg, Msg_SetMainCamera)->m_pCamera;
-        m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
-        m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerApplication, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]);
     }
 
 }

@@ -12,15 +12,15 @@ public:
     Camera();
     Camera(float ar, float fovy, float np, float fp);
     ~Camera();
-    void UpdateWToCMatrix(); // Update m_WorldToCamaraSpace.
+    void UpdateVPMatrix(); // Update m_ViewProjMatrix.
 
-    Matrix4x4 GetWToCMatrix() const;
     Matrix4x4 GetProjectionMatrix() const;
+    Matrix4x4 GetViewProjMatrix() const;
     bool Update(const GameContext &context);
     void _HandleMessage(CBRefCountPtr<Message> &pMsg);
 
 private:
-    Matrix4x4 m_WorldToCamaraSpace; //Inverse of SceneNode::m_WorldTransform. 
+    Matrix4x4 m_ViewProjMatrix;     // World->Clip
                                     //TODO: add message handler to update this when m_WorldTransform has been changed.
     Matrix4x4 m_ProjectionMatrix;
 
@@ -30,20 +30,21 @@ private:
     float m_FarPlane;
 };
 
-inline void Camera::UpdateWToCMatrix()
+inline void Camera::UpdateVPMatrix()
 {
-    m_WorldToCamaraSpace = GetParentSceneNode()->GetWorldTransform().Inversed();
-}
-
-inline Matrix4x4 Camera::GetWToCMatrix() const
-{
-    return m_WorldToCamaraSpace;
+    m_ViewProjMatrix = GetParentSceneNode()->GetWorldTransform().Inversed() * m_ProjectionMatrix;
 }
 
 inline Matrix4x4 Camera::GetProjectionMatrix() const
 {
     return m_ProjectionMatrix;
 }
+
+inline Matrix4x4 Camera::GetViewProjMatrix() const
+{
+    return m_ViewProjMatrix;
+}
+
 
 
 #endif
