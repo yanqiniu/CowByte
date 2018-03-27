@@ -14,6 +14,7 @@
 #include "GeometryCPU/MeshInstance.h"
 #include "../Utils/CBFile.h"
 #include "../Messaging/CBMessaging.h"
+#include "GeometryGPU/GPURegisterLayout.h"
 
 #include "DDSTextureLoader/DDSTextureLoader.h"
 
@@ -108,10 +109,10 @@ bool Graphics::Update(const GameContext& context)
 
     m_pMainCamera->UpdateWToCMatrix();
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerFrame, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]);
 
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
-        m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
         DrawSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
     }
 
@@ -158,6 +159,8 @@ bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
 
     // Update world matrix.
     m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerObject, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]);
+    
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
 
@@ -170,6 +173,7 @@ void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
     {
         m_pMainCamera = MESSAGE_FROM_PTR(pMsg, Msg_SetMainCamera)->m_pCamera;
         m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
+        m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerApplication, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]);
     }
 
 }
