@@ -23,8 +23,12 @@ Mesh::~Mesh()
 // This should be called after cpu load.
 bool Mesh::InitializeGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
 {
-    return m_VertexBuf.InitFromVertexVector(pD3DDevice, pDeviceContext, m_Vertices) &&
-           m_IndexBuf.InitFromWORDVector(pD3DDevice, pDeviceContext, m_Indices);
+    bool result = true;
+    result &= m_VertexBuf.InitFromVertexVector(pD3DDevice, pDeviceContext, m_Vertices);
+    result &= m_IndexBuf.InitFromWORDVector(pD3DDevice, pDeviceContext, m_Indices);
+    result &= m_MaterialGPU.LoadFromMaterialCPU(pD3DDevice, pDeviceContext, m_MaterialCPU);
+
+    return result;
 }
 
 void Mesh::ReleaseGPU()
@@ -34,7 +38,7 @@ void Mesh::ReleaseGPU()
 }
 
 // CPU  read and load.
-bool Mesh::LoadContent(const char* meshName)
+bool Mesh::LoadCPU(const char* meshName)
 {
     Filepath meshFilePath;
     CBPath::GenerateAssetPath(meshFilePath, "meshes", meshName);
@@ -109,6 +113,22 @@ bool Mesh::LoadContent(const char* meshName)
     if (!ReadUVBufFile(temp.Get()))
     {
         DbgERROR("Failed reading in uv buffer [%s].", temp.Get());
+        return false;
+    }
+
+    // Read the normal buffer file.
+    temp.Clear();
+    if (!meshFile.GetNextNonEmptyLine(temp.Get(), temp.Capacity(), false))
+    {
+        DbgERROR("Failed getting material file in [%s].", meshFilePath.Get());
+        return false;
+    }
+    temp.Strip(StripMode::ALL);
+    Filepath tempPath;
+    CBPath::GenerateAssetPath(tempPath, "materials", temp.Get());
+    if(!m_MaterialCPU.LoadFromFile(tempPath.Get()))
+    {
+        DbgERROR("Failed loading matcpu in file in [%s].", meshFilePath.Get());
         return false;
     }
 

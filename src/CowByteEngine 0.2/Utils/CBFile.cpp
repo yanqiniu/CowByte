@@ -70,3 +70,8 @@ bool CBFile::GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripN
 
     return false;
 }
+
+bool CBFile::GetNextNonEmptyLine(CBString<256> &buffer, bool doStripNewLine)
+{
+    return GetNextNonEmptyLine(buffer.Get(), buffer.Capacity(), doStripNewLine);
+}

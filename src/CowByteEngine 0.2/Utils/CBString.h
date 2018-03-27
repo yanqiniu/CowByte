@@ -19,17 +19,18 @@ public:
     ~CBString();
 
     // member functions.
-    void   Set(const char *inStr);
-    void   Set(CBString &toAppend);
-    char*  Get();
-    void   Clear();
-    size_t Capacity() const;
-    size_t Size() const;
-    int    Compare(const char *rhs) const;
-    int    Compare(CBString &rhs) const;
-    void   Append(const char *toAppend);
-    bool   Strip();
-    bool   Strip(StripMode mode);
+    void        Set(const char *inStr);
+    void        Set(CBString &toAppend);
+    char*       Get();
+    const char* Peek() const;
+    void        Clear();
+    size_t      Capacity() const;
+    size_t      Size() const;
+    int         Compare(const char *rhs) const;
+    int         Compare(CBString &rhs) const;
+    void        Append(const char *toAppend);
+    bool        Strip();
+    bool        Strip(StripMode mode);
 
     void   operator=(const char* cstring);
 
@@ -40,6 +41,13 @@ private:
     char m_Data[len];
     static char _s_buf[len];
 };
+
+// Get() but const.
+template <size_t len>
+inline const char* CBString<len>::Peek() const
+{
+    return m_Data;
+}
 
 template <size_t len>
 inline int CBString<len>::Compare(CBString &rhs) const

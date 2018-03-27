@@ -141,6 +141,9 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
+    <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
+    <ClInclude Include="Render\GeometryGPU\MaterialGPU.h" />
     <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
     <ClInclude Include="Math\CBMath.h" />
     <ClInclude Include="Math\Matrix4x4.h" />
@@ -161,9 +164,11 @@
     <ClInclude Include="Render\GeometryCPU\MeshInstance.h" />
     <ClInclude Include="Render\MeshManager.h" />
     <ClInclude Include="Render\GeometryCPU\Vertex.h" />
+    <ClInclude Include="Render\Other\CBColor.h" />
     <ClInclude Include="Render\Window.h" />
     <ClInclude Include="SceneGraph\Camera.h" />
     <ClInclude Include="SceneGraph\SceneNode.h" />
+    <ClInclude Include="Render\GeometryGPU\TextureGPU.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBHelper.h" />
@@ -184,6 +189,8 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
+    <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
     <ClCompile Include="Math\Matrix4x4.cpp" />
     <ClCompile Include="Math\Quaternion.cpp" />
@@ -203,6 +210,7 @@
     <ClCompile Include="Render\Window.cpp" />
     <ClCompile Include="SceneGraph\Camera.cpp" />
     <ClCompile Include="SceneGraph\SceneNode.cpp" />
+    <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />
     <ClCompile Include="Utils\CBString.cpp" />

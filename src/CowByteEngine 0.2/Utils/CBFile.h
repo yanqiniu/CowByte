@@ -5,6 +5,7 @@
 #include <fstream>
 #include <stdio.h>
 #include "../Memory/CBMemory.h"
+#include "CBString.h"
 
 // CowByte engine text file reader.
 class CBFile
@@ -17,6 +18,7 @@ public:
 
     char* ReadIntoBuffer(size_t &size);
     bool GetNextNonEmptyLine(char *buffer, size_t maxLineSize, bool doStripNewLine);
+    bool GetNextNonEmptyLine(CBString<256> &buffer, bool doStripNewLine);
 
 private:
     FILE *m_pFile;

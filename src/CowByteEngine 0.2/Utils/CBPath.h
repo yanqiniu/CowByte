@@ -6,12 +6,14 @@
 
 namespace CBPath
 {
-    static const char AssetsFolder[256] = "assets\\";
-    static const char MeshFolder[256] = "assets\\meshes\\";
-    static const char TextureFolder[256] = "assets\\textures\\";
+    static const char _assetsFolder[256] = "assets\\";
+    static const char _meshFolder[256] = "assets\\meshes\\";
+    static const char _textureFolder[256] = "assets\\textures\\";
 
-    // className: mesh, shader...etc.
+    static Filepath g_BuildDir;
+
     void GenerateAssetPath(Filepath &buf, const char *className, const char *fileName);
+    LPCWSTR GetShaderPath(const char *shaderFileName);
     void SetWorkingDirectory();
 }
 

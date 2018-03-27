@@ -78,12 +78,16 @@ bool Graphics::Initialize()
     // Setup mesh manager and load meshes.
     m_pMeshManager = new MeshManager();
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
-    m_pMeshManager->CPULoadMesh("cube.mesha");
-    m_pMeshManager->CPULoadMesh("plane.mesha");
-    m_pMeshManager->CPULoadMesh("torus.mesha");
-    m_pMeshManager->CPULoadMesh("cow.mesha");
 
-    m_pMeshManager->LoadMeshesGPU(m_pDevice, m_pDeviceContext);
+
+    if(!m_pMeshManager->CPULoadMesh("cube.mesha") ||
+        !m_pMeshManager->CPULoadMesh("plane.mesha"))
+    {
+        return false;
+    }
+
+    if (!m_pMeshManager->LoadMeshesGPU(m_pDevice, m_pDeviceContext))
+        return false;
     return true;
 }
 
@@ -142,6 +146,7 @@ bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
     {
         mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
         mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
+        mesh->GetMaterial().SetAsActive(m_pDeviceContext);
         m_LastDrawnMeshID = pMeshInst->GetMeshID();
     }
 
@@ -270,23 +275,6 @@ bool Graphics::InitializePipeline()
     m_Viewport.MinDepth = 0.0f;
     m_Viewport.MaxDepth = 1.0f;
 
-
-    // Load and compile shaders. These will be put into a Mesh class.
-    ID3D10Blob *VS, *PS;
-    ID3D11VertexShader *pVS;
-    ID3D11PixelShader *pPS;
-
-    D3DReadFileToBlob(L"src\\x64\\Debug\\default_vs.cso", &VS);
-    ThrowIfFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &pVS));
-
-    D3DReadFileToBlob(L"src\\x64\\Debug\\default_ps.cso", &PS);
-    ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &pPS));
-
-    // set the shader objects
-    m_pDeviceContext->VSSetShader(pVS, 0, 0);
-    m_pDeviceContext->PSSetShader(pPS, 0, 0);
-
-
     // Create the constant buffers for the variables defined in the vertex shader.
     D3D11_BUFFER_DESC constantBufferDesc;
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
@@ -298,37 +286,11 @@ bool Graphics::InitializePipeline()
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]));
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
-
-
-    // Create input layout.
-    m_pDevice->CreateInputLayout(Vertex::InputDesc, 3, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout);
-    m_pDeviceContext->IASetInputLayout(m_pInputLayout);
+    ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
 
     // Set rasterizer stage.
     m_pDeviceContext->RSSetState(m_pRasterizerState);
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
-
-    // Set sampler state.
-    D3D11_SAMPLER_DESC sampDesc;
-    ZeroMemory(&sampDesc, sizeof(sampDesc));
-    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
-    sampDesc.MinLOD = 0;
-    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-    m_pSamplerState = nullptr;
-    ThrowIfFailed(m_pDevice->CreateSamplerState(&sampDesc, &m_pSamplerState));
-    m_pDeviceContext->PSSetSamplers(0, 1, &m_pSamplerState);
-
-    // TEMP:
-    Filepath texturepath;
-    ID3D11ShaderResourceView* tempTexture;
-    CBPath::GenerateAssetPath(texturepath, "textures", "cube.dds");
-    const wchar_t *newPath = CBStringOps::CharToWChar(texturepath.Get());
-    CreateDDSTextureFromFile(m_pDevice, newPath, nullptr, &tempTexture);
-    m_pDeviceContext->PSSetShaderResources(0, 1, &tempTexture);
 
     // Output merger stage.
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);

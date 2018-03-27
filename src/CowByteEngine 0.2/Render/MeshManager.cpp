@@ -19,8 +19,8 @@ MeshManager::~MeshManager()
 Mesh* MeshManager::CPULoadMesh(const char *meshName)
 {
     Mesh temp;
-    if (!temp.LoadContent(meshName))
-        return false;
+    if (!temp.LoadCPU(meshName))
+        return nullptr;
     return AddMesh(temp);
 }
 
@@ -107,12 +107,15 @@ UID MeshManager::GetMeshID(const Filename &meshfn) const
     return INVALID_UID;
 }
 
-void MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+bool MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
 {
+    bool res = true;
     for (size_t i = 0; i < m_Meshes.Size(); ++i)
     {
-        m_Meshes.at(i).InitializeGPU(pD3DDevice, pDeviceContext);
+        res &= m_Meshes.at(i).InitializeGPU(pD3DDevice, pDeviceContext);
     }
+
+    return res;
 }
 
 void MeshManager::ReleaseMeshesGPU()
