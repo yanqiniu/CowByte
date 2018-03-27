@@ -32,7 +32,7 @@ Don't worry about the name :D
  - SIMD math (Intel SSE) including Vec3, Matrix4x4 and Quaternion;
  - Scenegraph;
  - Mesh Instancing;
- - Material and Texture support;
+ - Material and Texture support with texture sharing;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;

@@ -4,8 +4,10 @@
 #include "../Core/Component.h"
 #include "GeometryCPU/Mesh.h"
 #include "../Utils/typedefs.h"
+#include "../Utils/CBMap.h"
 class ID3D11Device;
 class ID3D11DeviceContext;
+class TextureManager;
 
 class MeshManager : public Component
 {
@@ -20,7 +22,7 @@ public:
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> &GetMeshInsts() const;
 
-    bool LoadMeshesGPU(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext);
+    bool GPULoadMeshes(ID3D11Device *pDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager);
     void ReleaseMeshesGPU();
 
     bool Update(const GameContext &context) override;
@@ -28,7 +30,7 @@ public:
 private:
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
 
-    CBVector<Mesh> m_Meshes;// Meshes, not Mesh instances.
+    CBMap<Mesh> m_Meshes;
     CBVector<MeshInstance*> m_MesheInstPtrs;
 };
 

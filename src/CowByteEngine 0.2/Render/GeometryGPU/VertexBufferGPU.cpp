@@ -25,6 +25,7 @@ bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pD3DDevice, ID3D11Devic
     bufferDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
     if (!ResultNotFailed(pD3DDevice->CreateBuffer(&bufferDesc, nullptr, &m_pVertexBuffer)))
     {
+        Release();
         return false;
     }
 
@@ -32,6 +33,7 @@ bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pD3DDevice, ID3D11Devic
     D3D11_MAPPED_SUBRESOURCE mappedSubrcs; 
     if (!ResultNotFailed(pDeviceContext->Map(m_pVertexBuffer, NULL, D3D11_MAP_WRITE_DISCARD, NULL, &mappedSubrcs)))
     {
+        Release();
         return false;
     }
     memcpy(mappedSubrcs.pData, &vertices[0], sizeof(Vertex) * vertices.Size());
@@ -42,8 +44,11 @@ bool VertexBufferGPU::InitFromVertexVector(ID3D11Device *pD3DDevice, ID3D11Devic
 
 void VertexBufferGPU::Release()
 {
-    m_pVertexBuffer->Release();
-    m_pVertexBuffer = nullptr;
+    if (m_pVertexBuffer != nullptr)
+    {
+        m_pVertexBuffer->Release();
+        m_pVertexBuffer = nullptr;
+    }
 }
 
 void VertexBufferGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext) const

@@ -5,7 +5,7 @@
 
 
 MeshManager::MeshManager() :
-    m_Meshes(8),
+    m_Meshes(128),
     m_MesheInstPtrs(8)
 {
 
@@ -26,48 +26,15 @@ Mesh* MeshManager::CPULoadMesh(const char *meshName)
 
 Mesh* MeshManager::GetMeshPtr(UID meshId)
 {
-    // NOTICE:
-    // This function uses binary search so 
-    // make sure the mesh vector is sorted 
-    // by m_UID small->large.
-    // You don't have to worry about this
-    // if you stick to using AddMesh(), 
-    // instead of push_back() or insert()
-    // to m_Meshes directly.
-
-    size_t l = 0; 
-    size_t r = m_Meshes.Size() - 1;
-
-    while (l <= r)
-    {
-        size_t m = (r + l) / 2;
-
-        // Check middle:
-        if (m_Meshes[m].GetID() == meshId)
-            return &m_Meshes[m];
-        else if (meshId < m_Meshes[m].GetID())
-            r = m - 1;
-        else // meshId > m_Meshes[m].GetID()
-            l = m + 1;
-    }
-
-    return nullptr;
+    return m_Meshes.Get(meshId);
 }
 
-// Insert mesh into vector, sorted by m_ID small->large.
-// Then return ptr to added mesh.
+// Insert mesh into map then return ptr to added mesh.
 Mesh* MeshManager::AddMesh(const Mesh &toAdd)
 {
-    for (size_t i = 0; i < m_Meshes.Size(); ++i)
-    {
-        if (toAdd.GetID() < m_Meshes[i].GetID())
-        {
-            return m_Meshes.Insert(i, toAdd);
-        }
-    }
-
-    // Empty or end of vector.
-    return m_Meshes.Insert(m_Meshes.Size(), toAdd);
+    // Notice this take advantage of shallow copy of mesh,
+    // that the temp toAdd object and inserted copy has the same Id.
+    return m_Meshes.Insert(toAdd, toAdd.GetID());
 }
 
 // Insert MeshInstance pointer to m_MesheInstPtrs so that it is 
@@ -96,23 +63,27 @@ void MeshManager::AddMeshInstance(MeshInstance* pToAdd)
 // it needs.
 UID MeshManager::GetMeshID(const Filename &meshfn) const
 {
-    for (size_t i = 0; i < m_Meshes.Size(); ++i)
+    for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        if (m_Meshes.peekat(i).GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
+        if (m_Meshes.PeekAt(i) != nullptr && 
+            m_Meshes.PeekAt(i)->GetMeshName().Compare(const_cast<Filename&>(meshfn)) == 0)
         {
-            return m_Meshes.peekat(i).GetID();
+            return m_Meshes.PeekAt(i)->GetID();
         }
     }
 
     return INVALID_UID;
 }
 
-bool MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext)
+bool MeshManager::GPULoadMeshes(ID3D11Device *pD3DDevice, ID3D11DeviceContext *pDeviceContext, TextureManager *pTexManager)
 {
     bool res = true;
-    for (size_t i = 0; i < m_Meshes.Size(); ++i)
+    for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        res &= m_Meshes.at(i).InitializeGPU(pD3DDevice, pDeviceContext);
+        if(m_Meshes.PeekAt(i) == nullptr)
+            continue;
+        Mesh* temp = m_Meshes.At(i);
+        res &= m_Meshes.At(i)->InitializeGPU(pD3DDevice, pDeviceContext, pTexManager);
     }
 
     return res;
@@ -120,11 +91,13 @@ bool MeshManager::LoadMeshesGPU(ID3D11Device *pD3DDevice, ID3D11DeviceContext *p
 
 void MeshManager::ReleaseMeshesGPU()
 {
-    for (size_t i = 0; i < m_Meshes.Size(); ++i)
+    for (size_t i = 0; i < m_Meshes.Capacity(); ++i)
     {
-        m_Meshes.at(i).ReleaseGPU();
-    }
+        if (m_Meshes.PeekAt(i) == nullptr)
+            continue;
 
+        m_Meshes.At(i)->ReleaseGPU();
+    }
 }
 
 bool MeshManager::Update(const GameContext &context)

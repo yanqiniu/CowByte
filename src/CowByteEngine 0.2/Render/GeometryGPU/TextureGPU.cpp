@@ -8,7 +8,8 @@ using namespace DirectX;
 
 TextureGPU::TextureGPU() :
     m_pSamplerState(nullptr),
-    m_pShaderRscView(nullptr)
+    m_pShaderRscView(nullptr),
+    m_UID(INVALID_UID)
 {
 }
 
@@ -25,6 +26,7 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
     const wchar_t *newPath = CBStringOps::CharToWChar(texturePath.Get());
     if(!ResultNotFailed(CreateDDSTextureFromFile(pDevice, newPath, nullptr, &m_pShaderRscView)))
     {
+        Release();
         return false;
     }
 
@@ -42,16 +44,26 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
     m_pSamplerState = nullptr;
     if (!ResultNotFailed(pDevice->CreateSamplerState(&sampDesc, &m_pSamplerState)))
     {
+        Release();
         return false;
     }
 
+    static UID uidCounter = 0;
+    m_UID = uidCounter++;
+    m_TexFileName.Set(filename);
     return true;
 }
 
 void TextureGPU::Release()
 {
-    m_pSamplerState->Release();
-    m_pShaderRscView->Release();
-    m_pSamplerState = nullptr;
-    m_pShaderRscView = nullptr;
+    if (m_pSamplerState != nullptr)
+    {
+        m_pSamplerState->Release();
+        m_pSamplerState = nullptr;
+    }
+    if (m_pShaderRscView != nullptr)
+    {
+        m_pShaderRscView->Release();
+        m_pShaderRscView = nullptr;
+    }
 }
