@@ -14,16 +14,12 @@ struct PS_Input
 };
 
 
-cbuffer PerApplication : register(b0)
-{
-}
-
-cbuffer PerFrame : register(b1)
+cbuffer ViewProjMat : register(b0)
 {
     matrix viewProjectionMatrix;
 }
 
-cbuffer PerObject : register(b2)
+cbuffer ObjectWorldMat : register(b1)
 {
     matrix worldMatrix;
 }

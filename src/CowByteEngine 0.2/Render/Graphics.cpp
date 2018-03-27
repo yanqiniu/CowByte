@@ -47,7 +47,8 @@ Graphics::Graphics(const GraphicsData &data):
     m_pTexManager(nullptr),
     m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
-    m_pConstantBuffers(),
+    m_pConstBuf_ViewProjMat(nullptr),
+    m_pConstBuf_ObjectWorldMat(nullptr),
     m_pDepthStencilBuffer(nullptr),
     m_pDepthStencilState(nullptr),
     m_pRasterizerState(nullptr),
@@ -105,8 +106,7 @@ bool Graphics::Update(const GameContext& context)
     else
     {
         m_pMainCamera->UpdateVPMatrix();
-        m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
-        m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerFrame, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]);
+        m_pDeviceContext->UpdateSubresource(m_pConstBuf_ViewProjMat, 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
     }
 
     FLOAT color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
@@ -160,8 +160,7 @@ bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
         return false;
 
     // Update world matrix.
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
-    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::PerObject, 1, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]);
+    m_pDeviceContext->UpdateSubresource(m_pConstBuf_ObjectWorldMat, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
     
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
@@ -284,10 +283,12 @@ bool Graphics::InitializePipeline()
     constantBufferDesc.CPUAccessFlags = 0;
     constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]));
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ObjectWorldMat));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ViewProjMat));
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::ObjectWorldMatrix, 1, &m_pConstBuf_ObjectWorldMat);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstants::ViewProjMatrix,    1, &m_pConstBuf_ViewProjMat);
+
 
     // Set rasterizer stage.
     m_pDeviceContext->RSSetState(m_pRasterizerState);

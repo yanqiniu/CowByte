@@ -60,11 +60,15 @@ private:
     ID3D11RenderTargetView *m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
 
-    ID3D11Buffer *m_pConstantBuffers[NUM_CBUFFER];
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
     ID3D11SamplerState* m_pSamplerState;
+
+    // Constant buffers:
+    ID3D11Buffer *m_pConstBuf_ViewProjMat;
+    ID3D11Buffer *m_pConstBuf_ObjectWorldMat;
+
 
     // Other members:
     Window *m_pWindow;
