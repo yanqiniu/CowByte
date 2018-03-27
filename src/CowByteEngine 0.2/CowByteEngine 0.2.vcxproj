@@ -141,6 +141,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Math\Point.h" />
     <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
     <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
     <ClInclude Include="Render\GeometryGPU\MaterialGPU.h" />

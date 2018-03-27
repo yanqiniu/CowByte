@@ -44,29 +44,27 @@ bool Input::Initialize()
     ThrowIfFailed(m_pDirectInput->CreateDevice(GUID_SysKeyboard, &m_pKeyboard, nullptr));
     ThrowIfFailed(m_pKeyboard->SetDataFormat(&c_dfDIKeyboard));
     ThrowIfFailed(m_pKeyboard->SetCooperativeLevel(m_pWindow->GetWindowHandle(), DISCL_EXCLUSIVE | DISCL_FOREGROUND)); // Do not share with other programs.
-    m_pKeyboard->Acquire();
 
     // Setup mouse.
     ThrowIfFailed(m_pDirectInput->CreateDevice(GUID_SysMouse, &m_pMouse, nullptr));
     ThrowIfFailed(m_pMouse->SetDataFormat(&c_dfDIMouse));
     ThrowIfFailed(m_pMouse->SetCooperativeLevel(m_pWindow->GetWindowHandle(), DISCL_NONEXCLUSIVE | DISCL_FOREGROUND)); // Have to check for when it goes in and out of focus and re-acquire it each time.
-    m_pMouse->Acquire();
 
     return true;
 }
 
 bool Input::Update(const GameContext &context)
 {
-    // Read the current state of the keyboard.
-    if (!ReadKeyboard())
-        return false;
+    int keyRes = ReadKeyboard();
+    int mouseRes = ReadMouse();
 
-    // Read the current state of the mouse.
-    if (!ReadMouse())
-        return false;
+    if (keyRes == 0)
+        ProcessKeyboardInput();
+    if (mouseRes == 0)
+        ProcessMouseInput();
 
-    // Process the changes in the mouse and keyboard.
-    ProcessDirectInput();
+    if (keyRes == 1 || mouseRes == 1)
+        return false;
 
     return true;
 }
@@ -123,7 +121,10 @@ bool Input::GetKeyHeld(KeyCodes keyCode)
     return m_InputPrev.GetKeyDown(keyCode) && m_InputCur.GetKeyDown(keyCode);
 }
 
-bool Input::ReadKeyboard()
+// 0: Succeeded.
+// 1: Failed.
+// 2: Attempted reacquire.
+int Input::ReadKeyboard()
 {
     HRESULT result = m_pKeyboard->GetDeviceState(sizeof(m_KeyboardState), (LPVOID)&m_KeyboardState);
     if (FAILED(result))
@@ -131,18 +132,23 @@ bool Input::ReadKeyboard()
         // If the keyboard lost focus or was not acquired then try to get it back.
         if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
         {
+            // Acquire then try to read again next frame.
             m_pKeyboard->Acquire();
+            return 2;
         }
         else
         {
             DbgERROR("Failed getting keyboard state!");
-            return false;
+            return 1;
         }
     }
-    return true;
+    return 0;
 }
 
-bool Input::ReadMouse()
+// 0: Succeeded.
+// 1: Failed.
+// 2: Attempted reacquire.
+int Input::ReadMouse()
 {
     HRESULT result = m_pMouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_MouseState);
     if (FAILED(result))
@@ -150,24 +156,29 @@ bool Input::ReadMouse()
         // If the keyboard lost focus or was not acquired then try to get it back.
         if ((result == DIERR_INPUTLOST) || (result == DIERR_NOTACQUIRED))
         {
+            // Acquire then try to read again next frame.
             m_pMouse->Acquire();
+            return 2;
         }
         else
         {
             DbgERROR("Failed getting mouse state!");
-            return false;
+            return 1;
         }
     }
-    return true;
-
+    return 0;
 }
 
-void Input::ProcessDirectInput()
+void Input::ProcessKeyboardInput()
 {
-    m_InputPrev = m_InputCur;
-
-    m_InputCur.m_MouseDelta.X = m_MouseState.lX;
-    m_InputCur.m_MouseDelta.Y = m_MouseState.lY;
-
     memcpy(m_InputCur.m_Keys, m_KeyboardState, sizeof(m_InputCur.m_Keys));
 }
+
+void Input::ProcessMouseInput()
+{
+    m_InputPrev = m_InputCur;
+    m_InputCur.m_MouseDelta.X = m_MouseState.lX;
+    m_InputCur.m_MouseDelta.Y = m_MouseState.lY;
+}
+
+

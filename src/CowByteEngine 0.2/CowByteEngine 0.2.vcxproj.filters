@@ -132,6 +132,8 @@
     <ClInclude Include="Math\simdhelper.h">
       <Filter>Math</Filter>
     </ClInclude>
+    <ClInclude Include="Math\Vec2.h" />
+    <ClInclude Include="Render\DDSTextureLoader\DDSTextureLoader.h" />
     <ClInclude Include="Render\GeometryCPU\Mesh.h">
       <Filter>Render</Filter>
     </ClInclude>
@@ -141,39 +143,16 @@
     <ClInclude Include="Render\GeometryCPU\MeshInstance.h">
       <Filter>Render</Filter>
     </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\DDSTextureLoader\DDSTextureLoader.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryCPU\MaterialCPU.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\MaterialGPU.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\TextureGPU.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\GeometryGPU\TextureManager.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Render\Other\CBColor.h">
-      <Filter>Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Utils\CBMap.h">
-      <Filter>Utils</Filter>
-    </ClInclude>
-    <ClInclude Include="Math\Vec2.h">
-      <Filter>Math</Filter>
-    </ClInclude>
+    <ClInclude Include="Render\GeometryGPU\VertexBufferGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\IndexBufferGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\MaterialGPU.h" />
+    <ClInclude Include="Render\GeometryGPU\TextureGPU.h" />
+    <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
+    <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
+    <ClInclude Include="Render\Other\CBColor.h" />
+    <ClInclude Include="Render\GeometryGPU\TextureManager.h" />
+    <ClInclude Include="Utils\CBMap.h" />
+    <ClInclude Include="Math\Point.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -245,6 +224,7 @@
     <ClCompile Include="Math\Quaternion.cpp">
       <Filter>Math</Filter>
     </ClCompile>
+    <ClCompile Include="Render\DDSTextureLoader\DDSTextureLoader.cpp" />
     <ClCompile Include="Render\GeometryCPU\Mesh.cpp">
       <Filter>Render</Filter>
     </ClCompile>
@@ -254,27 +234,12 @@
     <ClCompile Include="Render\GeometryCPU\MeshInstance.cpp">
       <Filter>Render</Filter>
     </ClCompile>
-    <ClCompile Include="Render\DDSTextureLoader\DDSTextureLoader.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryGPU\TextureManager.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
-    <ClCompile Include="Render\GeometryGPU\VertexBufferGPU.cpp">
-      <Filter>Render</Filter>
-    </ClCompile>
+    <ClCompile Include="Render\GeometryGPU\VertexBufferGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
+    <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
+    <ClCompile Include="Render\GeometryGPU\TextureManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">

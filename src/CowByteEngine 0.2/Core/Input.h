@@ -6,39 +6,10 @@
 #include "../Render/Window.h"
 #include "../Utils/typedefs.h"
 #include "../Utils/KeyCodes.h"
-#include "../Memory/CBMemory.h"
+#include "../Math/Point.h"
 
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
-
-//////////////////////////////////////////////////////////////////////////
-
-// TODO: move this to a more proper place.
-struct Point
-{
-    CBMEM_OVERLOAD_NEW_DELETE(Point)
-
-    INT32 X;
-    INT32 Y;
-
-    Point() :
-        X(0),
-        Y(0)
-    {
-
-    }
-
-    friend bool operator==(const Point& p1, const Point& p2)
-    {
-        return p1.X == p2.X && p1.Y == p2.Y;
-    }
-
-    friend bool operator!=(const Point& p1, const Point& p2)
-    {
-        return p1.X != p2.X || p1.Y != p2.Y;
-    }
-
-};
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -99,9 +70,10 @@ public:
     bool GetKeyHeld(KeyCodes keyCode);  // Key was down both last frame and this frame.
 
 private:
-    bool ReadKeyboard();
-    bool ReadMouse();
-    void ProcessDirectInput();
+    int ReadKeyboard();
+    int ReadMouse();
+    void ProcessKeyboardInput();
+    void ProcessMouseInput();
 
     InputStatus m_InputCur;
     InputStatus m_InputPrev;
