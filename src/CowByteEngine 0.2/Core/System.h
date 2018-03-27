@@ -30,7 +30,7 @@ class System : public Component
     friend class Engine;
 
 public: 
-    SystemType GetType() { return m_SystemType; }
+    SystemType GetType() const { return m_SystemType; }
 
 protected:
     System(const SystemData& data);
@@ -39,8 +39,6 @@ protected:
     virtual bool Initialize() { return Component::Initialize(); }
     virtual bool Update(const GameContext& context) override { return true; }
     virtual bool Shutdown() { return Component::Shutdown(); }
-
-    SystemType GetType() const { return m_SystemType; }
 
     SystemType m_SystemType;
 };
