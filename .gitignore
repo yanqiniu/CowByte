@@ -325,3 +325,5 @@ ASALocalRun/
 assets/other/Thumbs\.db
 
 *.db
+
+*.ma
