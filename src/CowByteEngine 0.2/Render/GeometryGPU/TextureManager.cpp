@@ -54,3 +54,13 @@ void TextureManager::Release()
         m_Textures.At(i)->Release();
     }
 }
+
+bool TextureManager::Update(const GameContext &context)
+{
+    return true;
+}
+
+void TextureManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
+{
+
+}

@@ -106,7 +106,7 @@ void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext, const Texture
 }
 
 void MaterialGPU::Release()
-{    // Set textures
+{   // Set textures
     //for (size_t i = 0; i < m_Textures.Size(); ++i)
     //{
     //    //m_Textures.at(i).Release();

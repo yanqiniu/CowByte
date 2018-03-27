@@ -91,6 +91,7 @@ bool Graphics::Initialize()
     }
 
     m_pTexManager = new TextureManager();
+    m_pTexManager->AttachTo_NonSceneNode_Parent(this);
     if (!m_pMeshManager->GPULoadMeshes(m_pDevice, m_pDeviceContext, m_pTexManager))
         return false;
     return true;
@@ -128,6 +129,9 @@ bool Graphics::ShutDown()
     m_pDevice->Release();
     m_pDeviceContext->Release();
     m_pRenderTargetView->Release();
+    m_pMeshManager->ReleaseMeshesGPU();
+    m_pTexManager->Release();
+    Component::Shutdown();
     return true;
 }
 

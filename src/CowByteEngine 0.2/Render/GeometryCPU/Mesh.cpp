@@ -34,6 +34,7 @@ void Mesh::ReleaseGPU()
 {
     m_VertexBuf.Release();
     m_IndexBuf.Release();
+    m_MaterialGPU.Release();
 }
 
 // CPU  read and load.
