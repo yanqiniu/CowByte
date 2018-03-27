@@ -1,6 +1,7 @@
 #ifndef _TEXTURE_GPU_H
 #define _TEXTURE_GPU_H
 #include <d3d11_1.h>
+#include "../../Utils/typedefs.h"
 
 class TextureGPU
 {
@@ -17,6 +18,7 @@ public:
 private:
     ID3D11SamplerState       *m_pSamplerState;
     ID3D11ShaderResourceView *m_pShaderRscView;
+    UID m_UID;
 };
 #endif
 

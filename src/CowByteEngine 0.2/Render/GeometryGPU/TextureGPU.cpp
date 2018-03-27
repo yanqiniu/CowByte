@@ -48,6 +48,8 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
         return false;
     }
 
+    static UID uidCounter = 0;
+    m_UID = uidCounter++;
     return true;
 }
 
