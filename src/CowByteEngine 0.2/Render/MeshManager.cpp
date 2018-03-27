@@ -19,8 +19,8 @@ MeshManager::~MeshManager()
 Mesh* MeshManager::CPULoadMesh(const char *meshName)
 {
     Mesh temp;
-    if (!temp.LoadContent(meshName))
-        return false;
+    if (!temp.LoadCPU(meshName))
+        return nullptr;
     return AddMesh(temp);
 }
 
