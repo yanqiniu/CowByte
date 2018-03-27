@@ -323,3 +323,5 @@ ASALocalRun/
 *.binlog
 
 assets/other/Thumbs\.db
+
+*.db
