@@ -6,7 +6,7 @@
 
 // Unlike CBQueue who implement a block based linked list, 
 // CBVector implement a contiguous array in a single block.
-template <class T>
+template <typename T>
 class CBVector
 {
 public:
@@ -56,7 +56,7 @@ private:
 };
 
 
-template <class T>
+template <typename T>
 CBVector<T>::CBVector() :
     m_Size(0),
     m_Capacity(0),
@@ -65,7 +65,7 @@ CBVector<T>::CBVector() :
 }
 
 // Custom copy constructor that doesn't just do a shallow copy.
-template <class T>
+template <typename T>
 CBVector<T>::CBVector(const CBVector &toCopy) :
     m_Size(0),
     m_Capacity(0),
@@ -76,14 +76,14 @@ CBVector<T>::CBVector(const CBVector &toCopy) :
     m_Size = toCopy.m_Size;
 }
 
-template <class T>
+template <typename T>
 CBVector<T>::CBVector(size_t size) :
     CBVector()
 {
     Resize(size);
 }
 
-template <class T>
+template <typename T>
 CBVector<T>::~CBVector()
 {
     Clear();
@@ -94,7 +94,7 @@ CBVector<T>::~CBVector()
     }
 }
 
-template <class T>
+template <typename T>
 CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
 {
     /*
@@ -127,7 +127,7 @@ CBVector<T> & CBVector<T>::operator=(const CBVector<T> &rhs)
     return *this;
 }
 
-template <class T>
+template <typename T>
 T* CBVector<T>::Back()
 {
     if (m_Size == 0)
@@ -136,7 +136,7 @@ T* CBVector<T>::Back()
         return &m_Data[m_Size - 1];
 }
 
-template <class T>
+template <typename T>
 void CBVector<T>::Clear()
 {
     // Please note that this does not set capacity to 0.
@@ -147,7 +147,7 @@ void CBVector<T>::Clear()
         Pop_back();
 }
 
-template <class T>
+template <typename T>
 bool CBVector<T>::IsValidIndex(size_t index)
 {
     return index >= 0 && index < m_Size;
@@ -156,7 +156,7 @@ bool CBVector<T>::IsValidIndex(size_t index)
 // Notice that insert in the middle is very costly as it
 // needs to destruct elements being shifted when shifting
 // them.
-template <class T>
+template <typename T>
 T* CBVector<T>::Insert(size_t index, const T &value)
 {
     if (index < 0 || index > m_Size) // can insert at mSize (push_back)
@@ -180,7 +180,7 @@ T* CBVector<T>::Insert(size_t index, const T &value)
     return &m_Data[index];
 }
 
-template <class T>
+template <typename T>
 bool CBVector<T>::Erase(size_t index)
 {
     if (!IsValidIndex(index))
@@ -199,13 +199,13 @@ bool CBVector<T>::Erase(size_t index)
     return true;
 }
 
-template <class T>
+template <typename T>
 bool CBVector<T>::Pop_back()
 {
     return Erase(m_Size - 1);
 }
 
-template <class T>
+template <typename T>
 void CBVector<T>::Resize(size_t newCapacity)
 {
     if (newCapacity == m_Capacity) // "wtf?"
@@ -242,14 +242,14 @@ void CBVector<T>::Resize(size_t newCapacity)
     }
 }
 
-template <class T>
+template <typename T>
 T* CBVector<T>::Push_back(const T &toPush)
 {
     return Insert(m_Size, toPush);
 }
 
 
-template <class T>
+template <typename T>
 void CBVector<T>::Grow_capacity()
 {
     if (m_Capacity == 0)
