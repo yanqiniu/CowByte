@@ -20,10 +20,10 @@ struct GameData : public SystemData
     Input *m_pInput;
 };
 
-DECLARE_DEBUG_GAME_OBJECT(Cube)
-DECLARE_DEBUG_GAME_OBJECT(Plane)
-DECLARE_DEBUG_GAME_OBJECT(Torus)
-DECLARE_DEBUG_GAME_OBJECT(Cow)
+DECLARE_DEBUG_GAME_OBJECT(Cube);
+DECLARE_DEBUG_GAME_OBJECT(Plane);
+DECLARE_DEBUG_GAME_OBJECT(Torus);
+DECLARE_DEBUG_GAME_OBJECT(Cow);
 
 
 // This will be polished into a general purpose Game class that

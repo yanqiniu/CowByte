@@ -20,14 +20,14 @@ public:
 
     // member functions.
     void        Set(const char *inStr);
-    void        Set(CBString &toAppend);
+    void        Set(const CBString &toAppend);
     char*       Get();
     const char* Peek() const;
     void        Clear();
     size_t      Capacity() const;
     size_t      Size() const;
     int         Compare(const char *rhs) const;
-    int         Compare(CBString &rhs) const;
+    int         Compare(const CBString &rhs) const;
     void        Append(const char *toAppend);
     bool        Strip();
     bool        Strip(StripMode mode);
@@ -50,9 +50,9 @@ inline const char* CBString<len>::Peek() const
 }
 
 template <size_t len>
-inline int CBString<len>::Compare(CBString &rhs) const
+inline int CBString<len>::Compare(const CBString &rhs) const
 {
-    return strcmp(m_Data, rhs.Get());
+    return strcmp(m_Data, rhs.Peek());
 }
 
 template <size_t len>
@@ -108,9 +108,9 @@ inline void CBString<len>::Set(const char *inStr)
 }
 
 template <size_t len>
-inline void CBString<len>::Set(CBString &toAppend)
+inline void CBString<len>::Set(const CBString &value)
 {
-    Set(toAppend.Get());
+    Set(value.Peek());
 }
 
 template <size_t len>

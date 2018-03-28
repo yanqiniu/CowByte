@@ -141,6 +141,8 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Render\GeometryCPU\Light.h" />
+    <ClInclude Include="Math\Point.h" />
     <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
     <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
     <ClInclude Include="Render\GeometryGPU\MaterialGPU.h" />
@@ -170,6 +172,7 @@
     <ClInclude Include="SceneGraph\SceneNode.h" />
     <ClInclude Include="Render\GeometryGPU\TextureGPU.h" />
     <ClInclude Include="Render\GeometryGPU\TextureManager.h" />
+    <ClInclude Include="Render\GeometryCPU\TextureCPU.h" />
     <ClInclude Include="Utils\CBDebug.h" />
     <ClInclude Include="Utils\CBFile.h" />
     <ClInclude Include="Utils\CBHelper.h" />
@@ -191,6 +194,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Light.cpp" />
     <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />
@@ -214,6 +218,7 @@
     <ClCompile Include="SceneGraph\SceneNode.cpp" />
     <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\TextureManager.cpp" />
+    <ClCompile Include="Render\GeometryCPU\TextureCPU.cpp" />
     <ClCompile Include="Utils\CBFile.cpp" />
     <ClCompile Include="Utils\CBPath.cpp" />
     <ClCompile Include="Utils\CBString.cpp" />

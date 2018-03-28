@@ -6,21 +6,21 @@
 #include "../Render/GeometryCPU/MeshInstance.h"
 #include "../Utils/CBRefCountPtr.h"
 
-#define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)\
-ClassName::ClassName()\
-{\
-    m_pSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);\
-    MeshInstance *pMeshInst = new MeshInstance(MeshFile);\
-    pMeshInst->AttachTo_SceneNode_Parent(m_pSceneNode);\
-    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();\
-    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = pMeshInst;\
-    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());\
+#define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)                                   \
+ClassName::ClassName()                                                                  \
+{                                                                                       \
+    m_pSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);          \
+    MeshInstance *pMeshInst = new MeshInstance(MeshFile);                               \
+    pMeshInst->AttachTo_SceneNode_Parent(m_pSceneNode);                                 \
+    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();              \
+    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = pMeshInst;   \
+    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());                 \
 } 
 
-DEFINE_DEBUG_GAME_OBJECT(Cube, "cube.mesha")
-DEFINE_DEBUG_GAME_OBJECT(Plane, "plane.mesha")
-DEFINE_DEBUG_GAME_OBJECT(Torus, "torus.mesha")
-DEFINE_DEBUG_GAME_OBJECT(Cow, "cow.mesha")
+DEFINE_DEBUG_GAME_OBJECT(Cube, "cube.mesha");
+DEFINE_DEBUG_GAME_OBJECT(Plane, "plane.mesha");
+DEFINE_DEBUG_GAME_OBJECT(Torus, "torus.mesha");
+DEFINE_DEBUG_GAME_OBJECT(Cow, "cow.mesha");
 
 Game::Game(const GameData& gameData) :
     System(SystemType::SYS_GAME),
@@ -36,12 +36,9 @@ Game::~Game()
 // Call this after systems have been initialized.
 bool Game::Initialize()
 {
-    //// Initialize Camera.
-    //m_pMainCamera = new Camera();
-    //SceneNode *pCameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
-    //m_pMainCamera->AttachTo_SceneNode_Parent(pCameraSceneNode);
     DbgAssert(m_pInput != nullptr, "Null input used by game!");
 
+    // Game objects setup.
     //m_pCube0 = new Cube();
     m_pCube1 = new Cube();
     m_pPlane = new Plane();
@@ -56,11 +53,13 @@ bool Game::Initialize()
     m_pPlane->m_pSceneNode->Scale(3.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
+
     // Create game camera.
     m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
-    cameraSceneNode->Translate(Vec3(0, 3, -10.0f));
+    cameraSceneNode->RotateLocal(Vec3::Up(), 45.0f);
+    cameraSceneNode->Translate(Vec3(-20, 6.0f, -20.0f));
 
     // Set the game camera as main.
     CBRefCountPtr<Message> msgPtr = Msg_SetMainCamera::Create();

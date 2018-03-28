@@ -5,9 +5,9 @@
 
 Component::Component() :
     m_MessageQueue(),
-    m_Components(4),
+    m_ChildrenComps(4),
     m_bIsActive(true),
-    m_pParentComponent(nullptr),
+    m_pParentComp(nullptr),
     m_bParentIsSceneNode(false),
     m_nOffsprings(0)
 {
@@ -24,9 +24,9 @@ void Component::AcceptMessage(CBRefCountPtr<Message> &pMsg)
     m_MessageQueue.Enqueue(pMsg);
 
     // And then broadcast to all children.
-    for (UINT32 i = 0; i < m_Components.Size(); ++i)
+    for (UINT32 i = 0; i < m_ChildrenComps.Size(); ++i)
     {
-        m_Components.at(i)->AcceptMessage(pMsg);
+        m_ChildrenComps.at(i)->AcceptMessage(pMsg);
     }
 }
 
@@ -43,8 +43,8 @@ bool Component::Update(const GameContext &context)
 bool Component::Shutdown()
 {
     m_MessageQueue.~CBQueue();
-    m_Components.~CBVector();
-    m_pParentComponent = nullptr;
+    m_ChildrenComps.~CBVector();
+    m_pParentComp = nullptr;
 
     return true;
 }
@@ -54,9 +54,9 @@ bool Component::UpdateTree(const GameContext &context)
     bool toRet = true;
     // Update me and children:
     toRet &= Update(context);
-    for (int i = 0; i < m_Components.Size(); ++i)
+    for (int i = 0; i < m_ChildrenComps.Size(); ++i)
     {
-        toRet &= m_Components.at(i)->UpdateTree(context);
+        toRet &= m_ChildrenComps.at(i)->UpdateTree(context);
     }
 
     return toRet;
@@ -75,21 +75,20 @@ bool Component::IsActiveSelf()
 
 void Component::AttachTo_NonSceneNode_Parent(Component* parentPtr)
 {
-    // TODO: add support for attaching to another parent. 
-    // component reference in current parent should be erased!
-    if (m_pParentComponent != nullptr && m_pParentComponent != parentPtr)
+    // Erasing component reference in current parent, if there is one.
+    if (m_pParentComp != nullptr && m_pParentComp != parentPtr)
     {
-        for (size_t i = 0; i < m_pParentComponent->m_Components.Size(); ++i)
+        for (size_t i = 0; i < m_pParentComp->m_ChildrenComps.Size(); ++i)
         {
-            if (m_pParentComponent->m_Components.peekat(i) == this)
+            if (m_pParentComp->m_ChildrenComps.peekat(i) == this)
             {
-                m_pParentComponent->m_Components.Erase(i);
+                m_pParentComp->m_ChildrenComps.Erase(i);
             }
         }
     }
 
     parentPtr->AddChild(this);
-    m_pParentComponent = parentPtr;
+    m_pParentComp = parentPtr;
 }
 
 void Component::AttachTo_SceneNode_Parent(SceneNode* parentPtr)
@@ -106,7 +105,7 @@ bool Component::HasSceneNodeParent()
 SceneNode *Component::GetParentSceneNode() const
 {
     if (m_bParentIsSceneNode)
-        return dynamic_cast<SceneNode*> (m_pParentComponent);
+        return dynamic_cast<SceneNode*> (m_pParentComp);
     else
         return nullptr;
 }
@@ -115,14 +114,14 @@ SceneNode *Component::GetParentSceneNode() const
 bool Component::AddChild(Component* childPtr)
 {
     // Check if the pointer already exists.
-    for (size_t i = 0; i < m_Components.Size(); ++i)
+    for (size_t i = 0; i < m_ChildrenComps.Size(); ++i)
     {
-        if (m_Components.peekat(i) == childPtr)
+        if (m_ChildrenComps.peekat(i) == childPtr)
             return false;
     }
 
-    m_Components.Push_back(childPtr);
-    IncreNumOffsprings(this, 1 + childPtr->m_nOffsprings);
+    m_ChildrenComps.Push_back(childPtr);
+    IncreNumOffsprings(1 + childPtr->m_nOffsprings);
     return true;
 }
 
@@ -136,21 +135,22 @@ void Component::HandleMessageQueue()
     }
 }
 
-void Component::IncreNumOffsprings(Component* comp, size_t amount)
+void Component::IncreNumOffsprings(size_t amount)
 {
+    Component *comp = this;
     while (comp != nullptr)
     {
         comp->m_nOffsprings += amount;
-        comp = comp->m_pParentComponent;
+        comp = comp->m_pParentComp;
     }
 }
 
 void Component::HandleMessagesQueueTree()
 {
     HandleMessageQueue();
-    for (int i = 0; i < m_Components.Size(); ++i)
+    for (int i = 0; i < m_ChildrenComps.Size(); ++i)
     {
-        m_Components.at(i)->HandleMessagesQueueTree();
+        m_ChildrenComps.at(i)->HandleMessagesQueueTree();
     }
 }
 

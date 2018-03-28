@@ -14,6 +14,7 @@
 #include "GeometryCPU/MeshInstance.h"
 #include "../Utils/CBFile.h"
 #include "../Messaging/CBMessaging.h"
+#include "GeometryGPU/GPURegisterLayout.h"
 
 #include "DDSTextureLoader/DDSTextureLoader.h"
 
@@ -46,7 +47,8 @@ Graphics::Graphics(const GraphicsData &data):
     m_pTexManager(nullptr),
     m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
-    m_pConstantBuffers(),
+    m_pConstBuf_ViewProjMat(nullptr),
+    m_pConstBuf_ObjectWorldMat(nullptr),
     m_pDepthStencilBuffer(nullptr),
     m_pDepthStencilState(nullptr),
     m_pRasterizerState(nullptr),
@@ -89,6 +91,7 @@ bool Graphics::Initialize()
     }
 
     m_pTexManager = new TextureManager();
+    m_pTexManager->AttachTo_NonSceneNode_Parent(this);
     if (!m_pMeshManager->GPULoadMeshes(m_pDevice, m_pDeviceContext, m_pTexManager))
         return false;
     return true;
@@ -101,17 +104,18 @@ bool Graphics::Update(const GameContext& context)
         DbgWARNING("No main camera set (send the message)!");
         return false;
     }
+    else
+    {
+        m_pMainCamera->UpdateVPMatrix();
+        m_pDeviceContext->UpdateSubresource(m_pConstBuf_ViewProjMat, 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
+    }
 
     FLOAT color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
-    m_pMainCamera->UpdateWToCMatrix();
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME], 0, nullptr, &m_pMainCamera->GetWToCMatrix(), 0, 0);
-
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
-        m_pDeviceContext->VSSetConstantBuffers(0, 3, m_pConstantBuffers);
         DrawSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
     }
 
@@ -125,6 +129,9 @@ bool Graphics::ShutDown()
     m_pDevice->Release();
     m_pDeviceContext->Release();
     m_pRenderTargetView->Release();
+    m_pMeshManager->ReleaseMeshesGPU();
+    m_pTexManager->Release();
+    Component::Shutdown();
     return true;
 }
 
@@ -157,7 +164,8 @@ bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
         return false;
 
     // Update world matrix.
-    m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT], 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    m_pDeviceContext->UpdateSubresource(m_pConstBuf_ObjectWorldMat, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+    
     m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
 
@@ -169,7 +177,6 @@ void Graphics::_HandleMessage(CBRefCountPtr<Message> &pMsg)
     if (pMsg->GetInstType() == Msg_SetMainCamera::ClassTypeSpecifier())
     {
         m_pMainCamera = MESSAGE_FROM_PTR(pMsg, Msg_SetMainCamera)->m_pCamera;
-        m_pDeviceContext->UpdateSubresource(m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION], 0, nullptr, &m_pMainCamera->GetProjectionMatrix(), 0, 0);
     }
 
 }
@@ -221,12 +228,6 @@ bool Graphics::InitializePipeline()
     ));
 
 
-    // Set render target.
-    ID3D11Texture2D *pBackBuffer;
-    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
-    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
-    pBackBuffer->Release();
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, nullptr);
 
     // Create a depth stencil buffer and view.
     D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
@@ -286,16 +287,23 @@ bool Graphics::InitializePipeline()
     constantBufferDesc.CPUAccessFlags = 0;
     constantBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_APPLICATION]));
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_FRAME]));
-    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstantBuffers[ConstantBufferType::CBUFFER_OBJECT]));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ObjectWorldMat));
+    ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ViewProjMat));
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg::ObjectWorldMatrix, 1, &m_pConstBuf_ObjectWorldMat);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg::ViewProjMatrix,    1, &m_pConstBuf_ViewProjMat);
+
 
     // Set rasterizer stage.
     m_pDeviceContext->RSSetState(m_pRasterizerState);
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
 
     // Output merger stage.
+    // Set render target.
+    ID3D11Texture2D *pBackBuffer;
+    ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
+    pBackBuffer->Release();
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 

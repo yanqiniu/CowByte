@@ -17,8 +17,6 @@ public:
     
     Mesh* CPULoadMesh(const char *meshName); // Return pointer to the mesh loaded.
     Mesh* GetMeshPtr(UID meshId);
-    Mesh* AddMesh(const Mesh &toAdd);
-    void AddMeshInstance(MeshInstance* pToAdd);
     UID   GetMeshID(const Filename &meshfn) const;
     const CBVector<MeshInstance*> &GetMeshInsts() const;
 
@@ -29,6 +27,8 @@ public:
 
 private:
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
+    Mesh* AddMesh(const Mesh &toAdd);
+    void AddMeshInstance(MeshInstance* pToAdd);
 
     CBMap<Mesh> m_Meshes;
     CBVector<MeshInstance*> m_MesheInstPtrs;

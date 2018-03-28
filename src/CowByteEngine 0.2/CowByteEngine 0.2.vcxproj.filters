@@ -152,6 +152,9 @@
     <ClInclude Include="Render\Other\CBColor.h" />
     <ClInclude Include="Render\GeometryGPU\TextureManager.h" />
     <ClInclude Include="Utils\CBMap.h" />
+    <ClInclude Include="Math\Point.h" />
+    <ClInclude Include="Render\GeometryCPU\Light.h" />
+    <ClInclude Include="Render\GeometryCPU\TextureCPU.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -239,6 +242,8 @@
     <ClCompile Include="Render\GeometryGPU\TextureGPU.cpp" />
     <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\TextureManager.cpp" />
+    <ClCompile Include="Render\GeometryCPU\Light.cpp" />
+    <ClCompile Include="Render\GeometryCPU\TextureCPU.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">
