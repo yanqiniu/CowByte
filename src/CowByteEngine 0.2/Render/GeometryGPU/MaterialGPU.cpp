@@ -93,22 +93,9 @@ void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext, const Texture
     // Set textures
     for (size_t i = 0; i < m_TexIDs.Size(); ++i)
     {
-        // TODO: set textures according to their types!
-        int slot = -1;
-        switch (pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i))->GetType())
-        {
-        case Albedo: slot = GPUTextureReg::AlbedoMap; break;
-        case Normal: slot = GPUTextureReg::NormalMap; break;
-        case Specular: slot = GPUTextureReg::SpecularMap; break;
-        }
-
-        if (slot == -1)
-        {
-            // Invalid texture type
-            continue;
-        }
-        pDeviceContext->PSSetSamplers(slot, 1, &pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i))->GetSamplerState());
-        pDeviceContext->PSSetShaderResources(slot, 1, &pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i))->GetShaderResourceView());
+        const TextureGPU* pTexGPU = pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i));
+        pDeviceContext->PSSetSamplers(pTexGPU->GetReg(), 1, &pTexGPU->GetSamplerState());
+        pDeviceContext->PSSetShaderResources(pTexGPU->GetReg(), 1, &pTexGPU->GetShaderResourceView());
     }
 
     // Set input layout.

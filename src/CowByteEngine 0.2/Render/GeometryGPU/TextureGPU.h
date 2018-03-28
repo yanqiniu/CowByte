@@ -3,6 +3,7 @@
 #include <d3d11_1.h>
 #include "../../Utils/typedefs.h"
 #include "../GeometryCPU/TextureCPU.h"
+#include "GPURegisterLayout.h"
 //#include "TextureManager.h"
 
 class TextureGPU
@@ -12,7 +13,7 @@ public:
     TextureGPU();
     ~TextureGPU();
 
-    TextureType GetType() const { return m_Type; }
+    GPUTextureReg GetReg() const { return m_RegSlot; }
     ID3D11SamplerState*const & GetSamplerState() const { return m_pSamplerState; }
     ID3D11ShaderResourceView*const & GetShaderResourceView() const { return m_pShaderRscView; }
 
@@ -24,7 +25,7 @@ private:
     Filename m_TexFileName;
     ID3D11SamplerState       *m_pSamplerState;
     ID3D11ShaderResourceView *m_pShaderRscView;
-    TextureType m_Type;
+    GPUTextureReg m_RegSlot;
     UID m_UID;
 };
 #endif

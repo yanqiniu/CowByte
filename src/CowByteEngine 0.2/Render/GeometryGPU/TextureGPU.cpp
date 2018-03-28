@@ -51,7 +51,12 @@ bool TextureGPU::LoadFromTextureCPU(ID3D11Device *pDevice, const TextureCPU &tex
     static UID uidCounter = 0;
     m_UID = uidCounter++;
     m_TexFileName.Set(texCPU.GetFilename());
-    m_Type = texCPU.GetType();
+    switch (texCPU.GetType())
+    {
+    case Albedo:   m_RegSlot = GPUTextureReg::AlbedoMap; break;
+    case Normal:   m_RegSlot = GPUTextureReg::NormalMap; break;
+    case Specular: m_RegSlot = GPUTextureReg::SpecularMap; break;
+    }
     return true;
 }
 
