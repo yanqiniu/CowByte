@@ -12,6 +12,7 @@ public:
     TextureGPU();
     ~TextureGPU();
 
+    TextureType GetType() const { return m_Type; }
     ID3D11SamplerState*const & GetSamplerState() const { return m_pSamplerState; }
     ID3D11ShaderResourceView*const & GetShaderResourceView() const { return m_pShaderRscView; }
 
