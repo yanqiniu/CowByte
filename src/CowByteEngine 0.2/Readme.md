@@ -14,7 +14,3 @@
     * Scene management related files. Everything that sits in scene scope, including SceneNode, Camera, GameObject (TODO).
 - Utils
     * Utility and Logistics headers and Classes, including file reader, string operation, data containers, etc.
-
-### Other
-This is a refactoring of 0.1 version.  
-(so plz go to the other project folder if you wish to see old history of some of the files.)
