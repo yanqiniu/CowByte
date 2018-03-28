@@ -6,15 +6,15 @@
 #include "../Render/GeometryCPU/MeshInstance.h"
 #include "../Utils/CBRefCountPtr.h"
 
-#define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)\
-ClassName::ClassName()\
-{\
-    m_pSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);\
-    MeshInstance *pMeshInst = new MeshInstance(MeshFile);\
-    pMeshInst->AttachTo_SceneNode_Parent(m_pSceneNode);\
-    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();\
-    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = pMeshInst;\
-    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());\
+#define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)                                   \
+ClassName::ClassName()                                                                  \
+{                                                                                       \
+    m_pSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);          \
+    MeshInstance *pMeshInst = new MeshInstance(MeshFile);                               \
+    pMeshInst->AttachTo_SceneNode_Parent(m_pSceneNode);                                 \
+    CBRefCountPtr<Message> msgPtr = Msg_RegisterDrawbleMeshInst::Create();              \
+    MESSAGE_FROM_PTR(msgPtr, Msg_RegisterDrawbleMeshInst)->m_MeshInstPtr = pMeshInst;   \
+    CBMessaging::PostQueuedMessage(msgPtr, MessageBus::GetEngineBus());                 \
 } 
 
 DEFINE_DEBUG_GAME_OBJECT(Cube, "cube.mesha");
