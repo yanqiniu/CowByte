@@ -84,7 +84,7 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
 void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext, const TextureManager *pTexMgrGPU) const
 {
     // Set constant buffer.
-    pDeviceContext->VSSetConstantBuffers(GPUConstantsReg::PerMat, 1, &m_pConstBuf);
+    pDeviceContext->VSSetConstantBuffers(GPUConstantsReg_VS::PerMat, 1, &m_pConstBuf);
 
     // Set shader
     pDeviceContext->VSSetShader(m_pShaderVertex, 0, 0);

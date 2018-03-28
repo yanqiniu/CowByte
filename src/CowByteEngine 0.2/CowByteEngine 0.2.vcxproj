@@ -141,7 +141,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
-    <ClInclude Include="Render\GeometryCPU\Light.h" />
+    <ClInclude Include="SceneGraph\Light.h" />
     <ClInclude Include="Math\Point.h" />
     <ClInclude Include="Render\GeometryCPU\MaterialCPU.h" />
     <ClInclude Include="Render\GeometryGPU\GPURegisterLayout.h" />
@@ -194,7 +194,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
-    <ClCompile Include="Render\GeometryCPU\Light.cpp" />
+    <ClCompile Include="SceneGraph\Light.cpp" />
     <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\MaterialGPU.cpp" />
     <ClCompile Include="Render\GeometryGPU\IndexBufferGPU.cpp" />

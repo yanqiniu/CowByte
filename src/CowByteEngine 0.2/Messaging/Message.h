@@ -4,6 +4,7 @@
 #include "../Utils/typedefs.h"
 #include "MessageDecl.h"
 #include "../Memory/CBMemory.h"
+#include "../SceneGraph/Light.h"
 
 class MeshInstance;
 class Camera;
@@ -19,9 +20,6 @@ Step-by-Step: How do we create a new Message type?
 
 
 typedef INT32 MsgTypeID;
-
-
-
 
 class Message
 {
@@ -54,5 +52,13 @@ class Msg_SetMainCamera : public Message
 public:
     Camera *m_pCamera;
 };
+
+class Msg_RegisterLight : public Message
+{
+    DECLARE_MESSAGE_CLASS(Msg_RegisterLight, 3);
+public:
+    Light *m_pLight;
+};
+
 
 #endif // !_MESSAGE_H

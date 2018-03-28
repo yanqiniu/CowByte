@@ -145,6 +145,11 @@ void SceneNode::LookAt(const SceneNode &target, Vec3 up)
     UpdateLocalTransform();
 }
 
+const Vec3& SceneNode::GetWorldPosition() const
+{
+    return Vec3(m_WorldTransform._m[0][3], m_WorldTransform._m[1][3], m_WorldTransform._m[2][3], 1.0f);
+}
+
 bool SceneNode::Update(const GameContext &context)
 {
     return true;

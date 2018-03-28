@@ -11,6 +11,12 @@ class MessageBus;
 class GameContext;
 class SceneNode;
 
+// Overload pure virtual function with default content.
+#define DECLARE_COMPONENT_DEFAULT(ClassName)                                \
+virtual bool Update(const GameContext &context) override { return true; };   \
+virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override {};
+
+
 class Component
 {
 public:

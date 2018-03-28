@@ -290,8 +290,8 @@ bool Graphics::InitializePipeline()
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ObjectWorldMat));
     ThrowIfFailed(m_pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_pConstBuf_ViewProjMat));
     ZeroMemory(&constantBufferDesc, sizeof(D3D11_BUFFER_DESC));
-    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg::ObjectWorldMatrix, 1, &m_pConstBuf_ObjectWorldMat);
-    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg::ViewProjMatrix,    1, &m_pConstBuf_ViewProjMat);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg_VS::ObjectWorldMatrix, 1, &m_pConstBuf_ObjectWorldMat);
+    m_pDeviceContext->VSSetConstantBuffers(GPUConstantsReg_VS::ViewProjMatrix,    1, &m_pConstBuf_ViewProjMat);
 
 
     // Set rasterizer stage.
@@ -306,7 +306,6 @@ bool Graphics::InitializePipeline()
     pBackBuffer->Release();
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
-
 
     return true;
 }

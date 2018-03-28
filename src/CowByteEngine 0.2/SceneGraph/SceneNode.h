@@ -36,6 +36,7 @@ public:
 
     const Matrix4x4& GetLocalTransform() const { return m_LocalTransform; }
     const Matrix4x4& GetWorldTransform() const { return m_WorldTransform; }
+    const Vec3&      GetWorldPosition() const;
 
     virtual bool Update(const GameContext &context) override;
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;

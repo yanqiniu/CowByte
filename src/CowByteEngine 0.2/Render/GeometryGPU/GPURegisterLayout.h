@@ -1,7 +1,7 @@
 #ifndef _GPU_REGISTER_LAYOUT_H
 #define _GPU_REGISTER_LAYOUT_H
 
-enum GPUConstantsReg
+enum GPUConstantsReg_VS
 {
     //////////////////////////////////////////////////////////////////////////
     // Per applications:
@@ -10,11 +10,6 @@ enum GPUConstantsReg
     //////////////////////////////////////////////////////////////////////////
     // Per Frame:
     ViewProjMatrix,
-    // Lights:
-    //Light0,
-    //Light1,
-    //Light2,
-    //Light3,
 
     //////////////////////////////////////////////////////////////////////////
     // Per Object:
@@ -27,6 +22,16 @@ enum GPUConstantsReg
 
     //////////////////////////////////////////////////////////////////////////
     NumConstBuffer
+};
+
+static const int g_nMaxLights = 4;
+enum GPUConstantsReg_PS
+{
+    // Pixel Lights:
+    Light0,
+    Light1,
+    Light2,
+    Light3
 };
 
 enum GPUTextureReg
