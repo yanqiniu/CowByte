@@ -4,7 +4,6 @@
 #include "../Utils/typedefs.h"
 #include "MessageDecl.h"
 #include "../Memory/CBMemory.h"
-#include "../SceneGraph/Light.h"
 
 class MeshInstance;
 class Camera;
@@ -53,6 +52,7 @@ public:
     Camera *m_pCamera;
 };
 
+class Light;
 class Msg_RegisterLight : public Message
 {
     DECLARE_MESSAGE_CLASS(Msg_RegisterLight, 3);
