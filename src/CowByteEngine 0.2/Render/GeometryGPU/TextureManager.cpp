@@ -13,19 +13,19 @@ TextureManager::~TextureManager()
 {
 }
 
-UID TextureManager::LoadTextureFromFile(ID3D11Device *pDevice, const char *filename)
+UID TextureManager::LoadFromTextureCPU(ID3D11Device *pDevice, const TextureCPU &texCPU)
 {
     // See if exists.
     for (size_t i = 0; i < m_Textures.Capacity(); ++i)
     {
         if (m_Textures.PeekAt(i) == nullptr)
             continue;
-        if (m_Textures.PeekAt(i)->m_TexFileName.Compare(filename) == 0)
+        if (m_Textures.PeekAt(i)->m_TexFileName.Compare(texCPU.GetFilename()) == 0)
             return m_Textures.PeekAt(i)->m_UID;
     }
 
     TextureGPU temp;
-    temp.LoadFromFile(pDevice, filename);
+    temp.LoadFromTextureCPU(pDevice, texCPU);
     if (m_Textures.Insert(temp, temp.m_UID) == nullptr)
     {
         DbgERROR("Failed adding texture to manager.");
@@ -33,6 +33,8 @@ UID TextureManager::LoadTextureFromFile(ID3D11Device *pDevice, const char *filen
     }
     return temp.m_UID;
 }
+
+
 
 TextureGPU* TextureManager::GetTexture(UID id)
 {

@@ -39,16 +39,12 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     pDeviceContext->UpdateSubresource(m_pConstBuf, 0, nullptr, &matcpu.GetConstBufferCPU(), 0, 0);
 
     // Create textures. 
-    // TODO: have a texture manager so we share textures.
-    UID tempID = pTexMgrGPU->LoadTextureFromFile(pDevice, matcpu.GetMapName(TexMapType::Albedo).Peek());
-    if (tempID == INVALID_UID) return false;
-    else m_TexIDs.Push_back(tempID);
-    tempID = pTexMgrGPU->LoadTextureFromFile(pDevice, matcpu.GetMapName(TexMapType::Normal).Peek());
-    if (tempID == INVALID_UID) return false;
-    else m_TexIDs.Push_back(tempID);
-    tempID = pTexMgrGPU->LoadTextureFromFile(pDevice, matcpu.GetMapName(TexMapType::Specular).Peek());
-    if (tempID == INVALID_UID) return false;
-    else m_TexIDs.Push_back(tempID);
+    for (size_t i = 0; i < matcpu.GetTextureCPUs().Size(); ++i)
+    {
+        UID tempID = pTexMgrGPU->LoadFromTextureCPU(pDevice, matcpu.GetTextureCPUs().peekat(i));
+        if (tempID == INVALID_UID) return false;
+        else m_TexIDs.Push_back(tempID);
+    }
 
     // Create shaders.
     ID3D10Blob *VS = nullptr;
@@ -97,6 +93,7 @@ void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext, const Texture
     // Set textures
     for (size_t i = 0; i < m_TexIDs.Size(); ++i)
     {
+        // TODO: set textures according to their types!
         pDeviceContext->PSSetSamplers(i, 1, &pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i))->GetSamplerState());
         pDeviceContext->PSSetShaderResources(i, 1, &pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i))->GetShaderResourceView());
     }

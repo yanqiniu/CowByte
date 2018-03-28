@@ -7,6 +7,7 @@
 #include "../../Utils/CBMap.h"
 #include "../../Memory/CBMemory.h"
 #include "../../Core/Component.h"
+#include "../GeometryCPU/TextureCPU.h"
 
 class TextureManager : public Component
 {
@@ -15,7 +16,7 @@ public:
     TextureManager();
     ~TextureManager();
 
-    UID LoadTextureFromFile(ID3D11Device *pDevice, const char *filename);
+    UID LoadFromTextureCPU(ID3D11Device *pDevice, const TextureCPU &texCPU);
     TextureGPU* GetTexture(UID id);
     const TextureGPU* PeekTexture(UID id) const;
     void Release();

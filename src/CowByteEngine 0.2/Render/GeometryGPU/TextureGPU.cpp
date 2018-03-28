@@ -18,13 +18,13 @@ TextureGPU::~TextureGPU()
 {
 }
 
-bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
+bool TextureGPU::LoadFromTextureCPU(ID3D11Device *pDevice, const TextureCPU &texCPU)
 {
     // Load the texture.
     Filepath texturePath;
-    CBPath::GenerateAssetPath(texturePath, "textures", filename);
+    CBPath::GenerateAssetPath(texturePath, "textures", texCPU.GetFilename().Peek());
     const wchar_t *newPath = CBStringOps::CharToWChar(texturePath.Get());
-    if(!ResultNotFailed(CreateDDSTextureFromFile(pDevice, newPath, nullptr, &m_pShaderRscView)))
+    if (!ResultNotFailed(CreateDDSTextureFromFile(pDevice, newPath, nullptr, &m_pShaderRscView)))
     {
         Release();
         return false;
@@ -50,9 +50,11 @@ bool TextureGPU::LoadFromFile(ID3D11Device *pDevice, const char *filename)
 
     static UID uidCounter = 0;
     m_UID = uidCounter++;
-    m_TexFileName.Set(filename);
+    m_TexFileName.Set(texCPU.GetFilename());
+    m_Type = texCPU.GetType();
     return true;
 }
+
 
 void TextureGPU::Release()
 {

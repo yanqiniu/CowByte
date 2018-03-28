@@ -7,7 +7,8 @@
 
 
 
-MaterialCPU::MaterialCPU()
+MaterialCPU::MaterialCPU() :
+    m_TextureCPUs(4)
 {
 }
 
@@ -109,7 +110,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_NameAlbedoMap.Set(line.Get());
+    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Albedo));
 
     // Get normal map.
     line.Clear();
@@ -119,7 +120,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_NameNormalMap.Set(line.Get());
+    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Normal));
 
     // Get specular map.
     line.Clear();
@@ -129,7 +130,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_NameSpecularMap.Set(line.Get());
+    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Specular));
 
     // Get vertex shader.
     line.Clear();
@@ -154,20 +155,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     return true;
 }
 
-const Filename& MaterialCPU::GetMapName(TexMapType type) const
+const CBVector<TextureCPU>& MaterialCPU::GetTextureCPUs() const
 {
-    switch (type)
-    {
-    case Albedo:
-        return m_NameAlbedoMap;
-        break;
-    case Normal:
-        return m_NameNormalMap;
-        break;
-    case Specular:
-        return m_NameSpecularMap;
-        break;
-    default:
-        break;
-    }
+    return m_TextureCPUs;
 }
