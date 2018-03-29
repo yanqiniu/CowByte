@@ -21,9 +21,9 @@ Don't worry about the name :D
  - All features in the list mentioned bellow are implemented already.
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
  - It now renders low-poly cow model exported from Maya.
- - Also suppots different material and textures for different meshes:
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_26_2018.jpg)
- - Dynamic per-pixel lighting (Sceenshot N/A yet.)
+ - Also suppots different material and textures for different meshes.
+  - Dynamic per-pixel lighting.
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2018.jpg)
 
 ### Features
  - As mentioned above, this engine uses DirectX 11. Might support DX12 later;
