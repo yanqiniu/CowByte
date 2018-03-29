@@ -128,9 +128,9 @@ void Game::NaviCameraUpdate(const GameContext &context)
 
     // Space: rise, LShift: fall:
     if (m_pInput->GetKeyHeld(KeyCodes::KEY_SPACE))
-        m_pGameCamera->GetParentSceneNode()->Translate(up * (CAM_RISE_SPEED) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->Translate(Vec3::Up() * (CAM_RISE_SPEED) * context.dTime);
     else if (m_pInput->GetKeyHeld(KeyCodes::KEY_LSHIFT))
-        m_pGameCamera->GetParentSceneNode()->Translate(up * (-CAM_RISE_SPEED) * context.dTime);
+        m_pGameCamera->GetParentSceneNode()->Translate(Vec3::Up() * (-CAM_RISE_SPEED) * context.dTime);
 
 #undef CAM_MOVE_SPEED
 #undef CAM_ROTATE_SPEED
