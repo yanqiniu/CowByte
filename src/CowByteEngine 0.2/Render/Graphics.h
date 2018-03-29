@@ -12,6 +12,7 @@
 #include "../Core/System.h"
 #include "MeshManager.h"
 #include "GeometryGPU/TextureManager.h"
+#include "GeometryGPU/LightManager.h"
 
 class Window;
 class Camera;
@@ -74,6 +75,7 @@ private:
     Window *m_pWindow;
     MeshManager *m_pMeshManager;
     TextureManager *m_pTexManager;
+    LightManager *m_pLightManager;
     Camera *m_pMainCamera;
     UID m_LastDrawnMeshID;
 };

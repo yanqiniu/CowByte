@@ -5,6 +5,7 @@
 #include "../SceneGraph/Camera.h"
 #include "../Render/GeometryCPU/MeshInstance.h"
 #include "../Utils/CBRefCountPtr.h"
+#include "../SceneGraph/Light.h"
 
 #define DEFINE_DEBUG_GAME_OBJECT(ClassName, MeshFile)                                   \
 ClassName::ClassName()                                                                  \
@@ -54,6 +55,13 @@ bool Game::Initialize()
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
 
+    m_pDirLight = new Light();
+    SceneNode* pDirLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    pDirLightSN->LookAt(Vec3(-1.0f, 1.0f, -1.0f), Vec3::Up());
+    m_pDirLight->AttachTo_SceneNode_Parent(pDirLightSN);
+    m_pDirLight->InitializeDirectional(CBColor(1.0f, 1.0f, 1.0f, 0.0f));
+    m_pDirLight->RegisterLight();
+
     // Create game camera.
     m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
@@ -75,7 +83,7 @@ bool Game::Update(const GameContext &context)
 
     //m_pCow->m_pSceneNode->Rotate(Vec3(0, 1, 0), 15.0f * context.dTime);
     m_pCube1->m_pSceneNode->RotateLocal(Vec3(0, 1, 0), -30.0f * context.dTime);
-
+    m_pDirLight->GetParentSceneNode()->RotateLocal(Vec3::Up(), 30.0f * context.dTime);
     return true;
 }
 

@@ -139,10 +139,15 @@ void SceneNode::Scale(float scale)
     Scale(scale, scale, scale);
 }
 
+void SceneNode::LookAt(const Vec3 &target, Vec3 up)
+{
+    m_WorldTransform = m_WorldTransform.LookAt(target, up);
+    UpdateLocalTransform();
+}
+
 void SceneNode::LookAt(const SceneNode &target, Vec3 up)
 {
-    m_WorldTransform = m_WorldTransform.LookAt(target.GetWorldTransform().GetPosition(), up);
-    UpdateLocalTransform();
+    LookAt(target.GetWorldTransform().GetPosition(), up);
 }
 
 bool SceneNode::Update(const GameContext &context)

@@ -20,9 +20,6 @@ Step-by-Step: How do we create a new Message type?
 
 typedef INT32 MsgTypeID;
 
-
-
-
 class Message
 {
 public:
@@ -54,5 +51,14 @@ class Msg_SetMainCamera : public Message
 public:
     Camera *m_pCamera;
 };
+
+class Light;
+class Msg_RegisterLight : public Message
+{
+    DECLARE_MESSAGE_CLASS(Msg_RegisterLight, 3);
+public:
+    Light *m_pLight;
+};
+
 
 #endif // !_MESSAGE_H
