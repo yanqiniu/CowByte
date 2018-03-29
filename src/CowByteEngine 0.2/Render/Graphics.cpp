@@ -80,8 +80,6 @@ bool Graphics::Initialize()
     // Setup mesh manager and load meshes.
     m_pMeshManager = new MeshManager();
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
-
-
     if(!m_pMeshManager->CPULoadMesh("cube.mesha") ||
         !m_pMeshManager->CPULoadMesh("plane.mesha") ||
         !m_pMeshManager->CPULoadMesh("cow.mesha")
@@ -90,10 +88,16 @@ bool Graphics::Initialize()
         return false;
     }
 
+    // Setup texture manager and load meshes on GPU.
     m_pTexManager = new TextureManager();
     m_pTexManager->AttachTo_NonSceneNode_Parent(this);
     if (!m_pMeshManager->GPULoadMeshes(m_pDevice, m_pDeviceContext, m_pTexManager))
         return false;
+
+    // Setup Light Manager.
+    m_pLightManager = new LightManager();
+    m_pLightManager->AttachTo_NonSceneNode_Parent(this);
+
     return true;
 }
 
@@ -114,6 +118,8 @@ bool Graphics::Update(const GameContext& context)
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
+    m_pLightManager->CreateLightsGPU(m_pDevice, m_pDeviceContext); // Don't worry this only run once.
+    m_pLightManager->UpdateLightsGPU(m_pDeviceContext);
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
         DrawSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
