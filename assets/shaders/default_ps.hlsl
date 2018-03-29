@@ -1,27 +1,38 @@
-struct PS_Input
-{
-    float4 position : SV_POSITION;
-    float4 normal : NORMAL;
-    float2 texcoord : TEXCOORD;
-};
+#include "StandardPSHeader.hlsl"
 
-Texture2D gTexture : register(t0);
-SamplerState gSamplerState : register(s0);
-
-cbuffer Light0 : register(b3)
+// TODO: if statement slow.
+float4 Lighting(Light light, PS_Input input)
 {
-    float4    m_Position_0;
-    float4    m_Direction_0;
-    float4    m_Color_0;
-    int       m_Type_0;
-    float     m_Radius_0;
+    if(light.m_Type == 0) // Ambient
+    {
+        return light.m_Color;
+    }
+    else if(light.m_Type == 1) // Directional
+    {
+        return saturate(dot(input.normal, light.m_Direction)) * light.m_Color;
+    }
+    else if(light.m_Type == 2) // Point
+    {
+        float4 toRet = normalize(input.worldPos - light.m_Position);
+        toRet = saturate(dot(input.normal, -toRet));
+        float disCoef = distance(input.worldPos, light.m_Position);
+        disCoef = smoothstep(0, light.m_Radius, disCoef);
+        disCoef = 1.0f - disCoef;
+        toRet *= disCoef;
+        toRet *= light.m_Color;
+        return toRet;
+    }
+    else // Invalid, including -1
+    {
+        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    }
+
 }
 
 
 float4 PShader(PS_Input input) : SV_TARGET
 {
-    float4 outColor = gTexture.Sample(gSamplerState, input.texcoord);
-	float coef = saturate(dot(input.normal, m_Direction_0));
-	outColor *= coef;
+    float4 outColor = gAlbedoMap.Sample(gAlbedoSS, input.texcoord);
+    outColor *= saturate(Lighting(m_Light0, input) + Lighting(m_Light1, input));
     return outColor;
 }
