@@ -50,6 +50,8 @@ private:
     Plane *m_pPlane;
     Torus *m_pTorus;
     Cow *m_pCow;
+
+    Light *m_pDirLight;
 };
 
 #endif
