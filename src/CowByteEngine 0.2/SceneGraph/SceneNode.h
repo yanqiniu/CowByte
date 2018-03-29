@@ -32,11 +32,11 @@ public:
     void RotateLocal(const Vec3 &axis, float angleInDegree);
     void Scale(float x, float y, float z);
     void Scale(float scale);
+    void LookAt(const Vec3 &target, Vec3 up);
     void LookAt(const SceneNode &target, Vec3 up);
 
     const Matrix4x4& GetLocalTransform() const { return m_LocalTransform; }
     const Matrix4x4& GetWorldTransform() const { return m_WorldTransform; }
-    const Vec3&      GetWorldPosition() const;
 
     virtual bool Update(const GameContext &context) override;
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
