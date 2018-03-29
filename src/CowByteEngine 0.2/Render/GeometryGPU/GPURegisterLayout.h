@@ -28,7 +28,7 @@ static const int g_nMaxLights = 4;
 enum GPUConstantsReg_PS
 {
     // Pixel Lights:
-    Light0 = NumConstBuffer_VS,
+    Light0,
     Light1,
     Light2,
     Light3,
