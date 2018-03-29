@@ -24,6 +24,7 @@ DECLARE_DEBUG_GAME_OBJECT(Cube);
 DECLARE_DEBUG_GAME_OBJECT(Plane);
 DECLARE_DEBUG_GAME_OBJECT(Torus);
 DECLARE_DEBUG_GAME_OBJECT(Cow);
+DECLARE_DEBUG_GAME_OBJECT(Sphere);
 
 
 // This will be polished into a general purpose Game class that
@@ -48,8 +49,8 @@ private:
     Cube *m_pCube0;
     Cube *m_pCube1;
     Plane *m_pPlane;
-    Torus *m_pTorus;
     Cow *m_pCow;
+    Sphere *m_pSphere;
 
     Light *m_pDirLight;
 };

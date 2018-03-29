@@ -22,6 +22,7 @@ DEFINE_DEBUG_GAME_OBJECT(Cube, "cube.mesha");
 DEFINE_DEBUG_GAME_OBJECT(Plane, "plane.mesha");
 DEFINE_DEBUG_GAME_OBJECT(Torus, "torus.mesha");
 DEFINE_DEBUG_GAME_OBJECT(Cow, "cow.mesha");
+DEFINE_DEBUG_GAME_OBJECT(Sphere, "sphere.mesha");
 
 Game::Game(const GameData& gameData) :
     System(SystemType::SYS_GAME),
@@ -45,7 +46,7 @@ bool Game::Initialize()
     m_pPlane = new Plane();
     //m_pTorus = new Torus();
     m_pCow = new Cow();
-
+    m_pSphere = new Sphere();
     //m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
     //m_pCube0->m_pSceneNode->Scale(2.0f);
     m_pCube1->m_pSceneNode->Scale(1.2f);
@@ -54,6 +55,7 @@ bool Game::Initialize()
     m_pPlane->m_pSceneNode->Scale(3.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
+    m_pSphere->m_pSceneNode->Translate(-10.0, 3.0f, -10.0f);
 
     m_pDirLight = new Light();
     SceneNode* pDirLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);

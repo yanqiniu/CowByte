@@ -82,7 +82,8 @@ bool Graphics::Initialize()
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
     if(!m_pMeshManager->CPULoadMesh("cube.mesha") ||
         !m_pMeshManager->CPULoadMesh("plane.mesha") ||
-        !m_pMeshManager->CPULoadMesh("cow.mesha")
+        !m_pMeshManager->CPULoadMesh("cow.mesha") ||
+        !m_pMeshManager->CPULoadMesh("sphere.mesha")
         )
     {
         return false;
