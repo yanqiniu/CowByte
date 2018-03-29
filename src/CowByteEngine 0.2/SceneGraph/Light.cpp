@@ -1,14 +1,22 @@
 #include "Light.h"
 #include "../Utils/CBDebug.h"
 #include "../Messaging/CBMessaging.h"
+#include "SceneNode.h"
 
 
-
-Light::Light() :
+Light::LightData::LightData() :
     m_Color(1.0f, 1.0f, 1.0f, 1.0f), // Default to white
+    m_Position(0.0f, 0.0f, 0.0f, 1.0f),
     m_Direction(0.0f, -1.0f, 0.0f, 0.0f),
     m_Radius(1.0f),
     m_Type(-1)
+{
+
+}
+
+
+Light::Light() :
+    m_Data()
 {
 }
 
@@ -19,6 +27,29 @@ Light::~Light()
 
 bool Light::Update(const GameContext &context)
 {
+    if (m_Data.m_Type == LightType::PointLight)
+    {
+        if (!HasSceneNodeParent())
+        {
+            DbgWARNING("Point light must be attached to scene node for position update!");
+        }
+        else
+        {
+            m_Data.m_Position = GetParentSceneNode()->GetWorldTransform().GetPosition();
+        }
+    }
+    else if (m_Data.m_Type == LightType::DirectionalLight)
+    {
+        if (!HasSceneNodeParent())
+        {
+            DbgWARNING("Directional light must be attached to scene node for rotation update!");
+        }
+        else
+        {
+            m_Data.m_Direction = GetParentSceneNode()->GetWorldTransform().Front();
+        }
+    }
+
     return true;
 }
 
@@ -31,12 +62,12 @@ bool Light::InitializeAmbient(const CBColor& color)
         DbgWARNING("Light must be attached to scene node!");
         return false;
     }
-    m_Type = static_cast<INT32>(LightType::AmbientLight);
-    m_Color = color;
+    m_Data.m_Type = static_cast<INT32>(LightType::AmbientLight);
+    m_Data.m_Color = color;
     return true;
 }
 
-bool Light::InitializeDirectional(const CBColor& color, const Vec3& direction)
+bool Light::InitializeDirectional(const CBColor& color)
 {
     // Yes, directional light doesn't really need position from scene node, 
     // but it's needed for receiving messages.
@@ -45,9 +76,8 @@ bool Light::InitializeDirectional(const CBColor& color, const Vec3& direction)
         DbgWARNING("Light must be attached to scene node!");
         return false;
     }
-    m_Type = static_cast<INT32>(LightType::DirectionalLight);
-    m_Color = color;
-    m_Direction = direction;
+    m_Data.m_Type = static_cast<INT32>(LightType::DirectionalLight);
+    m_Data.m_Color = color;
     return true;
 }
 
@@ -58,9 +88,9 @@ bool Light::InitializePoint(const CBColor& color, float radius)
         DbgWARNING("Light must be attached to scene node!");
         return false;
     }
-    m_Type = static_cast<INT32>(LightType::PointLight);
-    m_Color = color;
-    m_Radius = radius;
+    m_Data.m_Type = static_cast<INT32>(LightType::PointLight);
+    m_Data.m_Color = color;
+    m_Data.m_Radius = radius;
     return true;
 }
 
