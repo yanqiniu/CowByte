@@ -52,17 +52,26 @@ bool Game::Initialize()
     m_pCube1->m_pSceneNode->Scale(1.2f);
     m_pCube1->m_pSceneNode->Translate(-3.0f, 1.0f, 0.0f);
     //m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
-    m_pPlane->m_pSceneNode->Scale(3.0f);
+    m_pPlane->m_pSceneNode->Scale(10.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
     m_pSphere->m_pSceneNode->Translate(-10.0, 3.0f, -10.0f);
 
+    // Create lighting
     m_pDirLight = new Light();
     SceneNode* pDirLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     pDirLightSN->LookAt(Vec3(-1.0f, 1.0f, -1.0f), Vec3::Up());
     m_pDirLight->AttachTo_SceneNode_Parent(pDirLightSN);
-    m_pDirLight->InitializeDirectional(CBColor(1.0f, 1.0f, 1.0f, 0.0f));
+    m_pDirLight->InitializeDirectional(CBColor(0.3f, 0.3f, 0.3f, 1.0f));
     m_pDirLight->RegisterLight();
+
+    m_pPtLight = new Light();
+    SceneNode* pPtLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
+    pPtLightSN->Translate(Vec3(0.0f, 10.0f, 0.0f));
+    m_pPtLight->AttachTo_SceneNode_Parent(pPtLightSN);
+    m_pPtLight->InitializePoint(CBColor(1.0f, 1.0f, 1.0f, 1.0f), 20.0f);
+    m_pPtLight->RegisterLight();
+
 
     // Create game camera.
     m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);

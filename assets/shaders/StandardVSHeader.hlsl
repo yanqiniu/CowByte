@@ -9,9 +9,11 @@ struct VS_Input
 struct PS_Input
 {
     float4 position : SV_POSITION;
+    float4 worldPos : POSITION;
     float4 normal : NORMAL;
     float2 texcoord : TEXCOORD;
 };
+
 
 
 cbuffer ViewProjMat : register(b0)

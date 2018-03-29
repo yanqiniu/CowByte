@@ -115,7 +115,7 @@ bool Graphics::Update(const GameContext& context)
         m_pDeviceContext->UpdateSubresource(m_pConstBuf_ViewProjMat, 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
     }
 
-    FLOAT color[4] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    FLOAT color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 

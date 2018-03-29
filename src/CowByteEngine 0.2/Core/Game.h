@@ -53,6 +53,7 @@ private:
     Sphere *m_pSphere;
 
     Light *m_pDirLight;
+    Light *m_pPtLight;
 };
 
 #endif
