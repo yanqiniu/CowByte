@@ -26,7 +26,6 @@ float4 Lighting(Light light, PS_Input input)
     {
         return float4(0.0f, 0.0f, 0.0f, 1.0f);
     }
-
 }
 
 

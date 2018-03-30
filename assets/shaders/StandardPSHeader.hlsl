@@ -13,7 +13,7 @@ SamplerState gSpecularSS : register(s2);
 // Constants
 cbuffer CameraWorldPos : register(b0)
 {
-    float4x4 m_CamWorldPos;
+    float4 m_CamWorldPos;
 }
 
 cbuffer PerMatConstant : register(b1)
