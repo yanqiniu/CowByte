@@ -110,7 +110,8 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Albedo));
+    if (!line.Compare("none") == 0)
+        m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Albedo));
 
     // Get normal map.
     line.Clear();
@@ -120,7 +121,8 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Normal));
+    if (!line.Compare("none") == 0)
+        m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Normal));
 
     // Get specular map.
     line.Clear();
@@ -130,7 +132,8 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
     line.Strip(StripMode::ALL);
-    m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Specular));
+    if (!line.Compare("none") == 0)
+        m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Specular));
 
     // Get vertex shader.
     line.Clear();

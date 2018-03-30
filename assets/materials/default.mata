@@ -10,10 +10,10 @@ MAT
 cube.dds
 
 # Normal map
-cube.dds
+none
 
 # Specular map
-cube.dds
+none
 
 # Vertex shader
 default_vs.cso

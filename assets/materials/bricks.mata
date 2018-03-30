@@ -13,7 +13,7 @@ brick_albedo.dds
 brick_normal.dds
 
 # Specular map
-brick_albedo.dds
+none
 
 # Vertex shader
 default_vs.cso
