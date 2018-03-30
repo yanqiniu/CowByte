@@ -34,6 +34,11 @@ struct Vec2
         return p1.X != p2.X || p1.Y != p2.Y;
     }
 
+    Vec2 operator-(const Vec2& rhs)
+    {
+        return Vec2(X - rhs.X, Y - rhs.Y);
+    }
+
 };
 
 #endif
