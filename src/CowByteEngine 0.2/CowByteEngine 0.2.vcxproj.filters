@@ -262,5 +262,6 @@
     <FxCompile Include="..\..\assets\shaders\default_vs.hlsl">
       <Filter>Assets</Filter>
     </FxCompile>
+    <FxCompile Include="..\..\assets\shaders\NormalMapped_ps.hlsl" />
   </ItemGroup>
 </Project>

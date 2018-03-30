@@ -19,4 +19,4 @@ brick_albedo.dds
 default_vs.cso
 
 # Pixel shader 
-default_ps.cso
+NormalMapped_ps.cso
