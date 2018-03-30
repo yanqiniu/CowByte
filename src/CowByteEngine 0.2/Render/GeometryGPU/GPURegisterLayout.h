@@ -26,6 +26,7 @@ enum GPUConstantsReg_VS
 static const int g_nMaxLights = 4;
 enum GPUConstantsReg_PS
 {
+    CameraWorldPos,
     PerMat,
 
     // Pixel Lights:

@@ -20,7 +20,12 @@ Texture2D gSpecularMap : register(t2);
 SamplerState gSpecularSS : register(s2);
 
 // Constants
-cbuffer PerMatConstant : register(b0)
+cbuffer CameraWorldPos : register(b0)
+{
+    float4x4 m_CamWorldPos;
+}
+
+cbuffer PerMatConstant : register(b1)
 {
     float4 m_ColorDiffuse;
     float4 m_ColorSpecular;
@@ -36,22 +41,22 @@ struct Light
     float     m_Radius;
 };
 
-cbuffer Light0 : register(b1)
+cbuffer Light0 : register(b2)
 {
     Light m_Light0;
 }
 
-cbuffer Light1 : register(b2)
+cbuffer Light1 : register(b3)
 {
     Light m_Light1;
 }
 
-cbuffer Light2 : register(b3)
+cbuffer Light2 : register(b4)
 {
     Light m_Light2;
 }
 
-cbuffer Light3 : register(b4)
+cbuffer Light3 : register(b5)
 {
     Light m_Light3;
 }

@@ -111,8 +111,10 @@ bool Graphics::Update(const GameContext& context)
     }
     else
     {
+        // Update camera ViewProjection Matrix as well as position.
         m_pMainCamera->UpdateVPMatrix();
         m_pDeviceContext->UpdateSubresource(m_PerFrameConstBuf.m_ViewProjMatrix, 0, nullptr, &m_pMainCamera->GetViewProjMatrix(), 0, 0);
+        m_pDeviceContext->UpdateSubresource(m_PerFrameConstBuf.m_CameraWorldPos, 0, nullptr, &m_pMainCamera->GetParentSceneNode()->GetWorldTransform().GetPosition(), 0, 0);
     }
 
     FLOAT color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };

@@ -37,17 +37,27 @@ struct PerFrameConstBufGPU : public ConstantBufferGPU
             return false;
         }
 
+        constantBufferDesc.ByteWidth = sizeof(Vec3);
+        if (!ResultNotFailed(pDevice->CreateBuffer(&constantBufferDesc, nullptr, &m_CameraWorldPos)))
+        {
+            DbgERROR("Failed creating buffer!");
+            return false;
+        }
+
+
         return true;
     }
 
     virtual void SetBuffers(ID3D11DeviceContext *pDeviceContext)
     {
         pDeviceContext->VSSetConstantBuffers(GPUConstantsReg_VS::ViewProjMatrix, 1, &m_ViewProjMatrix);
+        pDeviceContext->PSSetConstantBuffers(GPUConstantsReg_PS::CameraWorldPos, 1, &m_CameraWorldPos);
     }
 
     //////////////////////////////////////////////////////////////////////////
 
     ID3D11Buffer *m_ViewProjMatrix;
+    ID3D11Buffer *m_CameraWorldPos;
 };
 
 struct PerObjectConstBufGPU : public ConstantBufferGPU
