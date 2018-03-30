@@ -141,6 +141,7 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Render\GeometryGPU\ConstantBufferGPU.h" />
     <ClInclude Include="Render\GeometryGPU\LightManager.h" />
     <ClInclude Include="SceneGraph\Light.h" />
     <ClInclude Include="Math\Point.h" />

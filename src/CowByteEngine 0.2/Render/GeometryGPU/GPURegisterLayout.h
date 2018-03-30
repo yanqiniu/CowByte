@@ -18,7 +18,6 @@ enum GPUConstantsReg_VS
 
     //////////////////////////////////////////////////////////////////////////
     // Per Mat:
-    PerMat,
 
     //////////////////////////////////////////////////////////////////////////
     NumConstBuffer_VS
@@ -27,6 +26,8 @@ enum GPUConstantsReg_VS
 static const int g_nMaxLights = 4;
 enum GPUConstantsReg_PS
 {
+    PerMat,
+
     // Pixel Lights:
     Light0,
     Light1,

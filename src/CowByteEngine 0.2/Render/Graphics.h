@@ -13,6 +13,7 @@
 #include "MeshManager.h"
 #include "GeometryGPU/TextureManager.h"
 #include "GeometryGPU/LightManager.h"
+#include "GeometryGPU/ConstantBufferGPU.h"
 
 class Window;
 class Camera;
@@ -49,6 +50,10 @@ private:
         NUM_CBUFFER
     };
 
+    // Constant buffers:
+    PerFrameConstBufGPU m_PerFrameConstBuf;
+    PerObjectConstBufGPU m_PerObjectConstBuf;
+
     // View port and other large member:
     D3D11_VIEWPORT m_Viewport;
 
@@ -65,11 +70,6 @@ private:
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
     ID3D11SamplerState* m_pSamplerState;
-
-    // Constant buffers:
-    ID3D11Buffer *m_pConstBuf_ViewProjMat;
-    ID3D11Buffer *m_pConstBuf_ObjectWorldMat;
-
 
     // Other members:
     Window *m_pWindow;
