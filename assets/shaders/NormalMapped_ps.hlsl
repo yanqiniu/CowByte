@@ -36,7 +36,7 @@ float4 PShader(PS_Input input) : SV_TARGET
     input.texcoord *= 10.0f;
 
     // Sample Albedo.
-    float4 outColor = gAlbedoMap.Sample(gAlbedoSS, input.texcoord);
+    float4 outColor = gAlbedoMap.Sample(gAlbedoSS, input.texcoord) * m_ColorDiffuse;
 
     // Sample Normal.
     float4 normalSampled = gNormalMap.Sample(gNormalSS, input.texcoord);
