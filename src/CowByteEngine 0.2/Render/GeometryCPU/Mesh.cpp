@@ -431,7 +431,10 @@ void Mesh::GenerateTangents()
         Vec2 Delta2 = pV2->m_TexCoord - pV0->m_TexCoord;
 
         Vec3 T = (Delta1.Y * E2 - Delta2.Y * E1) / (Delta1.Y * Delta2.X - Delta2.Y * Delta1.X);
-
+        //(T - pV0->m_Normal * pV0->m_Normal.Dot(T)).Normalize()
+        Vec3 BT = pV0->m_Normal.Cross(T);
+        T = BT.Cross(pV0->m_Normal);
+        T.Normalize();
         pV0->m_Tangent = T;
         pV1->m_Tangent = T;
         pV2->m_Tangent = T;
