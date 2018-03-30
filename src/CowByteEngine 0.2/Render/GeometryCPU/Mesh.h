@@ -44,6 +44,8 @@ private:
     bool ReadNormalBufFile(const char *filepath);
     bool ReadUVBufFile(const char *filepath);
 
+    void GenerateTangents();
+
     static int g_IDCounter;
 
     Filename         m_MeshName;

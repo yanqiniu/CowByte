@@ -14,9 +14,10 @@ struct Vertex
     Vertex();
     ~Vertex();
 
-    static D3D11_INPUT_ELEMENT_DESC InputDesc[3];
+    static D3D11_INPUT_ELEMENT_DESC InputDesc[4];
     Vec3 m_Pos;
     Vec3 m_Normal;
+    Vec3 m_Tangent;
     Vec2 m_TexCoord;
 };
 

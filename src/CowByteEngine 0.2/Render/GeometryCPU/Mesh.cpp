@@ -132,6 +132,8 @@ bool Mesh::LoadCPU(const char* meshName)
         return false;
     }
 
+    GenerateTangents();
+
     m_MeshName = Filename(meshName);
     m_bIsLoaded = true;
 
@@ -410,4 +412,31 @@ bool Mesh::ReadUVBufFile(const char *filepath)
         m_Vertices.at(i).m_TexCoord.Y = tempY;
     }
 
+}
+
+// Generate tangent vector for each vertices, so
+// Call this after position, normal and UV has been set.
+void Mesh::GenerateTangents()
+{
+    for (size_t i = 0; i < m_nTriangles; ++i)
+    {
+        Vertex* pV0 = &m_Vertices[i * 3];
+        Vertex* pV1 = &m_Vertices[i * 3 + 1];
+        Vertex* pV2 = &m_Vertices[i * 3 + 2];
+
+        Vec3 E1 = pV1->m_Pos - pV0->m_Pos;
+        Vec3 E2 = pV2->m_Pos - pV0->m_Pos;
+
+        Vec2 Delta1 = pV1->m_TexCoord - pV0->m_TexCoord;
+        Vec2 Delta2 = pV2->m_TexCoord - pV0->m_TexCoord;
+
+        Vec3 T = (Delta1.Y * E2 - Delta2.Y * E1) / (Delta1.Y * Delta2.X - Delta2.Y * Delta1.X);
+        //(T - pV0->m_Normal * pV0->m_Normal.Dot(T)).Normalize()
+        Vec3 BT = pV0->m_Normal.Cross(T);
+        T = BT.Cross(pV0->m_Normal);
+        T.Normalize();
+        pV0->m_Tangent = T;
+        pV1->m_Tangent = T;
+        pV2->m_Tangent = T;
+    }
 }

@@ -71,7 +71,7 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     }
 
     // Create input layout.
-    if (!ResultNotFailed(pDevice->CreateInputLayout(Vertex::InputDesc, 3, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout)))
+    if (!ResultNotFailed(pDevice->CreateInputLayout(Vertex::InputDesc, 4, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout)))
     {
         DbgERROR("Filed creating input layout!");
         Release();
