@@ -69,7 +69,7 @@ bool Game::Initialize()
     SceneNode* pPtLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     pPtLightSN->Translate(Vec3(0.0f, 10.0f, 0.0f));
     m_pPtLight->AttachTo_SceneNode_Parent(pPtLightSN);
-    m_pPtLight->InitializePoint(CBColor(1.0f, 1.0f, 1.0f, 1.0f), 20.0f);
+    m_pPtLight->InitializePoint(CBColor(1.0f, 1.0f, 1.0f, 1.0f), 30.0f);
     m_pPtLight->RegisterLight();
 
 
@@ -77,8 +77,9 @@ bool Game::Initialize()
     m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 1000.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
-    cameraSceneNode->RotateLocal(Vec3::Up(), 45.0f);
-    cameraSceneNode->Translate(Vec3(-20, 6.0f, -20.0f));
+    cameraSceneNode->RotateLocal(m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Up(), 45.0f);
+    cameraSceneNode->RotateLocal(m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Right(), 15.0f);
+    cameraSceneNode->Translate(Vec3(-20, 10.0f, -20.0f));
 
     // Set the game camera as main.
     CBRefCountPtr<Message> msgPtr = Msg_SetMainCamera::Create();
