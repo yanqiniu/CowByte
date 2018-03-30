@@ -1,21 +1,5 @@
-struct VS_Input
-{
-    float4 position : POSITION;
-    float4 normal : NORMAL;
-    float4 tangent : TANGENT;
-    float2 texcoord : TEXCOORD;
-};
-
-
-struct PS_Input
-{
-    float4 position : SV_POSITION;
-    float4 worldPos : POSITION;
-    float4 normal : NORMAL;
-    float4 tangent : TANGENT;
-    float4 bitangent : BITANGENT;
-    float2 texcoord : TEXCOORD;
-};
+#include "StandardVSInput.hlsl"
+#include "StandardPSInput.hlsl"
 
 ////////////////////////////////////////////////////////
 // Per Frame Constants
