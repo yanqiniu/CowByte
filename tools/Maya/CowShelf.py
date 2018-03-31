@@ -144,10 +144,15 @@ def export_normal_buf(faces, filepath):
     outfile.write("NORMAL_BUF\n")
     outfile.write("{0}\n".format(len(faces)*3))
     for f in faces:
-        normal = f.getNormal() # use face normals for sharp edge?
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
-        outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+        n = f.getNormals()
+        for normal in n:
+            outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+
+        # if using face normals...
+        # normal = f.getNormal()
+        # outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+        # outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
+        # outfile.write("{0} {1} {2}\n".format(normal.x, normal.y, -normal.z))
 
 def export_uv(faces, filepath):
     print("Exporting [{0}]...".format(filepath))
