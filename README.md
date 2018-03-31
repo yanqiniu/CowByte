@@ -36,8 +36,7 @@ Don't worry about the name :D
  - Scenegraph;
  - Mesh sharing;
  - Material and Texture support with texture sharing;
- - Dynamic per-pixel phong lighting and shading;
- - Normal map rendering;
+ - Phong lighting and shading with normap map;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;
