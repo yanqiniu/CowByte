@@ -3,38 +3,50 @@
 // TODO: if statement slow.
 float4 Lighting(Light light, PS_Input input)
 {
-    if(light.m_Type == 0) // Ambient
+    if (light.m_Type == 0) // Ambient
     {
         return light.m_Color;
     }
-    else if(light.m_Type == 1) // Directional
+    else if (light.m_Type == 1) // Directional
     {
-        return saturate(dot(input.normal, light.m_Direction)) * light.m_Color;
+        float4 diffuse = saturate(dot(input.normal, -light.m_Direction));
+        float4 reflected = light.m_Direction - 2 * dot(light.m_Direction, input.normal) * input.normal;
+        float4 cameraDir = normalize(m_CamWorldPos - input.worldPos);
+        float4 specular = pow(saturate(dot(reflected, cameraDir)), 8);
+
+        return diffuse + specular;
     }
-    else if(light.m_Type == 2) // Point
+    else if (light.m_Type == 2) // Point
     {
-        float4 toRet = normalize(input.worldPos - light.m_Position);
-        toRet = dot(input.normal, -toRet);
+        float4 lightDir = normalize(input.worldPos - light.m_Position);
+        float4 diffuse = saturate(dot(input.normal, -lightDir));
         float disCoef = distance(input.worldPos, light.m_Position);
         disCoef = smoothstep(0, light.m_Radius, disCoef);
         disCoef = 1.0f - disCoef;
-        toRet *= disCoef;
-        toRet *= light.m_Color;
-        return toRet;
+        diffuse *= disCoef;
+
+
+        float4 reflected = reflect(lightDir, input.normal);
+        float4 cameraDir = normalize(input.worldPos - m_CamWorldPos);
+        float specular = pow(saturate(dot(-reflected, cameraDir)), 2) * disCoef;
+
+        return (diffuse + specular) * light.m_Color;
     }
     else // Invalid, including -1
     {
         return float4(0.0f, 0.0f, 0.0f, 1.0f);
     }
+
 }
 
 
 float4 PShader(PS_Input input) : SV_TARGET
 {
     // Tiling.
-    input.texcoord *= 10.0f;
+    input.texcoord *= 5.0f;
 
     // Sample Albedo.
+    //float4 outColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
     float4 outColor = gAlbedoMap.Sample(gAlbedoSS, input.texcoord) * m_ColorDiffuse;
 
     // Sample Normal.

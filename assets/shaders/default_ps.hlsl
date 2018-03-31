@@ -9,7 +9,7 @@ float4 Lighting(Light light, PS_Input input)
     }
     else if(light.m_Type == 1) // Directional
     {
-        return saturate(dot(input.normal, light.m_Direction)) * light.m_Color;
+        return saturate(dot(input.normal, -light.m_Direction)) * light.m_Color;
     }
     else if(light.m_Type == 2) // Point
     {
