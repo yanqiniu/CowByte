@@ -26,23 +26,29 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     # Diffuse Color.
     1.0 1.0 1.0 1.0
 
-    # Specular Color.
-    1.0 1.0 1.0 1.0
+    # Diffuse Strength.
+    1.0
+
+    # Specular Strength.
+    1.0
+
+    # Shininess
+    3.0
 
     # Albedo map
-    cube_albedo.dds
+    brick_albedo.dds
 
     # Normal map
-    cube_normal.dds
+    brick_normal.dds
 
     # Specular map
-    cube_specular.dds
+    none
 
     # Vertex shader
-    defualt_vs.hlsl
+    default_vs.cso
 
     # Pixel shader
-    default_ps.hlsl
+    NormalMapped_ps.cso
 
     */
 
@@ -62,6 +68,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
         return false;
     }
 
+    //////////////////////////////////////////////////////////////////////////
     // Get diffuse color.
     float tempR, tempG, tempB, tempA;
     line.Clear();
@@ -82,26 +89,58 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     }
     m_ConstBufCPU.m_ColorDiffuse.Set(tempR, tempG, tempB, tempA);
 
-    // Get specular color.
+    //////////////////////////////////////////////////////////////////////////
+    // Get diffuse strength.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))
     {
-        DbgERROR("Failed getting specular color [%s]", filepath);
+        DbgERROR("Failed getting diffuse strength [%s]", filepath);
         return false;
     }
     line.Strip(StripMode::ALL);
     marker = line.Get();
-    if (!CBStringOps::GetNextFloat32(marker, tempR, ' ') ||
-        !CBStringOps::GetNextFloat32(marker, tempG, ' ') ||
-        !CBStringOps::GetNextFloat32(marker, tempB, ' ') ||
-        !CBStringOps::GetNextFloat32(marker, tempA, ' '))
+    if (!CBStringOps::GetNextFloat32(marker, tempR, ' '))
     {
-        DbgERROR("Failed getting specular color [%s]", filepath);
+        DbgERROR("Failed getting diffuse strength [%s]", filepath);
         return false;
     }
-    m_ConstBufCPU.m_ColorSpecular.Set(tempR, tempG, tempB, tempA);
+    m_ConstBufCPU.m_DiffuseStrength = tempR;
 
-    // TODO: handle non-existent maps.
+    //////////////////////////////////////////////////////////////////////////
+    // Get specular strength.
+    line.Clear();
+    if (!matFile.GetNextNonEmptyLine(line, false))
+    {
+        DbgERROR("Failed getting specular strength [%s]", filepath);
+        return false;
+    }
+    line.Strip(StripMode::ALL);
+    marker = line.Get();
+    if (!CBStringOps::GetNextFloat32(marker, tempR, ' '))
+    {
+        DbgERROR("Failed getting specular strength [%s]", filepath);
+        return false;
+    }
+    m_ConstBufCPU.m_SpecularStrength = tempR;
+
+    //////////////////////////////////////////////////////////////////////////
+    // Get shininess.
+    line.Clear();
+    if (!matFile.GetNextNonEmptyLine(line, false))
+    {
+        DbgERROR("Failed getting shininess [%s]", filepath);
+        return false;
+    }
+    line.Strip(StripMode::ALL);
+    marker = line.Get();
+    if (!CBStringOps::GetNextFloat32(marker, tempR, ' '))
+    {
+        DbgERROR("Failed getting shininess [%s]", filepath);
+        return false;
+    }
+    m_ConstBufCPU.m_Shininess = tempR;
+
+    //////////////////////////////////////////////////////////////////////////
     // Get albedo map.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))
@@ -113,6 +152,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     if (!line.Compare("none") == 0)
         m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Albedo));
 
+    //////////////////////////////////////////////////////////////////////////
     // Get normal map.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))
@@ -124,6 +164,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     if (!line.Compare("none") == 0)
         m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Normal));
 
+    //////////////////////////////////////////////////////////////////////////
     // Get specular map.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))
@@ -135,6 +176,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     if (!line.Compare("none") == 0)
         m_TextureCPUs.Push_back(TextureCPU(Filename(line.Get()), TextureType::Specular));
 
+    //////////////////////////////////////////////////////////////////////////
     // Get vertex shader.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))
@@ -145,6 +187,7 @@ bool MaterialCPU::LoadFromFile(const char *filepath)
     line.Strip(StripMode::ALL);
     m_NameVertexShader.Set(line.Get());
 
+    //////////////////////////////////////////////////////////////////////////
     // Get pixel shader.
     line.Clear();
     if (!matFile.GetNextNonEmptyLine(line, false))

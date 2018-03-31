@@ -1,5 +1,7 @@
 #include "StandardPSHeader.hlsl"
 
+// This is a minimal ambient and diffuse only shader.
+
 // TODO: if statement slow.
 float4 Lighting(Light light, PS_Input input)
 {

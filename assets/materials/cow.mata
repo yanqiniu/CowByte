@@ -3,8 +3,14 @@ MAT
 # Diffuse Color.
 1.0 1.0 1.0 1.0
 
-# Specular Color.
-1.0 1.0 1.0 1.0
+# Diffuse Strength.
+1.0
+
+# Specular Strength.
+1.0
+
+# Shininess
+3.0
 
 # Albedo map
 cow.dds
