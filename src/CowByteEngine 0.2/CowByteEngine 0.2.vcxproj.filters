@@ -156,6 +156,7 @@
     <ClInclude Include="Render\GeometryCPU\TextureCPU.h" />
     <ClInclude Include="SceneGraph\Light.h" />
     <ClInclude Include="Render\GeometryGPU\LightManager.h" />
+    <ClInclude Include="Render\GeometryGPU\ConstantBufferGPU.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -263,5 +264,6 @@
       <Filter>Assets</Filter>
     </FxCompile>
     <FxCompile Include="..\..\assets\shaders\NormalMapped_ps.hlsl" />
+    <FxCompile Include="..\..\assets\shaders\AlbedoOnlyLit_ps.hlsl" />
   </ItemGroup>
 </Project>

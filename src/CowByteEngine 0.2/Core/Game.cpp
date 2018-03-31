@@ -55,13 +55,13 @@ bool Game::Initialize()
     m_pPlane->m_pSceneNode->Scale(10.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
-    //m_pSphere->m_pSceneNode->Translate(-10.0, 3.0f, -10.0f);
+    m_pSphere->m_pSceneNode->Translate(-3, 3.0f, -3.0f);
 
     // Create lighting
     m_pDirLight = new Light();
     SceneNode* pDirLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
-    pDirLightSN->LookAt(Vec3(-1.0f, 1.0f, -1.0f), Vec3::Up());
     m_pDirLight->AttachTo_SceneNode_Parent(pDirLightSN);
+    pDirLightSN->LookAt(Vec3(-1.0f, -1.0f, -1.0f), Vec3::Up());
     m_pDirLight->InitializeDirectional(CBColor(0.3f, 0.3f, 0.3f, 1.0f));
     m_pDirLight->RegisterLight();
 

@@ -26,6 +26,7 @@ Don't worry about the name :D
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2018.jpg)
  - Normal map support:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2_2018.PNG)
+ - Phong lighting is also implemented (Sceenshot N/A yet)
 
 
 ### Features
@@ -37,7 +38,7 @@ Don't worry about the name :D
  - Scenegraph;
  - Mesh sharing;
  - Material and Texture support with texture sharing;
- - Dynamic per-pixel lighting;
+ - Dynamic per-pixel phong lighting;
  - Normal map rendering;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;

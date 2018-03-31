@@ -53,6 +53,7 @@ int Engine::Initialize(GameContext &context)
     m_MapSystems[SystemType::SYS_GRAPHICS]->AttachTo_NonSceneNode_Parent(this);
     m_MapSystems[SystemType::SYS_INPUT]->AttachTo_NonSceneNode_Parent(this);
     m_MapSystems[SystemType::SYS_GAME]->AttachTo_NonSceneNode_Parent(this);
+    DbgINFO("Finished adding systems. All systems attached to Engine.");
 
     
     // Construct Engine bus.
@@ -77,10 +78,12 @@ int Engine::Initialize(GameContext &context)
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_GRAPHICS]);
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_WINDOW]);
     MessageBus::GetEngineBus()->AddSubscriber(m_MapSystems[SystemType::SYS_INPUT]);
+    DbgINFO("Finished initializing Messaging.");
 
     // Finally, process all the messages queued up during initialization.
     MessageBus::GetEngineBus()->Broadcast();
     MessageBus::GetEngineBus()->SubsHandleMessagesQueueTree();
+    DbgINFO("Finished processing initialization messages.");
     return true;
 }
 
@@ -95,6 +98,7 @@ bool Engine::Update(const GameContext& context)
 
 bool Engine::Shutdown()
 {
+    DbgINFO("Shutting down engine...");
     m_EngineState = EngineState::SHUTTINGDOWN;
     for (std::pair<SystemType, System*> pSysPair : m_MapSystems)
     {
@@ -119,9 +123,9 @@ int Engine::RunLoop()
         return 0;
 
     srand(GetTickCount());
-
     MSG msg = {};
 
+    DbgINFO("Finished initialization, entering engine loop...");
     m_EngineState = EngineState::RUNNING;
     context.dTime = 0;
 

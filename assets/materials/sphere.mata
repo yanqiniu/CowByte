@@ -10,13 +10,13 @@ MAT
 wood.dds
 
 # Normal map
-wood.dds
+none
 
 # Specular map
-wood.dds
+none
 
 # Vertex shader
 default_vs.cso
 
 # Pixel shader 
-default_ps.cso
+AlbedoOnlyLit_ps.cso

@@ -10,10 +10,10 @@ MAT
 cow.dds
 
 # Normal map
-cow.dds
+none
 
 # Specular map
-cow.dds
+none
 
 # Vertex shader
 default_vs.cso
