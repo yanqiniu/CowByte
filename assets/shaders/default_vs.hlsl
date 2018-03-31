@@ -9,9 +9,9 @@ PS_Input VShader(VS_Input input)
     output.worldPos = mul(input.position, worldMatrix);
     output.texcoord = input.texcoord;
 
-    output.normal = normalize(mul(input.normal, worldMatrix));
-    output.tangent = normalize(mul(input.tangent, worldMatrix));
-    output.bitangent = normalize(float4(-cross(output.normal, input.tangent), 0.0f));
+    output.normal = mul(input.normal, worldMatrix);
+    output.tangent = mul(input.tangent, worldMatrix);
+    output.bitangent = float4(-cross(output.normal, input.tangent), 0.0f);
     
 
     return output;

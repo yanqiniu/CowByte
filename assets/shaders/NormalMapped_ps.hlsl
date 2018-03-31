@@ -5,7 +5,7 @@
 float4 PShader(PS_Input input) : SV_TARGET
 {
     // Tiling.
-    input.texcoord *= 5.0f;
+    input.texcoord *= 4.0f;
 
     // Sample Albedo.
     //float4 outColor = float4(1.0f, 1.0f, 1.0f, 1.0f);
@@ -25,4 +25,3 @@ float4 PShader(PS_Input input) : SV_TARGET
     outColor *= saturate(PhongLighting(m_Light1, input));
     return outColor;
 }
-// Lighting(m_Light0, input) + 
