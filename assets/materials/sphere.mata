@@ -4,13 +4,13 @@ MAT
 1.0 1.0 1.0 1.0
 
 # Diffuse Strength.
-1.0f
+0.1
 
 # Specular Strength.
 0.4f
 
 # Shininess
-30.0f
+100.0f
 
 # Albedo map
 wood.dds

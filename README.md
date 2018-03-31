@@ -20,13 +20,11 @@ Don't worry about the name :D
 ### Current State
  - All features in the list mentioned bellow are implemented already.
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
- - It now renders low-poly cow model exported from Maya.
- - Also suppots different material and textures for different meshes.
- - Dynamic per-pixel lighting:
+ - It now renders low-poly cow model exported from Maya:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2018.jpg)
- - Normal map support:
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2_2018.PNG)
- - Phong lighting is also implemented (Sceenshot N/A yet)
+ - Material and textures for different meshes.
+ - Phong lighting and shading with normal map:
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_31_2018.PNG)
 
 
 ### Features
@@ -38,7 +36,7 @@ Don't worry about the name :D
  - Scenegraph;
  - Mesh sharing;
  - Material and Texture support with texture sharing;
- - Dynamic per-pixel phong lighting;
+ - Dynamic per-pixel phong lighting and shading;
  - Normal map rendering;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
