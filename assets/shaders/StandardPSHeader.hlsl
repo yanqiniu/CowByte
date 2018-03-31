@@ -19,7 +19,9 @@ cbuffer CameraWorldPos : register(b0)
 cbuffer PerMatConstant : register(b1)
 {
     float4 m_ColorDiffuse;
-    float4 m_ColorSpecular;
+    float  m_DiffuseStrength;
+    float  m_SpecularStrength;
+    float  m_Shininess;
 }
 
 // Lights

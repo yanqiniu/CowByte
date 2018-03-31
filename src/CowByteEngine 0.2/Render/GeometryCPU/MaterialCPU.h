@@ -10,7 +10,9 @@
 struct PerMatConstBufCPU
 {
     CBColor m_ColorDiffuse;
-    CBColor m_ColorSpecular;
+    FLOAT32 m_DiffuseStrength;
+    FLOAT32 m_SpecularStrength;
+    FLOAT32 m_Shininess;
 };
 
 class MaterialCPU
