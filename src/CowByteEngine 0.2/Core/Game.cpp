@@ -55,7 +55,7 @@ bool Game::Initialize()
     m_pPlane->m_pSceneNode->Scale(10.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);
     //m_pTorus->m_pSceneNode->Scale(10.0f);
-    m_pSphere->m_pSceneNode->Translate(-10.0, 3.0f, -10.0f);
+    m_pSphere->m_pSceneNode->Translate(-3, 3.0f, -3.0f);
 
     // Create lighting
     m_pDirLight = new Light();
