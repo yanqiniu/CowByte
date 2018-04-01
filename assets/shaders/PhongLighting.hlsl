@@ -12,7 +12,7 @@ float4 PhongLighting(Light light, PS_Input input)
         float4 cameraDir = normalize(m_CamWorldPos - input.worldPos);
         float4 specular = pow(saturate(dot(reflected, cameraDir)), m_Shininess);
 
-        return diffuse + specular;
+        return diffuse * m_DiffuseStrength + specular *  m_SpecularStrength;
     }
     else if(light.m_Type == 2) // Point
     {
