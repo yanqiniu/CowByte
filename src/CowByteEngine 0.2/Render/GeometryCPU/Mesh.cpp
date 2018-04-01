@@ -420,9 +420,10 @@ void Mesh::GenerateTangents()
 {
     for (size_t i = 0; i < m_nTriangles; ++i)
     {
-        Vertex* pV0 = &m_Vertices[i * 3];
+        // Vertices are stored in reversed order in vertex buffer, for each triangle.
+        Vertex* pV0 = &m_Vertices[i * 3 + 2];
         Vertex* pV1 = &m_Vertices[i * 3 + 1];
-        Vertex* pV2 = &m_Vertices[i * 3 + 2];
+        Vertex* pV2 = &m_Vertices[i * 3];
 
         Vec3 E1 = pV1->m_Pos - pV0->m_Pos;
         Vec3 E2 = pV2->m_Pos - pV0->m_Pos;
@@ -431,10 +432,9 @@ void Mesh::GenerateTangents()
         Vec2 Delta2 = pV2->m_TexCoord - pV0->m_TexCoord;
 
         Vec3 T = (Delta1.Y * E2 - Delta2.Y * E1) / (Delta1.Y * Delta2.X - Delta2.Y * Delta1.X);
-        //(T - pV0->m_Normal * pV0->m_Normal.Dot(T)).Normalize()
-        Vec3 BT = pV0->m_Normal.Cross(T);
-        T = BT.Cross(pV0->m_Normal);
-        T.Normalize();
+        //Vec3 B = (Delta1.X * E2 - Delta2.X * E1) / (Delta1.X * Delta2.Y - Delta2.X * Delta1.Y);
+        T = (T - pV0->m_Normal * pV0->m_Normal.Dot(T)).Normalized();
+
         pV0->m_Tangent = T;
         pV1->m_Tangent = T;
         pV2->m_Tangent = T;
