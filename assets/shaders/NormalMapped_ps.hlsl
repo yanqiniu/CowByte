@@ -5,7 +5,7 @@
 float4 PShader(PS_Input input) : SV_TARGET
 {
     // Tiling.  
-    input.texcoord *= 4.0f;
+    input.texcoord *= 5.0f;
 
     // Sample Albedo.
     //float4 outColor = float4(1.0f, 1.0f, 1.0f, 1.0f);

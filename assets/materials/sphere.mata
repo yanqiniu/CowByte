@@ -4,10 +4,10 @@ MAT
 1.0 1.0 1.0 1.0
 
 # Diffuse Strength.
-0.1
+0.4
 
 # Specular Strength.
-0.4f
+1.0
 
 # Shininess
 100.0f
