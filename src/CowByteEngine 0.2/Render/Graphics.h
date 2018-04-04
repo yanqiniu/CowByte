@@ -63,8 +63,14 @@ private:
     IDXGISwapChain *m_pSwapChain;
 
     // Other graphics:
-    ID3D11RenderTargetView *m_pRenderTargetView;
+    ID3D11RenderTargetView* m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
+
+    // Shadow map
+    ID3D11Texture2D* m_pShadowTex;
+    ID3D11DepthStencilView* m_pShadowDepthStencilView;
+    ID3D11ShaderResourceView* m_pShadowRscView;
+
 
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11DepthStencilState* m_pDepthStencilState;

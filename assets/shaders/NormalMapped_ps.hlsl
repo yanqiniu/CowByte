@@ -13,7 +13,7 @@ float4 PShader(PS_Input input) : SV_TARGET
 
     // Sample Normal.
     float3 normalSampled = gNormalMap.Sample(gNormalSS, input.texcoord).xyz;
-    normalSampled = 2.0 * normalSampled - 1.0f;
+    normalSampled = float3(2.0 * normalSampled.x - 1.0f, 2.0 * normalSampled.y - 1.0f, normalSampled.z);
 
     float3 N = normalize(input.normal.xyz);
     float3 T = normalize(input.tangent.xyz - dot(input.tangent.xyz, N)*N);
@@ -24,7 +24,7 @@ float4 PShader(PS_Input input) : SV_TARGET
     normalSampled = normalize(mul(normalSampled, TBN)); 
 
     // Apply normal and calculate lighting.
-    input.normal = float4(normalSampled, 0.0f);//float4(normalSampled.x, normalSampled.z, normalSampled.y, 0.0f); // Switch y and z because we are using B value as Y.
+    input.normal = float4(normalSampled, 0.0f);
     outColor *= saturate(PhongLighting(m_Light1, input));
     return outColor;
 }

@@ -307,6 +307,59 @@ bool Graphics::InitializePipeline()
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
+    //////////////////////////////////////////////////////////////////////////
+    // Shadow mapping:
+    D3D11_TEXTURE2D_DESC texDesc;
+    ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    texDesc.ArraySize = 1;
+    texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;// | D3D11_BIND_SHADER_RESOURCE;
+    texDesc.CPUAccessFlags = 0;
+    texDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    texDesc.Width = m_pWindow->GetWidth();
+    texDesc.Height = m_pWindow->GetHeight();
+    texDesc.MipLevels = 1;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.SampleDesc.Quality = 0;
+    texDesc.Usage = D3D11_USAGE_DEFAULT;
+    //texDesc.MiscFlags = 0;
+
+    //D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
+    //ZeroMemory(&depthStencilBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    //depthStencilBufferDesc.ArraySize = 1;
+    //depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    //depthStencilBufferDesc.CPUAccessFlags = 0;
+    //depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    //depthStencilBufferDesc.Width = m_pWindow->GetWidth();
+    //depthStencilBufferDesc.Height = m_pWindow->GetHeight();
+    //depthStencilBufferDesc.MipLevels = 1;
+    //depthStencilBufferDesc.SampleDesc.Count = 4;
+    //depthStencilBufferDesc.SampleDesc.Quality = 0;
+    //depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+
+    // Create the depth stencil view desc
+    D3D11_DEPTH_STENCIL_VIEW_DESC descDSV;
+    descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+    descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+    descDSV.Texture2D.MipSlice = 0;
+
+    //create shader resource view desc
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+
+    ////create texture and depth/resource views
+    //if (!ResultNotFailed(m_pDevice->CreateTexture2D(&texDesc, nullptr, &m_pShadowTex))) 
+    //    return false;
+
+    //if (!ResultNotFailed(m_pDevice->CreateDepthStencilView(m_pShadowTex, &descDSV, &m_pShadowDepthStencilView)))
+    //    return false;
+
+    //if (!ResultNotFailed(m_pDevice->CreateShaderResourceView(m_pShadowTex, &srvDesc, &m_pShadowRscView))) 
+    //    return false;
+
     return true;
 }
 

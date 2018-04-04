@@ -44,6 +44,12 @@ enum GPUTextureReg
     NormalMap,
     SpecularMap,
 
+    // One for each light.
+    ShadowMap0,
+    ShadowMap1,
+    ShadowMap2,
+    ShadowMap3,
+
     NumOfTexturesSupported
 };
 
