@@ -144,7 +144,7 @@ bool Graphics::PassDepthOnly()
     FLOAT color = 0.5f;
     m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilView);
     m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
-    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+    //m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
@@ -288,7 +288,7 @@ bool Graphics::InitializePipeline()
     ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
     depthStencilStateDesc.DepthEnable = TRUE;
     depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // mess with this for transparency
-    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
     depthStencilStateDesc.StencilEnable = FALSE;
     ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilState));
 
@@ -340,7 +340,7 @@ bool Graphics::InitializePipeline()
     zbufDesc.ArraySize = 1;
     zbufDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     zbufDesc.CPUAccessFlags = 0;
-    zbufDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    zbufDesc.Format = DXGI_FORMAT_R32_FLOAT;
     zbufDesc.Width = m_pWindow->GetWidth();
     zbufDesc.Height = m_pWindow->GetHeight();
     zbufDesc.MipLevels = 1;
@@ -360,7 +360,7 @@ bool Graphics::InitializePipeline()
         return false;
     }
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     srvDesc.Texture2D.MipLevels = zbufDesc.MipLevels;
     srvDesc.Texture2D.MostDetailedMip = 0;
