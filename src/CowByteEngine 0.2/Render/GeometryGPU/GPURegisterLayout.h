@@ -43,6 +43,7 @@ enum GPUTextureReg
     AlbedoMap,
     NormalMap,
     SpecularMap,
+    DepthMap,
 
     NumOfTexturesSupported
 };

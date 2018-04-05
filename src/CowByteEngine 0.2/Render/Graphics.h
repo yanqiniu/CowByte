@@ -25,6 +25,7 @@ struct GraphicsData : SystemData
     Window* m_pWindow;
 };
 
+
 class Graphics : public System
 {
 public:
@@ -33,8 +34,9 @@ public:
     virtual bool Initialize();
     virtual bool Update(const GameContext& context) override;
     virtual bool ShutDown();
+    bool PassDepthOnly();
     bool OnRender(UINT numIndices);
-    bool DrawSingleMeshInst(const MeshInstance* pMeshInst);
+    bool PassDraw();
     //void SetCamera();;
 
 private:
@@ -66,10 +68,19 @@ private:
     ID3D11RenderTargetView *m_pRenderTargetView;
     ID3D11DepthStencilView* m_pDepthStencilView;
 
+    // ZBuffer:
+    ID3D11VertexShader       *m_pDepthOnlyVS;
+    ID3D11PixelShader        *m_pDepthOnlyPS;
+    ID3D11Texture2D          *m_pZBuffer;
+    ID3D11RenderTargetView   *m_pZBufferView;
+    ID3D11ShaderResourceView *m_pZBufferRscView;
+    ID3D11SamplerState       *m_pZBufferSS;
+
+
     ID3D11Texture2D* m_pDepthStencilBuffer;
     ID3D11DepthStencilState* m_pDepthStencilState;
     ID3D11RasterizerState* m_pRasterizerState;
-    ID3D11SamplerState* m_pSamplerState;
+
 
     // Other members:
     Window *m_pWindow;

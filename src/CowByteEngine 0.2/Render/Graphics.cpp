@@ -47,12 +47,11 @@ Graphics::Graphics(const GraphicsData &data):
     m_pSwapChain(nullptr),
     m_pMeshManager(nullptr),
     m_pTexManager(nullptr),
-    m_pRenderTargetView(nullptr),
     m_pDepthStencilView(nullptr),
     m_pDepthStencilBuffer(nullptr),
     m_pDepthStencilState(nullptr),
     m_pRasterizerState(nullptr),
-    m_pSamplerState(nullptr),
+    m_pZBufferSS(nullptr),
     m_LastDrawnMeshID(INVALID_UID)
 {
 
@@ -104,6 +103,7 @@ bool Graphics::Initialize()
 
 bool Graphics::Update(const GameContext& context)
 {
+
     if (m_pMainCamera == nullptr)
     {
         DbgWARNING("No main camera set (send the message)!");
@@ -117,16 +117,11 @@ bool Graphics::Update(const GameContext& context)
         m_pDeviceContext->UpdateSubresource(m_PerFrameConstBuf.m_CameraWorldPos, 0, nullptr, &m_pMainCamera->GetParentSceneNode()->GetWorldTransform().GetPosition(), 0, 0);
     }
 
-    FLOAT color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
-    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pLightManager->CreateLightsGPU(m_pDevice, m_pDeviceContext); // Don't worry this only run once.
     m_pLightManager->UpdateLightsGPU(m_pDeviceContext);
-    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
-    {
-        DrawSingleMeshInst(m_pMeshManager->GetMeshInsts().peekat(i));
-    }
+    PassDepthOnly();
+    PassDraw();
 
     m_pSwapChain->Present(0, 0);
     return true;
@@ -137,46 +132,79 @@ bool Graphics::ShutDown()
     m_pSwapChain->Release();
     m_pDevice->Release();
     m_pDeviceContext->Release();
-    m_pRenderTargetView->Release();
     m_pMeshManager->ReleaseMeshesGPU();
     m_pTexManager->Release();
     Component::Shutdown();
     return true;
 }
 
-bool Graphics::OnRender(UINT numIndices)
+bool Graphics::PassDepthOnly()
 {
-    //UINT stride = sizeof(Vertex);
-    //UINT offset = 0;
-    //m_pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
-    //m_pDeviceContext->IASetIndexBuffer(m_pIndexBuffer, DXGI_FORMAT_R16_UINT, 0);
-    //
-    //m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    FLOAT colors[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
+    FLOAT color = 0.5f;
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilView);
+    m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
-    //m_pDeviceContext->DrawIndexed(numIndices, 0, 0);
+    m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
+    m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
+    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    {
+        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
+        Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());
+        if (mesh->IsLoaded())
+        {
+            mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
+            mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
+        }
+
+        if (mesh == nullptr)
+            continue;
+
+        // Update world matrix.
+        m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+        m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
+    }
+
 
     return true;
 }
 
-bool Graphics::DrawSingleMeshInst(const MeshInstance* pMeshInst)
+bool Graphics::OnRender(UINT numIndices)
 {
-    Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());;
-    if (m_LastDrawnMeshID != pMeshInst->GetMeshID() && mesh->IsLoaded())
+    return true;
+}
+
+bool Graphics::PassDraw()
+{
+    FLOAT color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+
+    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
-        mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
-        mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
-        mesh->GetMaterial().SetAsActive(m_pDeviceContext, m_pTexManager);
-        m_LastDrawnMeshID = pMeshInst->GetMeshID();
+        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
+        Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());;
+        if (mesh->IsLoaded())
+        {
+            mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
+            mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
+            mesh->GetMaterial().SetAsActive(m_pDeviceContext, m_pTexManager);
+            m_LastDrawnMeshID = pMeshInst->GetMeshID();
+        }
+
+        if (mesh == nullptr || m_LastDrawnMeshID == INVALID_UID)
+            continue;
+
+        // Update world matrix.
+        m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+        m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, &m_pZBufferRscView);
+        m_pDeviceContext->PSSetSamplers(GPUTextureReg::DepthMap, 1, &m_pZBufferSS);
+        m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
     }
-
-    if (mesh == nullptr || m_LastDrawnMeshID == INVALID_UID)
-        return false;
-
-    // Update world matrix.
-    m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
-    
-    m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
 
     return true;
 }
@@ -205,7 +233,8 @@ bool Graphics::InitializePipeline()
     swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapDesc.OutputWindow = m_pWindow->GetWindowHandle();
-    swapDesc.SampleDesc.Count = 4;
+    swapDesc.SampleDesc.Count = 1;
+    swapDesc.SampleDesc.Quality = 0;
     swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     swapDesc.Windowed = !m_pWindow->GetIsFullScreen();
 
@@ -248,7 +277,7 @@ bool Graphics::InitializePipeline()
     depthStencilBufferDesc.Width = m_pWindow->GetWidth();
     depthStencilBufferDesc.Height = m_pWindow->GetHeight();
     depthStencilBufferDesc.MipLevels = 1;
-    depthStencilBufferDesc.SampleDesc.Count = 4;
+    depthStencilBufferDesc.SampleDesc.Count = 1;
     depthStencilBufferDesc.SampleDesc.Quality = 0;
     depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBuffer));
@@ -299,13 +328,90 @@ bool Graphics::InitializePipeline()
     m_pDeviceContext->RSSetViewports(1, &m_Viewport);
 
     // Output merger stage.
-    // Set render target.
+    // Create render targets.
     ID3D11Texture2D *pBackBuffer;
     ThrowIfFailed(m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBackBuffer));
     ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
-    pBackBuffer->Release();
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+    //pBackBuffer->Release();
+
+    // Z Buffer:
+    D3D11_TEXTURE2D_DESC zbufDesc;
+    ZeroMemory(&zbufDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    zbufDesc.ArraySize = 1;
+    zbufDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    zbufDesc.CPUAccessFlags = 0;
+    zbufDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    zbufDesc.Width = m_pWindow->GetWidth();
+    zbufDesc.Height = m_pWindow->GetHeight();
+    zbufDesc.MipLevels = 1;
+    zbufDesc.SampleDesc.Count = 1;
+    zbufDesc.SampleDesc.Quality = 0;
+    zbufDesc.Usage = D3D11_USAGE_DEFAULT;
+    if (!ResultNotFailed(m_pDevice->CreateTexture2D(&zbufDesc, nullptr, &m_pZBuffer)))
+    {
+        return false;
+    }
+    D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
+    renderTargetViewDesc.Format = zbufDesc.Format;
+    renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
+    renderTargetViewDesc.Texture2D.MipSlice = 0;
+    if (!ResultNotFailed(m_pDevice->CreateRenderTargetView(m_pZBuffer, &renderTargetViewDesc, &m_pZBufferView)))
+    {
+        return false;
+    }
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = zbufDesc.MipLevels;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    if (!ResultNotFailed(m_pDevice->CreateShaderResourceView(m_pZBuffer, &srvDesc, &m_pZBufferRscView)))
+    {
+        return false;
+    }
+
+    //m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
+
+    D3D11_SAMPLER_DESC sampDesc;
+    ZeroMemory(&sampDesc, sizeof(sampDesc));
+    sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
+    sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+    sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+    sampDesc.MinLOD = 0;
+    sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+    m_pZBufferSS = nullptr;
+    if (!ResultNotFailed(m_pDevice->CreateSamplerState(&sampDesc, &m_pZBufferSS)))
+    {
+        return false;
+    }
+
+
+
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
+
+
+    // Initialize z-buffer related:
+    ID3D10Blob *VS = nullptr;
+    ID3D10Blob *PS = nullptr;
+    D3DReadFileToBlob(CBPath::GetShaderPath("depthOnly_vs.cso"), &VS);
+    D3DReadFileToBlob(CBPath::GetShaderPath("depthOnly_ps.cso"), &PS);
+    if (!ResultNotFailed(m_pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &m_pDepthOnlyVS)))
+    {
+        return false;
+    }
+    if (!ResultNotFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &m_pDepthOnlyPS)))
+    {
+        return false;
+    }
+
+    VS->Release();
+    PS->Release();
+    VS = nullptr;
+    PS = nullptr;
+
+
+
 
     return true;
 }
