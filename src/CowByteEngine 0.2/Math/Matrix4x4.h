@@ -146,10 +146,10 @@ __declspec(align(16)) struct Matrix4x4
     // fovy is in radian here.
     __forceinline static Matrix4x4 PerspectiveProjection(float ar, float fovy, float np, float fp)
     {
-        return Matrix4x4(1.0f / (ar * std::tan(fovy / 2)), 0.0f,                      0.0f,                   0.0f,
-                         0.0f,                             1.0f / std::tan(fovy / 2), 0.0f,                   0.0f,
-                         0.0f,                             0.0f,                      1 / (fp - np),          1.0f,
-                         0.0f,                             0.0f,                      - (np / (fp - np)),     0.0f);
+        return Matrix4x4(1.0f / (ar * std::tan(fovy / 2)), 0.0f,                      0.0f,                    0.0f,
+                         0.0f,                             1.0f / std::tan(fovy / 2), 0.0f,                    0.0f,
+                         0.0f,                             0.0f,                      fp / (fp - np),          1.0f,
+                         0.0f,                             0.0f,                      - (fp * np / (fp - np)), 0.0f);
 
     }
     __forceinline static Matrix4x4 Scale(float x, float y, float z)
