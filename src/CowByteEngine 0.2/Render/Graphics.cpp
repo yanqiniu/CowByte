@@ -141,9 +141,10 @@ bool Graphics::ShutDown()
 bool Graphics::PassDepthOnly()
 {
     FLOAT color = 1.0f;
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilView);
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pZDepthStencilView);
     m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
-    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+    m_pDeviceContext->OMSetDepthStencilState(m_pZDepthStencilState, 1);
+    m_pDeviceContext->ClearDepthStencilView(m_pZDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
@@ -181,6 +182,7 @@ bool Graphics::PassDraw()
     FLOAT color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
     m_pDeviceContext->OMSetRenderTargets(1, &m_pRenderTargetView, m_pDepthStencilView);
     m_pDeviceContext->ClearRenderTargetView(m_pRenderTargetView, color);
+    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
@@ -341,6 +343,14 @@ bool Graphics::InitializePipeline()
     //pBackBuffer->Release();
 
     // Z Buffer:
+
+    // Create z depth stencil buffer and view.
+    depthStencilBufferDesc.SampleDesc.Count = 1;
+    depthStencilBufferDesc.SampleDesc.Quality = 0;
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pZDepthStencilBuffer));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pZDepthStencilBuffer, nullptr, &m_pZDepthStencilView));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pZDepthStencilState));
+
     D3D11_TEXTURE2D_DESC zbufDesc;
     ZeroMemory(&zbufDesc, sizeof(D3D11_TEXTURE2D_DESC));
     zbufDesc.ArraySize = 1;
@@ -350,8 +360,8 @@ bool Graphics::InitializePipeline()
     zbufDesc.Width = m_pWindow->GetWidth();
     zbufDesc.Height = m_pWindow->GetHeight();
     zbufDesc.MipLevels = 1;
-    zbufDesc.SampleDesc.Count = swapDesc.SampleDesc.Count;
-    zbufDesc.SampleDesc.Quality = swapDesc.SampleDesc.Quality;
+    zbufDesc.SampleDesc.Count = 1;
+    zbufDesc.SampleDesc.Quality = 0;
     zbufDesc.Usage = D3D11_USAGE_DEFAULT;
     if (!ResultNotFailed(m_pDevice->CreateTexture2D(&zbufDesc, nullptr, &m_pZBuffer)))
     {
@@ -395,7 +405,6 @@ bool Graphics::InitializePipeline()
 
 
 
-    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
 
     // Initialize z-buffer related:

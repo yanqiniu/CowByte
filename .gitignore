@@ -327,3 +327,5 @@ assets/other/Thumbs\.db
 *.db
 
 *.ma
+
+assets/textures/debug_oriented\.dds

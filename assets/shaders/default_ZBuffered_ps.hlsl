@@ -9,8 +9,8 @@ float4 main(PS_Input input) : SV_TARGET
 
     float sampledZ = gDepthMap.Sample(gDepthSS, screenCoord);
 
-    if(input.depthPosition.z > sampledZ)
-        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+    if(input.depthPosition.z - sampledZ > 0.02) // threshhold for MSAA
+        return float4(0.0f, 1.0f, 0.0f, 1.0f);
 
     input.normal = normalize(input.normal);
     input.tangent = normalize(input.tangent);

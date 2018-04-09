@@ -76,6 +76,9 @@ private:
     ID3D11RenderTargetView   *m_pZBufferView;
     ID3D11ShaderResourceView *m_pZBufferRscView;
     ID3D11SamplerState       *m_pZBufferSS;
+    ID3D11DepthStencilState  *m_pZDepthStencilState;
+    ID3D11DepthStencilView   *m_pZDepthStencilView;
+    ID3D11Texture2D          *m_pZDepthStencilBuffer;
 
 
     ID3D11Texture2D* m_pDepthStencilBuffer;
