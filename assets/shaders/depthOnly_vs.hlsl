@@ -20,7 +20,7 @@ cbuffer ObjectWorldMat : register(b1)
 struct PSInput
 {
     float4 position      : SV_POSITION;
-    float4 depthPosition : TEXTURE0;
+    float4  depthPos     : POSITION;
 };
 
 PSInput main(VS_Input input)
@@ -29,6 +29,9 @@ PSInput main(VS_Input input)
     
     float4x4 mvp = mul(worldMatrix, viewProjectionMatrix);
     output.position = mul(input.position, mvp);
-    output.depthPosition = float4((output.position.x  + 1.0f) / 2, (output.position.y  + 1.0f) / 2, output.position.z, output.position.w);
+
+    output.depthPos = output.position; // Convert from homogeneous
+
+    // output.depthPosition = float4((output.position.x  + 1.0f) / 2, (output.position.y  + 1.0f) / 2, output.position.z, output.position.w);
     return output;
 }

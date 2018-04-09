@@ -74,7 +74,7 @@ bool Game::Initialize()
 
 
     // Create game camera.
-    m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 50.0f);
+    m_pGameCamera = new Camera((float)800 / 600, 40.0f, 0.01f, 100.0f);
     SceneNode *cameraSceneNode = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pGameCamera->AttachTo_SceneNode_Parent(cameraSceneNode);
     cameraSceneNode->RotateLocal(m_pGameCamera->GetParentSceneNode()->GetWorldTransform().Up(), 45.0f);

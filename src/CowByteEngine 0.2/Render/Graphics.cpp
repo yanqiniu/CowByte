@@ -140,11 +140,10 @@ bool Graphics::ShutDown()
 
 bool Graphics::PassDepthOnly()
 {
-    FLOAT colors[4] = { 1.0f, 1.0f, 0.0f, 1.0f };
-    FLOAT color = 0.5f;
+    FLOAT color = 1.0f;
     m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilView);
     m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
-    //m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
@@ -288,7 +287,7 @@ bool Graphics::InitializePipeline()
     ZeroMemory(&depthStencilStateDesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
     depthStencilStateDesc.DepthEnable = TRUE;
     depthStencilStateDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL; // mess with this for transparency
-    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+    depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
     depthStencilStateDesc.StencilEnable = FALSE;
     ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilState));
 
