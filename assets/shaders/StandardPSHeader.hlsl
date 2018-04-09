@@ -2,16 +2,14 @@
 
 // Textures.
 Texture2D gAlbedoMap   : register(t0);
-SamplerState gAlbedoSS : register(s0);
-
 Texture2D gNormalMap   : register(t1);
-SamplerState gNormalSS : register(s1);
-
 Texture2D gSpecularMap   : register(t2);
-SamplerState gSpecularSS : register(s2);
-
 Texture2D gDepthMap   : register(t3);
-SamplerState gDepthSS : register(s3);
+
+SamplerState gAlbedoSS : register(s0);
+SamplerState gNormalSS : register(s1);
+SamplerState gSpecularSS : register(s2);
+SamplerState gPointSS : register(s3);
 
 // Constants
 cbuffer CameraWorldPos : register(b0)

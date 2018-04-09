@@ -50,8 +50,7 @@ Graphics::Graphics(const GraphicsData &data):
     m_pDepthStencilView(nullptr),
     m_pDepthStencilBuffer(nullptr),
     m_pDepthStencilState(nullptr),
-    m_pRasterizerState(nullptr),
-    m_pZBufferSS(nullptr),
+    m_pPointSS(nullptr),
     m_LastDrawnMeshID(INVALID_UID)
 {
 
@@ -142,10 +141,10 @@ bool Graphics::ShutDown()
 bool Graphics::PassDepthOnly()
 {
     FLOAT color = m_pMainCamera->GetFarPlane(); // Use this since we record z'z in depth buffer, instead of z'.
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pZDepthStencilView);
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilViewNoMS);
     m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
-    m_pDeviceContext->OMSetDepthStencilState(m_pZDepthStencilState, 1);
-    m_pDeviceContext->ClearDepthStencilView(m_pZDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilStateNoMS, 1);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilViewNoMS, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
@@ -205,7 +204,7 @@ bool Graphics::PassDraw()
         m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
         m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, &m_pZBufferRscView);
-        m_pDeviceContext->PSSetSamplers(GPUTextureReg::DepthMap, 1, &m_pZBufferSS);
+        m_pDeviceContext->PSSetSamplers(GPUSamplerStateReg::Point, 1, &m_pPointSS);
         m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
     }
 
@@ -299,11 +298,11 @@ bool Graphics::InitializePipeline()
 
     depthStencilBufferDesc.SampleDesc.Count = 1;
     depthStencilBufferDesc.SampleDesc.Quality = 0;
-    ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pZDepthStencilBuffer));
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBufferNoMS));
 
     // Depth stencil Views:
     ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, nullptr, &m_pDepthStencilView));
-    ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pZDepthStencilBuffer, nullptr, &m_pZDepthStencilView));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBufferNoMS, nullptr, &m_pDepthStencilViewNoMS));
 
     // Depth stencil States:
     // Create depth/stencil state.
@@ -314,7 +313,7 @@ bool Graphics::InitializePipeline()
     depthStencilStateDesc.DepthFunc = D3D11_COMPARISON_LESS;
     depthStencilStateDesc.StencilEnable = FALSE;
     ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilState));
-    ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pZDepthStencilState));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilStateNoMS));
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -370,24 +369,20 @@ bool Graphics::InitializePipeline()
     rasterizerDesc.MultisampleEnable = FALSE;
     rasterizerDesc.ScissorEnable = FALSE;
     rasterizerDesc.SlopeScaledDepthBias = 0.0f;
-    ThrowIfFailed( m_pDevice->CreateRasterizerState(&rasterizerDesc, &m_pRasterizerState));
+    ID3D11RasterizerState* pRasterizerState;
+    ThrowIfFailed( m_pDevice->CreateRasterizerState(&rasterizerDesc, &pRasterizerState));
+    m_pDeviceContext->RSSetState(pRasterizerState);
 
     // Create viewport.
-    ZeroMemory(&m_Viewport, sizeof(D3D11_VIEWPORT));
-    m_Viewport.TopLeftX = 0;
-    m_Viewport.TopLeftY = 0;
-    m_Viewport.Width = static_cast<FLOAT>(m_pWindow->GetWidth());
-    m_Viewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
-    m_Viewport.MinDepth = 0.0f;
-    m_Viewport.MaxDepth = 1.0f;
-
-
-    // Set rasterizer stage.
-    m_pDeviceContext->RSSetState(m_pRasterizerState);
-    m_pDeviceContext->RSSetViewports(1, &m_Viewport);
-
-
-
+    D3D11_VIEWPORT viewport;
+    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = static_cast<FLOAT>(m_pWindow->GetWidth());
+    viewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
+    viewport.MinDepth = 0.0f;
+    viewport.MaxDepth = 1.0f;
+    m_pDeviceContext->RSSetViewports(1, &viewport);
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -414,7 +409,7 @@ bool Graphics::InitializePipeline()
     VS = nullptr;
     PS = nullptr;
 
-    // Create sampler state for depth map.
+    // Create sampler state.
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
@@ -424,8 +419,8 @@ bool Graphics::InitializePipeline()
     sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     sampDesc.MinLOD = 0;
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
-    m_pZBufferSS = nullptr;
-    ThrowIfFailed(m_pDevice->CreateSamplerState(&sampDesc, &m_pZBufferSS));
+    m_pPointSS = nullptr;
+    ThrowIfFailed(m_pDevice->CreateSamplerState(&sampDesc, &m_pPointSS));
 
     return true;
 }

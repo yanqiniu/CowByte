@@ -53,37 +53,35 @@ private:
     };
 
     // Constant buffers:
-    PerFrameConstBufGPU m_PerFrameConstBuf;
+    PerFrameConstBufGPU  m_PerFrameConstBuf;
     PerObjectConstBufGPU m_PerObjectConstBuf;
 
-    // View port and other large member:
-    D3D11_VIEWPORT m_Viewport;
-
-    // Ptr to the necessary three:
-    ID3D11Device *m_pDevice;
+    // Ptrs to the necessary three:
+    ID3D11Device        *m_pDevice;
     ID3D11DeviceContext *m_pDeviceContext;
-    IDXGISwapChain *m_pSwapChain;
+    IDXGISwapChain      *m_pSwapChain;
 
-    // Other graphics:
-    ID3D11RenderTargetView *m_pRenderTargetView;
-    ID3D11DepthStencilView* m_pDepthStencilView;
+    // Render target buffer and views, as well as shader resource views sharing the resource.
+    ID3D11Texture2D          *m_pZBuffer;
+    ID3D11RenderTargetView   *m_pRenderTargetView;
+    ID3D11RenderTargetView   *m_pZBufferView;
+    ID3D11ShaderResourceView *m_pZBufferRscView;
 
-    // ZBuffer:
+    // Depth stencil buffers, views and states.
+    ID3D11Texture2D          *m_pDepthStencilBuffer;
+    ID3D11Texture2D          *m_pDepthStencilBufferNoMS;
+    ID3D11DepthStencilView   *m_pDepthStencilView;
+    ID3D11DepthStencilView   *m_pDepthStencilViewNoMS;
+    ID3D11DepthStencilState  *m_pDepthStencilState;
+    ID3D11DepthStencilState  *m_pDepthStencilStateNoMS;
+
+    // Shaders, sampler states:
     ID3D11InputLayout        *m_pDepthInputLayout;
     ID3D11VertexShader       *m_pDepthOnlyVS;
     ID3D11PixelShader        *m_pDepthOnlyPS;
-    ID3D11Texture2D          *m_pZBuffer;
-    ID3D11RenderTargetView   *m_pZBufferView;
-    ID3D11ShaderResourceView *m_pZBufferRscView;
-    ID3D11SamplerState       *m_pZBufferSS;
-    ID3D11DepthStencilState  *m_pZDepthStencilState;
-    ID3D11DepthStencilView   *m_pZDepthStencilView;
-    ID3D11Texture2D          *m_pZDepthStencilBuffer;
+    ID3D11SamplerState       *m_pPointSS;
 
 
-    ID3D11Texture2D* m_pDepthStencilBuffer;
-    ID3D11DepthStencilState* m_pDepthStencilState;
-    ID3D11RasterizerState* m_pRasterizerState;
 
 
     // Other members:
