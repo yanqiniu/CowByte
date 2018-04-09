@@ -19,6 +19,9 @@ public:
     bool Update(const GameContext &context);
     void _HandleMessage(CBRefCountPtr<Message> &pMsg);
 
+    float GetNearPlane() const { return m_NearPlane; }
+    float GetFarPlane() const { return m_FarPlane; }
+
 private:
     Matrix4x4 m_ViewProjMatrix;     // World->Clip
     Matrix4x4 m_ProjectionMatrix;   // View->Clip
