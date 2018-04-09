@@ -227,7 +227,7 @@ bool Graphics::InitializePipeline()
     DXGI_SWAP_CHAIN_DESC swapDesc;
 
     ZeroMemory(&swapDesc, sizeof(swapDesc));
-    swapDesc.BufferCount = NumOfBuffers;
+    swapDesc.BufferCount = 1;
     swapDesc.BufferDesc.Width = m_pWindow->GetWidth();
     swapDesc.BufferDesc.Height = m_pWindow->GetHeight();
     DXGI_RATIONAL refreshRate;
@@ -237,7 +237,7 @@ bool Graphics::InitializePipeline()
     swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
     swapDesc.OutputWindow = m_pWindow->GetWindowHandle();
-    swapDesc.SampleDesc.Count = 1;
+    swapDesc.SampleDesc.Count = 4;
     swapDesc.SampleDesc.Quality = 0;
     swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
     swapDesc.Windowed = !m_pWindow->GetIsFullScreen();
@@ -269,6 +269,8 @@ bool Graphics::InitializePipeline()
         &m_pDeviceContext
     ));
 
+    //UINT tempQuality;
+    //m_pDevice->CheckMultisampleQualityLevels(swapDesc.BufferDesc.Format, swapDesc.SampleDesc.Count, &tempQuality);
 
 
     // Create a depth stencil buffer and view.
@@ -281,8 +283,8 @@ bool Graphics::InitializePipeline()
     depthStencilBufferDesc.Width = m_pWindow->GetWidth();
     depthStencilBufferDesc.Height = m_pWindow->GetHeight();
     depthStencilBufferDesc.MipLevels = 1;
-    depthStencilBufferDesc.SampleDesc.Count = 1;
-    depthStencilBufferDesc.SampleDesc.Quality = 0;
+    depthStencilBufferDesc.SampleDesc.Count = swapDesc.SampleDesc.Count;
+    depthStencilBufferDesc.SampleDesc.Quality = swapDesc.SampleDesc.Quality;
     depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBuffer));
     ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, nullptr, &m_pDepthStencilView));
@@ -348,8 +350,8 @@ bool Graphics::InitializePipeline()
     zbufDesc.Width = m_pWindow->GetWidth();
     zbufDesc.Height = m_pWindow->GetHeight();
     zbufDesc.MipLevels = 1;
-    zbufDesc.SampleDesc.Count = 1;
-    zbufDesc.SampleDesc.Quality = 0;
+    zbufDesc.SampleDesc.Count = swapDesc.SampleDesc.Count;
+    zbufDesc.SampleDesc.Quality = swapDesc.SampleDesc.Quality;
     zbufDesc.Usage = D3D11_USAGE_DEFAULT;
     if (!ResultNotFailed(m_pDevice->CreateTexture2D(&zbufDesc, nullptr, &m_pZBuffer)))
     {
