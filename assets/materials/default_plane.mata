@@ -4,19 +4,19 @@ MAT
 1.0 1.0 1.0 1.0
 
 # Diffuse Strength.
-0.4
+1.0
 
 # Specular Strength.
 1.0
 
 # Shininess
-100.0f
+3.00
 
 # Albedo map
-wood.dds
+brick_albedo.dds
 
 # Normal map
-none
+brick_normal.dds
 
 # Specular map
 none
@@ -25,4 +25,4 @@ none
 default_vs.cso
 
 # Pixel shader 
-AlbedoOnlyLit_ps.cso
+default_ZBuffered_ps.cso

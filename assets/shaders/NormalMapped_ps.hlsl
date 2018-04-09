@@ -4,8 +4,17 @@
 
 float4 PShader(PS_Input input) : SV_TARGET
 {
+    // input.depthPosition /= input.depthPosition.w;
+    float2 screenCoord = float2((input.depthPosition.x / input.depthPosition.w + 1.0f) / 2,
+                                1.0f-(input.depthPosition.y / input.depthPosition.w + 1.0f) / 2);
+
+    float sampledZ = gDepthMap.Sample(gPointSS, screenCoord);
+
+    if(input.depthPosition.z - sampledZ > 0.02) // threshhold for MSAA
+        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+
     // Tiling.  
-    input.texcoord *= 4.0f;
+    input.texcoord *= 5.0f;
 
     // Sample Albedo.
     //float4 outColor = float4(1.0f, 1.0f, 1.0f, 1.0f);

@@ -43,8 +43,19 @@ enum GPUTextureReg
     AlbedoMap,
     NormalMap,
     SpecularMap,
+    DepthMap,
 
     NumOfTexturesSupported
+};
+
+enum GPUSamplerStateReg
+{
+    AlbedoMapSS,
+    NormalMapSS,
+    SpecularMapSS,
+    Point,
+
+    NumOfSamplerStatesSupporteds
 };
 
 #endif // 

@@ -265,5 +265,8 @@
     </FxCompile>
     <FxCompile Include="..\..\assets\shaders\NormalMapped_ps.hlsl" />
     <FxCompile Include="..\..\assets\shaders\AlbedoOnlyLit_ps.hlsl" />
+    <FxCompile Include="..\..\assets\shaders\depthOnly_ps.hlsl" />
+    <FxCompile Include="..\..\assets\shaders\depthOnly_vs.hlsl" />
+    <FxCompile Include="..\..\assets\shaders\default_ZBuffered_ps.hlsl" />
   </ItemGroup>
 </Project>

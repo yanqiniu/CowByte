@@ -25,6 +25,8 @@ Don't worry about the name :D
  - Material and textures for different meshes.
  - Phong lighting and shading with normal map:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_31_2018.PNG)
+ - Depth map:
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018.PNG)
 
 
 ### Features
