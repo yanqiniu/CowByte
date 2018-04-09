@@ -206,6 +206,10 @@ bool Graphics::PassDraw()
         m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
     }
 
+    // Unbind screen textures.
+    ID3D11ShaderResourceView* pNullSRVs[] = { nullptr };
+    m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, pNullSRVs);
+
     return true;
 }
 
