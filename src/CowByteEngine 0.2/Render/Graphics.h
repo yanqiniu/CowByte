@@ -43,7 +43,7 @@ private:
     void _HandleMessage(CBRefCountPtr<Message> &pMsg) override;
     bool InitializePipeline();
 
-    static const int NumOfBuffers = 2;
+    static const int NumOfBuffers = 1;
     enum ConstantBufferType
     {
         CBUFFER_APPLICATION,
@@ -69,6 +69,7 @@ private:
     ID3D11DepthStencilView* m_pDepthStencilView;
 
     // ZBuffer:
+    ID3D11InputLayout        *m_pDepthInputLayout;
     ID3D11VertexShader       *m_pDepthOnlyVS;
     ID3D11PixelShader        *m_pDepthOnlyPS;
     ID3D11Texture2D          *m_pZBuffer;

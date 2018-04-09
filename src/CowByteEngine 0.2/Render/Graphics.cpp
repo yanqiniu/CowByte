@@ -147,6 +147,7 @@ bool Graphics::PassDepthOnly()
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
+    m_pDeviceContext->IASetInputLayout(m_pDepthInputLayout);
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
         MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
@@ -387,6 +388,7 @@ bool Graphics::InitializePipeline()
 
 
 
+
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
 
 
@@ -401,6 +403,13 @@ bool Graphics::InitializePipeline()
     }
     if (!ResultNotFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &m_pDepthOnlyPS)))
     {
+        return false;
+    }
+
+    // Create input layout.
+    if (!ResultNotFailed(m_pDevice->CreateInputLayout(Vertex::InputDesc, 4, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pDepthInputLayout)))
+    {
+        DbgERROR("Filed creating input layout!");
         return false;
     }
 
