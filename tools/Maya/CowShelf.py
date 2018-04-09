@@ -161,6 +161,7 @@ def export_uv(faces, filepath):
     outfile.write("{0}\n".format(len(faces)*3))
     for f in faces:
         uvs = f.getUVs()
+        # invert Y because out image loaders store top to bottom.
         outfile.write("{0} {1}\n".format(uvs[0][0], 1-uvs[1][0]))
         outfile.write("{0} {1}\n".format(uvs[0][1], 1-uvs[1][1]))
         outfile.write("{0} {1}\n".format(uvs[0][2], 1-uvs[1][2]))

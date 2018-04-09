@@ -5,20 +5,22 @@ float4 main(PS_Input input) : SV_TARGET
 {
     // input.depthPosition /= input.depthPosition.w;
     float2 screenCoord = float2((input.depthPosition.x / input.depthPosition.w + 1.0f) / 2,
-                                1.0f-(input.depthPosition.y / input.depthPosition.w + 1.0f) / 2);
+                                 1.0f-(input.depthPosition.y / input.depthPosition.w + 1.0f) / 2);
 
-    float sampledZ = gDepthMap.Sample(gDepthSS, screenCoord);
+    float sampledZ = 0;
+    sampledZ += gDepthMap.Load(input.position.xy, 0);
+    sampledZ += gDepthMap.Load(input.position.xy, 1);
+    sampledZ += gDepthMap.Load(input.position.xy, 2);
+    sampledZ += gDepthMap.Load(input.position.xy, 3);
+    sampledZ /= 4;
 
     if(input.depthPosition.z > sampledZ)
-        return float4(0.0f, 0.0f, 0.0f, 1.0f);
+        return float4(0.0f, sampledZ, 0.0f, 1.0f);
 
     input.normal = normalize(input.normal);
     input.tangent = normalize(input.tangent);
     input.bitangent = normalize(input.bitangent);
 
-
     float4 sampleColor = gAlbedoMap.Sample(gAlbedoSS, input.texcoord);
-    //float4 outColor = float4(sample, 0.0f, 0.0f, 1.0f);
-    //outColor *= saturate(PhongLighting(m_Light0, input) + PhongLighting(m_Light1, input));// + PhongLighting(m_Light2, input) + PhongLighting(m_Light3, input));
-    return sampleColor;//ZBufferTest(input);
+    return sampleColor;
 }

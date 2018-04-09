@@ -10,7 +10,7 @@ SamplerState gNormalSS : register(s1);
 Texture2D gSpecularMap   : register(t2);
 SamplerState gSpecularSS : register(s2);
 
-Texture2D gDepthMap   : register(t3);
+Texture2DMS<float> gDepthMap   : register(t3);
 SamplerState gDepthSS : register(s3);
 
 // Constants
