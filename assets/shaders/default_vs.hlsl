@@ -6,9 +6,12 @@ PS_Input VShader(VS_Input input)
     
     float4x4 mvp = mul(worldMatrix, viewProjectionMatrix);
     output.position = mul(input.position, mvp);
-
     output.worldPos = mul(input.position, worldMatrix);
     output.depthPosition = output.position;
+
+    float4x4 mlp = mul(worldMatrix, lightViewProjectionMatrix);
+    output.lightViewPosition = mul(input.position, mlp);
+
     output.texcoord = input.texcoord;
 
     output.normal = mul(input.normal, worldMatrix);

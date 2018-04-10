@@ -14,6 +14,7 @@ Camera::Camera() :
 // fovy should be in degree.
 Camera::Camera(float ar, float fovy, float np, float fp) :
     m_ProjectionMatrix(Matrix4x4::PerspectiveProjection(ar, DEGREE_TO_RAD(fovy), np, fp)),
+    //m_ProjectionMatrix(Matrix4x4::OrthographicProjection(8.0f, 6.0f, 0.01f, 100.0f)),
     m_AspectRatio(ar),
     m_FOVy(DEGREE_TO_RAD(fovy)),
     m_NearPlane(np),

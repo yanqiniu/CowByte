@@ -268,5 +268,6 @@
     <FxCompile Include="..\..\assets\shaders\depthOnly_ps.hlsl" />
     <FxCompile Include="..\..\assets\shaders\depthOnly_vs.hlsl" />
     <FxCompile Include="..\..\assets\shaders\default_ZBuffered_ps.hlsl" />
+    <FxCompile Include="..\..\assets\shaders\shadowMap_vs.hlsl" />
   </ItemGroup>
 </Project>
