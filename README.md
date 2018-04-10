@@ -25,8 +25,9 @@ Don't worry about the name :D
  - Material and textures for different meshes.
  - Phong lighting and shading with normal map:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_31_2018.PNG)
- - Depth map:
+ - Depth map and shadow mapping:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018.PNG)
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018_1.PNG)
 
 
 ### Features
@@ -39,6 +40,7 @@ Don't worry about the name :D
  - Mesh sharing;
  - Material and Texture support with texture sharing;
  - Phong lighting and shading with normap map;
+ - Hard shadow using shadow mapping;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;

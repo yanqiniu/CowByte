@@ -117,10 +117,11 @@ bool Graphics::Update(const GameContext& context)
     }
 
     m_pLightManager->CreateLightsGPU(m_pDevice, m_pDeviceContext); // Don't worry this only run once.
-    m_pLightManager->UpdateLightsGPU(m_pDeviceContext);
+    m_pLightManager->UpdateLightsGPU(m_pDeviceContext, &m_PerFrameConstBuf);
 
     // Draw passes.
     PassDepthOnly();
+    PassShadowMap();
     PassDraw();
 
     m_pSwapChain->Present(0, 0);
@@ -141,14 +142,17 @@ bool Graphics::ShutDown()
 bool Graphics::PassDepthOnly()
 {
     FLOAT color = m_pMainCamera->GetFarPlane(); // Use this since we record z'z in depth buffer, instead of z'.
-    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferView, m_pDepthStencilViewNoMS);
-    m_pDeviceContext->ClearRenderTargetView(m_pZBufferView, &color);
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferRTView, m_pDepthStencilViewNoMS);
+    m_pDeviceContext->ClearRenderTargetView(m_pZBufferRTView, &color);
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilStateNoMS, 1);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilViewNoMS, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);
     m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
     m_pDeviceContext->IASetInputLayout(m_pDepthInputLayout);
+
+    m_pDeviceContext->RSSetViewports(1, &m_MainViewport);
+
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
         MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
@@ -172,6 +176,44 @@ bool Graphics::PassDepthOnly()
     return true;
 }
 
+bool Graphics::PassShadowMap()
+{
+    FLOAT color = m_pMainCamera->GetFarPlane(); // Use this since we record z'z in depth buffer, instead of z'.
+    m_pDeviceContext->OMSetRenderTargets(1, &m_pShadowRTView, m_pDepthStencilViewShadow);
+    m_pDeviceContext->ClearRenderTargetView(m_pShadowRTView, &color);
+    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilStateShadow, 1);
+    m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilViewShadow, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
+
+    m_pDeviceContext->VSSetShader(m_pShadowMapVS, nullptr, 0);
+    m_pDeviceContext->PSSetShader(m_pDepthOnlyPS, nullptr, 0);
+    m_pDeviceContext->IASetInputLayout(m_pDepthInputLayout);
+
+    m_pDeviceContext->RSSetViewports(1, &m_ShadowViewport);
+
+    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    {
+        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
+        Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());
+        if (mesh->IsLoaded())
+        {
+            mesh->GetVertexBuffer().SetAsActive(m_pDeviceContext);
+            mesh->GetIndexBuffer().SetAsActive(m_pDeviceContext);
+        }
+
+        if (mesh == nullptr)
+            continue;
+
+        // Update world matrix.
+        m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
+        m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
+    }
+
+
+    return true;
+
+}
+
 bool Graphics::OnRender(UINT numIndices)
 {
     return true;
@@ -185,6 +227,7 @@ bool Graphics::PassDraw()
     m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
+    m_pDeviceContext->RSSetViewports(1, &m_MainViewport);
     for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
     {
         MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
@@ -203,7 +246,8 @@ bool Graphics::PassDraw()
         // Update world matrix.
         m_pDeviceContext->UpdateSubresource(m_PerObjectConstBuf.m_WorldMatrix, 0, nullptr, &pMeshInst->GetParentSceneNode()->GetWorldTransform(), 0, 0);
         m_pDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, &m_pZBufferRscView);
+        m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, &m_pZBufferSRView);
+        m_pDeviceContext->PSSetShaderResources(GPUTextureReg::ShadowMap, 1, &m_pShadowSRView);
         m_pDeviceContext->PSSetSamplers(GPUSamplerStateReg::Point, 1, &m_pPointSS);
         m_pDeviceContext->DrawIndexed(mesh->GetIndexBuffer().Count(), 0, 0);
     }
@@ -211,6 +255,7 @@ bool Graphics::PassDraw()
     // Unbind screen textures.
     ID3D11ShaderResourceView* pNullSRVs[] = { nullptr };
     m_pDeviceContext->PSSetShaderResources(GPUTextureReg::DepthMap, 1, pNullSRVs);
+    m_pDeviceContext->PSSetShaderResources(GPUTextureReg::ShadowMap, 1, pNullSRVs);
 
     return true;
 }
@@ -280,7 +325,6 @@ bool Graphics::InitializePipeline()
     //////////////////////////////////////////////////////////////////////////
     // Create depth stencil buffers, views and states.
 
-
     // Depth stencil Buffers:
     D3D11_TEXTURE2D_DESC depthStencilBufferDesc;
     ZeroMemory(&depthStencilBufferDesc, sizeof(D3D11_TEXTURE2D_DESC));
@@ -300,9 +344,15 @@ bool Graphics::InitializePipeline()
     depthStencilBufferDesc.SampleDesc.Quality = 0;
     ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBufferNoMS));
 
+    depthStencilBufferDesc.Width = g_ShadowMapW;
+    depthStencilBufferDesc.Height = g_ShadowMapH;
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_pDepthStencilBufferShadow));
+
+
     // Depth stencil Views:
     ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBuffer, nullptr, &m_pDepthStencilView));
     ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBufferNoMS, nullptr, &m_pDepthStencilViewNoMS));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilView(m_pDepthStencilBufferShadow, nullptr, &m_pDepthStencilViewShadow));
 
     // Depth stencil States:
     // Create depth/stencil state.
@@ -314,6 +364,7 @@ bool Graphics::InitializePipeline()
     depthStencilStateDesc.StencilEnable = FALSE;
     ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilState));
     ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilStateNoMS));
+    ThrowIfFailed(m_pDevice->CreateDepthStencilState(&depthStencilStateDesc, &m_pDepthStencilStateShadow));
 
 
     //////////////////////////////////////////////////////////////////////////
@@ -325,33 +376,39 @@ bool Graphics::InitializePipeline()
     ThrowIfFailed(m_pDevice->CreateRenderTargetView(pBackBuffer, nullptr, &m_pRenderTargetView));
 
     // Depth map:
-    D3D11_TEXTURE2D_DESC zbufDesc;
-    ZeroMemory(&zbufDesc, sizeof(D3D11_TEXTURE2D_DESC));
-    zbufDesc.ArraySize = 1;
-    zbufDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    zbufDesc.CPUAccessFlags = 0;
-    zbufDesc.Format = DXGI_FORMAT_R32_FLOAT;
-    zbufDesc.Width = m_pWindow->GetWidth();
-    zbufDesc.Height = m_pWindow->GetHeight();
-    zbufDesc.MipLevels = 1;
-    zbufDesc.SampleDesc.Count = 1;
-    zbufDesc.SampleDesc.Quality = 0;
-    zbufDesc.Usage = D3D11_USAGE_DEFAULT;
-    ThrowIfFailed(m_pDevice->CreateTexture2D(&zbufDesc, nullptr, &m_pZBuffer));
+    D3D11_TEXTURE2D_DESC texDesc;
+    ZeroMemory(&texDesc, sizeof(D3D11_TEXTURE2D_DESC));
+    texDesc.ArraySize = 1;
+    texDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+    texDesc.CPUAccessFlags = 0;
+    texDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    texDesc.Width = m_pWindow->GetWidth();
+    texDesc.Height = m_pWindow->GetHeight();
+    texDesc.MipLevels = 1;
+    texDesc.SampleDesc.Count = 1;
+    texDesc.SampleDesc.Quality = 0;
+    texDesc.Usage = D3D11_USAGE_DEFAULT;
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&texDesc, nullptr, &m_pZBuffer));
 
     D3D11_RENDER_TARGET_VIEW_DESC renderTargetViewDesc;
-    renderTargetViewDesc.Format = zbufDesc.Format;
+    renderTargetViewDesc.Format = texDesc.Format;
     renderTargetViewDesc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
     renderTargetViewDesc.Texture2D.MipSlice = 0;
-    ThrowIfFailed(m_pDevice->CreateRenderTargetView(m_pZBuffer, &renderTargetViewDesc, &m_pZBufferView));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(m_pZBuffer, &renderTargetViewDesc, &m_pZBufferRTView));
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = zbufDesc.MipLevels;
+    srvDesc.Texture2D.MipLevels = texDesc.MipLevels;
     srvDesc.Texture2D.MostDetailedMip = 0;
-    ThrowIfFailed(m_pDevice->CreateShaderResourceView(m_pZBuffer, &srvDesc, &m_pZBufferRscView));
+    ThrowIfFailed(m_pDevice->CreateShaderResourceView(m_pZBuffer, &srvDesc, &m_pZBufferSRView));
 
+    // Shadow Map.
+    texDesc.Width = g_ShadowMapW;
+    texDesc.Height = g_ShadowMapH;
+    ThrowIfFailed(m_pDevice->CreateTexture2D(&texDesc, nullptr, &m_pShadowMap));
+    ThrowIfFailed(m_pDevice->CreateRenderTargetView(m_pShadowMap, &renderTargetViewDesc, &m_pShadowRTView));
+    ThrowIfFailed(m_pDevice->CreateShaderResourceView(m_pShadowMap, &srvDesc, &m_pShadowSRView));
 
     //////////////////////////////////////////////////////////////////////////
     // Rasterizer.
@@ -374,16 +431,21 @@ bool Graphics::InitializePipeline()
     m_pDeviceContext->RSSetState(pRasterizerState);
 
     // Create viewport.
-    D3D11_VIEWPORT viewport;
-    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-    viewport.TopLeftX = 0;
-    viewport.TopLeftY = 0;
-    viewport.Width = static_cast<FLOAT>(m_pWindow->GetWidth());
-    viewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    m_pDeviceContext->RSSetViewports(1, &viewport);
+    ZeroMemory(&m_MainViewport, sizeof(D3D11_VIEWPORT));
+    m_MainViewport.TopLeftX = 0;
+    m_MainViewport.TopLeftY = 0;
+    m_MainViewport.Width = static_cast<FLOAT>(m_pWindow->GetWidth());
+    m_MainViewport.Height = static_cast<FLOAT>(m_pWindow->GetHeight());
+    m_MainViewport.MinDepth = 0.0f;
+    m_MainViewport.MaxDepth = 1.0f;
 
+    ZeroMemory(&m_ShadowViewport, sizeof(D3D11_VIEWPORT));
+    m_ShadowViewport.TopLeftX = 0;
+    m_ShadowViewport.TopLeftY = 0;
+    m_ShadowViewport.Width = static_cast<FLOAT>(g_ShadowMapW);
+    m_ShadowViewport.Height = static_cast<FLOAT>(g_ShadowMapH);
+    m_ShadowViewport.MinDepth = 0.0f;
+    m_ShadowViewport.MaxDepth = 1.0f;
 
     //////////////////////////////////////////////////////////////////////////
     // Other.
@@ -394,7 +456,7 @@ bool Graphics::InitializePipeline()
     m_PerFrameConstBuf.SetBuffers(m_pDeviceContext);
     m_PerObjectConstBuf.SetBuffers(m_pDeviceContext);
 
-    // Depth map shaders
+    // Depth shaders
     ID3D10Blob *VS = nullptr;
     ID3D10Blob *PS = nullptr;
     D3DReadFileToBlob(CBPath::GetShaderPath("depthOnly_vs.cso"), &VS);
@@ -403,11 +465,13 @@ bool Graphics::InitializePipeline()
     ThrowIfFailed(m_pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &m_pDepthOnlyPS));
     // Create input layout.
     ThrowIfFailed(m_pDevice->CreateInputLayout(Vertex::InputDesc, 4, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pDepthInputLayout));
-
     VS->Release();
     PS->Release();
     VS = nullptr;
     PS = nullptr;
+    ID3D10Blob *shadowVSBlob = nullptr;
+    D3DReadFileToBlob(CBPath::GetShaderPath("shadowMap_vs.cso"), &shadowVSBlob);
+    ThrowIfFailed(m_pDevice->CreateVertexShader(shadowVSBlob->GetBufferPointer(), shadowVSBlob->GetBufferSize(), NULL, &m_pShadowMapVS));
 
     // Create sampler state.
     D3D11_SAMPLER_DESC sampDesc;

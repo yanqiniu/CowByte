@@ -1,6 +1,18 @@
 // TODO: if statement slow.
-float4 PhongLighting(Light light, PS_Input input)
+float4 PhongLighting(Light light, PS_Input input, bool shadowed)
 {
+    if(shadowed)
+    {
+        // input.depthPosition /= input.depthPosition.w;
+        float2 coord = float2((input.lightViewPosition.x + 1.0f) / 2,
+                                    1.0f-(input.lightViewPosition.y + 1.0f) / 2);
+
+        float sampledZ = gShadowMap.Sample(gPointSS, coord);
+
+        if(input.lightViewPosition.z - sampledZ > 0.02) // threshhold for MSAA
+            return float4(1.0f, 0.0f, 0.0f, 1.0f);
+    }
+
     if(light.m_Type == 0) // Ambient
     {
         return light.m_Color;

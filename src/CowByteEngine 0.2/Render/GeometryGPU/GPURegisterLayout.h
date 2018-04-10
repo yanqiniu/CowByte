@@ -10,6 +10,7 @@ enum GPUConstantsReg_VS
     //////////////////////////////////////////////////////////////////////////
     // Per Frame:
     ViewProjMatrix,
+    LightViewProjMatrix,
 
     //////////////////////////////////////////////////////////////////////////
     // Per Object:
@@ -43,7 +44,9 @@ enum GPUTextureReg
     AlbedoMap,
     NormalMap,
     SpecularMap,
+
     DepthMap,
+    ShadowMap, //Used only for one single directional light
 
     NumOfTexturesSupported
 };

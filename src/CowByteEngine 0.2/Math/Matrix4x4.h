@@ -143,6 +143,15 @@ __declspec(align(16)) struct Matrix4x4
                          0.0f, 0.0f, 0.0f, 1.0f);
     }
 
+    __forceinline static Matrix4x4 OrthographicProjection(float w, float h, float np, float fp)
+    {
+        return Matrix4x4(2.0f / w, 0.0f,     0.0f,             0.0f,
+                         0.0f,     2.0f / h, 0.0f,             0.0f,
+                         0.0f,     0.0f,     1.0f / (fp - np), 0.0f,
+                         0.0f,     0.0f,     -np / (fp - np),  1.0f);
+    }
+
+
     // fovy is in radian here.
     __forceinline static Matrix4x4 PerspectiveProjection(float ar, float fovy, float np, float fp)
     {

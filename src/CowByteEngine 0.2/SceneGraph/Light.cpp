@@ -9,7 +9,8 @@ Light::LightData::LightData() :
     m_Position(0.0f, 0.0f, 0.0f, 1.0f),
     m_Direction(0.0f, -1.0f, 0.0f, 0.0f),
     m_Radius(1.0f),
-    m_Type(-1)
+    m_Type(-1),
+    m_bHasShadow(false)
 {
 
 }
@@ -67,7 +68,7 @@ bool Light::InitializeAmbient(const CBColor& color)
     return true;
 }
 
-bool Light::InitializeDirectional(const CBColor& color)
+bool Light::InitializeDirectional(const CBColor& color, bool hasShadow)
 {
     // Yes, directional light doesn't really need position from scene node, 
     // but it's needed for receiving messages.
@@ -78,6 +79,7 @@ bool Light::InitializeDirectional(const CBColor& color)
     }
     m_Data.m_Type = static_cast<INT32>(LightType::DirectionalLight);
     m_Data.m_Color = color;
+    m_Data.m_bHasShadow = hasShadow;
     return true;
 }
 
