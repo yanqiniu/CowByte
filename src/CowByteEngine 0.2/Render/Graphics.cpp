@@ -117,7 +117,7 @@ bool Graphics::Update(const GameContext& context)
     }
 
     m_pLightManager->CreateLightsGPU(m_pDevice, m_pDeviceContext); // Don't worry this only run once.
-    m_pLightManager->UpdateLightsGPU(m_pDeviceContext);
+    m_pLightManager->UpdateLightsGPU(m_pDeviceContext, &m_PerFrameConstBuf);
 
     // Draw passes.
     PassDepthOnly();

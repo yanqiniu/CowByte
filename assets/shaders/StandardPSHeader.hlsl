@@ -5,6 +5,7 @@ Texture2D gAlbedoMap   : register(t0);
 Texture2D gNormalMap   : register(t1);
 Texture2D gSpecularMap   : register(t2);
 Texture2D gDepthMap   : register(t3);
+Texture2D gShadowMap   : register(t4);
 
 SamplerState gAlbedoSS : register(s0);
 SamplerState gNormalSS : register(s1);
@@ -33,6 +34,7 @@ struct Light
     float4    m_Color;
     int       m_Type;
     float     m_Radius;
+    bool      m_hasShadow;
 };
 
 cbuffer Light0 : register(b2)

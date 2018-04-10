@@ -62,7 +62,7 @@ bool Game::Initialize()
     SceneNode* pDirLightSN = SceneNode::CreateSceneNodeThenAttach(&SceneNode::RootNode);
     m_pDirLight->AttachTo_SceneNode_Parent(pDirLightSN);
     pDirLightSN->LookAt(Vec3(1.0f, -1.0f, 1.0f), Vec3::Up());
-    m_pDirLight->InitializeDirectional(CBColor(0.3f, 0.3f, 0.3f, 1.0f));
+    m_pDirLight->InitializeDirectional(CBColor(0.3f, 0.3f, 0.3f, 1.0f), true);
     m_pDirLight->RegisterLight();
 
     m_pPtLight = new Light();

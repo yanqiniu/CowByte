@@ -24,9 +24,11 @@ class Light : public Component
         CBColor m_Color;
         INT32   m_Type; // Use this instead of enum because enum size is not consistent.
         FLOAT32 m_Radius;
+        bool    m_bHasShadow;
     };
 
 public:
+    friend class LightManager;
 
     Light();
     virtual ~Light();
@@ -35,7 +37,7 @@ public:
     virtual void _HandleMessage(CBRefCountPtr<Message> &pMsg) override {};
 
     bool InitializeAmbient(const CBColor& color);
-    bool InitializeDirectional(const CBColor& color);
+    bool InitializeDirectional(const CBColor& color, bool hasShadow);
     bool InitializePoint(const CBColor& color, float radius);
 
     void RegisterLight();
@@ -49,6 +51,7 @@ public:
 
 private:
     LightData m_Data;
+
 };
 #endif // _LIGHT_H
 

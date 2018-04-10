@@ -2,6 +2,8 @@
 #include "GPURegisterLayout.h"
 #include "../../Utils/CBDebug.h"
 #include "../../SceneGraph/Light.h"
+#include "../../SceneGraph/SceneNode.h"
+#include "ConstantBufferGPU.h"
 
 
 using namespace DirectX;
@@ -36,11 +38,23 @@ void LightManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
     }
 }
 
-bool LightManager::UpdateLightsGPU(ID3D11DeviceContext *pDeviceContext)
+bool LightManager::UpdateLightsGPU(ID3D11DeviceContext *pDeviceContext, PerFrameConstBufGPU *pConstBuf)
 {
     for (size_t i = 0; i < m_CPULights.Size(); i++)
     {
         pDeviceContext->UpdateSubresource(m_GPULights.at(i), 0, nullptr, &m_CPULights.at(i)->GetData(), 0, 0);
+        
+        // Shadow map realated.
+        if (m_CPULights.peekat(i)->m_Data.m_Type == LightType::DirectionalLight &&
+            m_CPULights.peekat(i)->m_Data.m_bHasShadow)
+        {
+            Light *pLight = m_CPULights.at(i);
+            // World -> light space
+            Matrix4x4 lightProj = Matrix4x4::OrthographicProjection(100.0f, 100.0f, 0.01f, 100.0f);
+            Matrix4x4 lightViewProjection = pLight->GetParentSceneNode()->GetWorldTransform().Inversed() * lightProj;
+            pDeviceContext->UpdateSubresource(pConstBuf->m_LightViewProjMatrix, 0, nullptr, &lightViewProjection, 0, 0);
+        }
+
     }
     pDeviceContext->PSSetConstantBuffers(GPUConstantsReg_PS::Light0, m_CPULights.Size(), &m_GPULights.at(0));
     return true;
