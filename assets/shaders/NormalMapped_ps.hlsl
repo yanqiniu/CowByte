@@ -14,7 +14,7 @@ float4 PhongLighting(Light light, PS_Input input, bool shadowed)
         {
             float sampledZ = gShadowMap.Sample(gPointSS, coord);
 
-            if(input.lightViewPosition.z - sampledZ > 0.02) // threshhold for MSAA
+            if(input.lightViewPosition.z - sampledZ > 0.001f)
                 return float4(0.0f, 0.0f, 0.0f, 1.0f);
         }
     }
