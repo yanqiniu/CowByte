@@ -40,7 +40,7 @@ Don't worry about the name :D
  - Mesh sharing;
  - Material and Texture support with texture sharing;
  - Phong lighting and shading with normap map;
- - Hard shadow using shadow mapping;
+ - Realtime hard shadow using shadow mapping;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;
