@@ -45,12 +45,12 @@ bool Game::Initialize()
     m_pCube1 = new Cube();
     m_pPlane = new Plane();
     //m_pTorus = new Torus();
-    //m_pCow = new Cow();
+    m_pCow = new Cow();
     m_pSphere = new Sphere();
     //m_pCube0->m_pSceneNode->Translate(0.0f, 3.0f, 0.0f);
     //m_pCube0->m_pSceneNode->Scale(2.0f);
     m_pCube1->m_pSceneNode->Scale(1.2f);
-    m_pCube1->m_pSceneNode->Translate(-3.0f, 1.0f, 0.0f);
+    m_pCube1->m_pSceneNode->Translate(-3.0f, 0.6f, 0.0f);
     //m_pPlane->m_pSceneNode->Translate(0.0f, -3.0f, 0.0f);
     m_pPlane->m_pSceneNode->Scale(10.0f);
     //m_pTorus->m_pSceneNode->Translate(0.0f, 0.0f, 5.0f);

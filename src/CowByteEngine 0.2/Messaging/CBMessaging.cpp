@@ -3,7 +3,6 @@
 void CBMessaging::InitializeEngineBus()
 {
     MessageBus::GetEngineBus() = new MessageBus();
-
 }
 
 void CBMessaging::PostQueuedMessage(CBRefCountPtr<Message> &pMsg, MessageBus *pMsgBus)
