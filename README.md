@@ -12,7 +12,6 @@ Don't worry about the name :D
 
 ### Build
  - The build process still needs to be streamlined...
- - The project uses DirectX 11 SDK. Download [here](https://www.microsoft.com/en-us/download/details.aspx?id=6812).
  - Uses Windows 10 SDK 10.0.16299.0. Older kits might be supported as well but not tested yet.
  - Solution created using Visual Studio 2017.
  - Uses some more recent C++ features like binary literals (C++14) and delete(void* ptr, size_t size) overload (C++17) which should be included with the latest VC++ that comes with VS2017.
@@ -40,7 +39,7 @@ Don't worry about the name :D
  - Mesh sharing;
  - Material and Texture support with texture sharing;
  - Phong lighting and shading with normap map;
- - Hard shadow using shadow mapping;
+ - Realtime hard shadow using shadow mapping;
  - Custom string and File that supports commenting;
  - Keyboard and mouse input;
  - Exporting mesh from Maya;

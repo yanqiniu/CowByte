@@ -50,7 +50,7 @@ bool LightManager::UpdateLightsGPU(ID3D11DeviceContext *pDeviceContext, PerFrame
         {
             Light *pLight = m_CPULights.at(i);
             // World -> light space
-            Matrix4x4 lightProj = Matrix4x4::OrthographicProjection(20.0f, 15.0f, 0.01f, 100.0f);
+            Matrix4x4 lightProj = Matrix4x4::OrthographicProjection(100.0f, 100.0f, 0.01f, 100.0f);
             Matrix4x4 lightViewProjection = pLight->GetParentSceneNode()->GetWorldTransform().Inversed() * lightProj;
             pDeviceContext->UpdateSubresource(pConstBuf->m_LightViewProjMatrix, 0, nullptr, &lightViewProjection, 0, 0);
         }

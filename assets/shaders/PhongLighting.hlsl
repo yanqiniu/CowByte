@@ -6,11 +6,14 @@ float4 PhongLighting(Light light, PS_Input input, bool shadowed)
         // input.depthPosition /= input.depthPosition.w;
         float2 coord = float2((input.lightViewPosition.x + 1.0f) / 2,
                                     1.0f-(input.lightViewPosition.y + 1.0f) / 2);
+        if(coord.x >= 0 && coord.x <= 1.0f &&
+           coord.y >= 0 && coord.y <= 1.0f )
+        {
+            float sampledZ = gShadowMap.Sample(gPointSS, coord);
 
-        float sampledZ = gShadowMap.Sample(gPointSS, coord);
-
-        if(input.lightViewPosition.z - sampledZ > 0.02) // threshhold for MSAA
-            return float4(1.0f, 0.0f, 0.0f, 1.0f);
+            if(input.lightViewPosition.z - sampledZ > 0.001f)
+                return float4(0.0f, 0.0f, 0.0f, 1.0f);
+        }
     }
 
     if(light.m_Type == 0) // Ambient

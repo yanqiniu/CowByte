@@ -80,7 +80,7 @@ bool Graphics::Initialize()
     m_pMeshManager->AttachTo_NonSceneNode_Parent(this);
     if(!m_pMeshManager->CPULoadMesh("cube.mesha") ||
         !m_pMeshManager->CPULoadMesh("plane.mesha") ||
-        //!m_pMeshManager->CPULoadMesh("cow.mesha") ||
+        !m_pMeshManager->CPULoadMesh("cow.mesha") ||
         !m_pMeshManager->CPULoadMesh("sphere.mesha")
         )
     {
@@ -144,7 +144,7 @@ bool Graphics::PassDepthOnly()
     FLOAT color = m_pMainCamera->GetFarPlane(); // Use this since we record z'z in depth buffer, instead of z'.
     m_pDeviceContext->OMSetRenderTargets(1, &m_pZBufferRTView, m_pDepthStencilViewNoMS);
     m_pDeviceContext->ClearRenderTargetView(m_pZBufferRTView, &color);
-    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilStateNoMS, 1);
+    m_pDeviceContext->OMSetDepthStencilState(m_pDepthStencilState, 1);
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilViewNoMS, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->VSSetShader(m_pDepthOnlyVS, nullptr, 0);

@@ -15,8 +15,8 @@
 #include "GeometryGPU/LightManager.h"
 #include "GeometryGPU/ConstantBufferGPU.h"
 
-static const int g_ShadowMapW = 1024;
-static const int g_ShadowMapH = 768;
+static const int g_ShadowMapW = 4096;
+static const int g_ShadowMapH = 4096;
 
 class Window;
 class Camera;
