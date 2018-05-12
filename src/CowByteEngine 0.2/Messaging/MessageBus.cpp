@@ -34,9 +34,9 @@ int MessageBus::Broadcast()
 int MessageBus::BroadcastSingle(CBRefCountPtr<Message> &pMsg)
 {
     int numSentTo = 0;
-    for (int i = 0; i < m_Subscribers.Size(); ++i)
+    for (auto& sub : m_Subscribers)
     {
-        m_Subscribers.at(i)->AcceptMessage(pMsg);
+        sub->AcceptMessage(pMsg);
         ++numSentTo;
     }
 
@@ -48,9 +48,9 @@ int MessageBus::BroadcastSingle(CBRefCountPtr<Message> &pMsg)
 // Call HandleMessagesQueueTree() on each subscribers.
 void MessageBus::SubsHandleMessagesQueueTree()
 {
-    for (int i = 0; i < m_Subscribers.Size(); ++i)
+    for (auto& sub : m_Subscribers)
     {
-        m_Subscribers[i]->HandleMessagesQueueTree();
+        sub->HandleMessagesQueueTree();
     }
 }
 
@@ -65,9 +65,9 @@ void MessageBus::AddSubscriber(Component* newSubscbr)
     }
 
     // Prevent double subscription.
-    for (int i = 0; i < m_Subscribers.Size(); ++i)
+    for (const auto& sub : m_Subscribers)
     {
-        if (m_Subscribers.peekat(i) == newSubscbr)
+        if (sub == newSubscbr)
         {
             return;
         }

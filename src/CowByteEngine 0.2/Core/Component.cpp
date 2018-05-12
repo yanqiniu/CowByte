@@ -54,9 +54,9 @@ bool Component::UpdateTree(const GameContext &context)
     bool toRet = true;
     // Update me and children:
     toRet &= Update(context);
-    for (int i = 0; i < m_ChildrenComps.Size(); ++i)
+    for (auto& comp : m_ChildrenComps)
     {
-        toRet &= m_ChildrenComps.at(i)->UpdateTree(context);
+        toRet &= comp->UpdateTree(context);
     }
 
     return toRet;
@@ -114,9 +114,9 @@ SceneNode *Component::GetParentSceneNode() const
 bool Component::AddChild(Component* childPtr)
 {
     // Check if the pointer already exists.
-    for (size_t i = 0; i < m_ChildrenComps.Size(); ++i)
+    for (const auto& comp : m_ChildrenComps)
     {
-        if (m_ChildrenComps.peekat(i) == childPtr)
+        if (comp == childPtr)
             return false;
     }
 
@@ -148,9 +148,9 @@ void Component::IncreNumOffsprings(size_t amount)
 void Component::HandleMessagesQueueTree()
 {
     HandleMessageQueue();
-    for (int i = 0; i < m_ChildrenComps.Size(); ++i)
+    for (auto& comp : m_ChildrenComps)
     {
-        m_ChildrenComps.at(i)->HandleMessagesQueueTree();
+        comp->HandleMessagesQueueTree();
     }
 }
 

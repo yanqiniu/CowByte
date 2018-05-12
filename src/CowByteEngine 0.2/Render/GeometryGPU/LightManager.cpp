@@ -40,18 +40,18 @@ void LightManager::_HandleMessage(CBRefCountPtr<Message> &pMsg)
 
 bool LightManager::UpdateLightsGPU(ID3D11DeviceContext *pDeviceContext, PerFrameConstBufGPU *pConstBuf)
 {
-    for (size_t i = 0; i < m_CPULights.Size(); i++)
+    size_t j = 0;
+    for (const auto& light : m_CPULights)
     {
-        pDeviceContext->UpdateSubresource(m_GPULights.at(i), 0, nullptr, &m_CPULights.at(i)->GetData(), 0, 0);
-        
-        // Shadow map realated.
-        if (m_CPULights.peekat(i)->m_Data.m_Type == LightType::DirectionalLight &&
-            m_CPULights.peekat(i)->m_Data.m_bHasShadow)
+        pDeviceContext->UpdateSubresource(m_GPULights.at(j), 0, nullptr, &light->GetData(), 0, 0);
+        ++j;
+        // Shadow map related.
+        if (light->m_Data.m_Type == LightType::DirectionalLight &&
+            light->m_Data.m_bHasShadow)
         {
-            Light *pLight = m_CPULights.at(i);
             // World -> light space
             Matrix4x4 lightProj = Matrix4x4::OrthographicProjection(100.0f, 100.0f, 0.01f, 100.0f);
-            Matrix4x4 lightViewProjection = pLight->GetParentSceneNode()->GetWorldTransform().Inversed() * lightProj;
+            Matrix4x4 lightViewProjection = light->GetParentSceneNode()->GetWorldTransform().Inversed() * lightProj;
             pDeviceContext->UpdateSubresource(pConstBuf->m_LightViewProjMatrix, 0, nullptr, &lightViewProjection, 0, 0);
         }
 

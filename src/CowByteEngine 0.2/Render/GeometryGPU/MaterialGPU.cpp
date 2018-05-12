@@ -39,9 +39,9 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     pDeviceContext->UpdateSubresource(m_pConstBuf, 0, nullptr, &matcpu.GetConstBufferCPU(), 0, 0);
 
     // Create textures. 
-    for (size_t i = 0; i < matcpu.GetTextureCPUs().Size(); ++i)
+    for (const auto& tex : matcpu.GetTextureCPUs())
     {
-        UID tempID = pTexMgrGPU->LoadFromTextureCPU(pDevice, matcpu.GetTextureCPUs().peekat(i));
+        UID tempID = pTexMgrGPU->LoadFromTextureCPU(pDevice, tex);
         if (tempID == INVALID_UID) return false;
         else m_TexIDs.Push_back(tempID);
     }
@@ -91,9 +91,9 @@ void MaterialGPU::SetAsActive(ID3D11DeviceContext *pDeviceContext, const Texture
     pDeviceContext->PSSetShader(m_pShaderPixel, 0, 0);
 
     // Set textures
-    for (size_t i = 0; i < m_TexIDs.Size(); ++i)
+    for (const auto& texid : m_TexIDs)
     {
-        const TextureGPU* pTexGPU = pTexMgrGPU->PeekTexture(m_TexIDs.peekat(i));
+        const TextureGPU* pTexGPU = pTexMgrGPU->PeekTexture(texid);
         pDeviceContext->PSSetSamplers(pTexGPU->GetReg(), 1, &pTexGPU->GetSamplerState());
         pDeviceContext->PSSetShaderResources(pTexGPU->GetReg(), 1, &pTexGPU->GetShaderResourceView());
     }

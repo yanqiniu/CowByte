@@ -153,9 +153,8 @@ bool Graphics::PassDepthOnly()
 
     m_pDeviceContext->RSSetViewports(1, &m_MainViewport);
 
-    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    for (const auto& pMeshInst : m_pMeshManager->GetMeshInsts())
     {
-        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
         Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());
         if (mesh->IsLoaded())
         {
@@ -190,9 +189,8 @@ bool Graphics::PassShadowMap()
 
     m_pDeviceContext->RSSetViewports(1, &m_ShadowViewport);
 
-    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    for (const auto& pMeshInst : m_pMeshManager->GetMeshInsts())
     {
-        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
         Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());
         if (mesh->IsLoaded())
         {
@@ -228,9 +226,8 @@ bool Graphics::PassDraw()
     m_pDeviceContext->ClearDepthStencilView(m_pDepthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0.0f);
 
     m_pDeviceContext->RSSetViewports(1, &m_MainViewport);
-    for (int i = 0; i < m_pMeshManager->GetMeshInsts().Size(); ++i)
+    for (const auto& pMeshInst : m_pMeshManager->GetMeshInsts())
     {
-        MeshInstance *pMeshInst = m_pMeshManager->GetMeshInsts().peekat(i);
         Mesh* mesh = m_pMeshManager->GetMeshPtr(pMeshInst->GetMeshID());;
         if (mesh->IsLoaded())
         {
