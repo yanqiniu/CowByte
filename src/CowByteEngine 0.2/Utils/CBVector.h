@@ -10,7 +10,23 @@ template <typename T>
 class CBVector
 {
 public:
-    CBMEM_OVERLOAD_NEW_DELETE(CBVector)
+    CBMEM_OVERLOAD_NEW_DELETE(CBVector);
+
+    class Iterator
+    {
+    public:
+        Iterator(T* ptr) : ptr_(ptr) {};
+        Iterator(const Iterator& toCpy) : ptr_(toCpy.ptr_) {};
+        ~Iterator() {/* Do nothing. */ };
+        T& operator*() { return *ptr_; };
+        Iterator operator++() { Iterator toRet = *this;  ++ptr_; return toRet; }
+        Iterator operator++(int junk) { ++ptr_; return *this; }
+        T* operator->() { return ptr_; }
+        bool operator==(const Iterator& rhs) { return ptr_ == rhs.ptr_; }
+        bool operator!=(const Iterator& rhs) { return ptr_ != rhs.ptr_; }
+    private:
+        T * ptr_;
+    };
 
     CBVector();
     CBVector(const CBVector &toCopy);
@@ -36,13 +52,19 @@ public:
     void Clear();
 
     // TODO: what is wrong with these that range-based for loop don't work?
-    T* begin() const
+    Iterator begin() const
     {
-        return &m_Data[0];
+        if (m_Size == 0)
+            return Iterator(nullptr);
+        else
+            return Iterator(&m_Data[0]);
     }
-    T* end() const
+    Iterator end() const
     {
-        return &m_Data[m_Size - 1];
+        if (m_Size == 0)
+            return Iterator(nullptr);
+        else
+            return Iterator(&m_Data[m_Size - 1]);
     }
 
 private:
