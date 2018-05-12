@@ -51,7 +51,6 @@ public:
     bool Erase(size_t index);
     void Clear();
 
-    // TODO: what is wrong with these that range-based for loop don't work?
     Iterator begin() const
     {
         return Iterator(m_Data);
