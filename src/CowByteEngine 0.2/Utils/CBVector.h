@@ -54,17 +54,11 @@ public:
     // TODO: what is wrong with these that range-based for loop don't work?
     Iterator begin() const
     {
-        if (m_Size == 0)
-            return Iterator(nullptr);
-        else
-            return Iterator(&m_Data[0]);
+        return Iterator(m_Data);
     }
     Iterator end() const
     {
-        if (m_Size == 0)
-            return Iterator(nullptr);
-        else
-            return Iterator(&m_Data[m_Size - 1]);
+        return Iterator(&m_Data[m_Size]);
     }
 
 private:
