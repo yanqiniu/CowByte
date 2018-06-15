@@ -19,14 +19,12 @@ Don't worry about the name :D
 ### Current State
  - All features in the list mentioned bellow are implemented already.
  - Navigation Camera (WASD to move, Arrow Keys to rotate, Space to rise, LShift to descend).
- - It now renders low-poly cow model exported from Maya:
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2018.jpg)
- - Material and textures for different meshes.
- - Phong lighting and shading with normal map:
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_31_2018.PNG)
- - Depth map and shadow mapping:
-![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018.PNG)
+  - Phong lighting and shading with normal map, depth map and shadow mapping:
 ![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018_1.PNG)
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_4_9_2018.PNG)
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_31_2018.PNG)
+ - Also supports exporting mesh from Maya:
+![Screenshot](https://github.com/yanqiniu/CowByte/blob/master/assets/other/screenshot_3_29_2018.jpg)
 
 
 ### Features
