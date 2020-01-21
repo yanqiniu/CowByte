@@ -141,6 +141,8 @@
     <ClInclude Include="Core\Input.h" />
     <ClInclude Include="Core\System.h" />
     <ClInclude Include="Core\WinMain.h" />
+    <ClInclude Include="Render\DrawCall\DrawCall.h" />
+    <ClInclude Include="Render\DrawCall\DrawCallGameObject.h" />
     <ClInclude Include="Render\GeometryGPU\ConstantBufferGPU.h" />
     <ClInclude Include="Render\GeometryGPU\LightManager.h" />
     <ClInclude Include="SceneGraph\Light.h" />
@@ -196,6 +198,7 @@
     <ClCompile Include="Core\Input.cpp" />
     <ClCompile Include="Core\System.cpp" />
     <ClCompile Include="Core\WinMain.cpp" />
+    <ClCompile Include="Render\DrawCall\DrawCallGameObject.cpp" />
     <ClCompile Include="Render\GeometryGPU\LightManager.cpp" />
     <ClCompile Include="SceneGraph\Light.cpp" />
     <ClCompile Include="Render\GeometryCPU\MaterialCPU.cpp" />

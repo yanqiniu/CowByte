@@ -6,7 +6,7 @@
 #include "../Utils/typedefs.h"
 #include "../Utils/CBMap.h"
 class ID3D11Device;
-class ID3D11DeviceContext;
+struct ID3D11DeviceContext;
 class TextureManager;
 
 class MeshManager : public Component

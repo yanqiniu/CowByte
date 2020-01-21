@@ -29,7 +29,7 @@ public:
     virtual bool Shutdown();
     bool   UpdateTree(const GameContext &context); // A "larger" update function that calls Update on this and offspring.
     void   SetActive(bool inBool);
-    bool   IsActiveSelf();
+    bool   IsActiveSelf() const;
 
     // Hierarchy and messaging related:
     size_t     GetNumOffsprings() const { return m_nOffsprings; };

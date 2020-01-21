@@ -6,7 +6,7 @@ struct Point
 {
     CBMEM_OVERLOAD_NEW_DELETE(Point);
 
-        INT32 X;
+    INT32 X;
     INT32 Y;
 
     Point() :

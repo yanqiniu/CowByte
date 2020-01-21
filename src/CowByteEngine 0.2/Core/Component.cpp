@@ -68,7 +68,7 @@ void Component::SetActive(bool inBool)
 }
 
 // Doesn't care if a parent is disabled.
-bool Component::IsActiveSelf()
+bool Component::IsActiveSelf() const
 {
     return m_bIsActive;
 }

@@ -59,13 +59,13 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     }
     if (!ResultNotFailed(pDevice->CreateVertexShader(VS->GetBufferPointer(), VS->GetBufferSize(), NULL, &m_pShaderVertex)))
     {
-        DbgERROR("Filed creating vertex shader!");
+        DbgERROR("Failed creating vertex shader!");
         Release();
         return false;
     }
     if (!ResultNotFailed(pDevice->CreatePixelShader(PS->GetBufferPointer(), PS->GetBufferSize(), NULL, &m_pShaderPixel)))
     {
-        DbgERROR("Filed creating pixel shader!");
+        DbgERROR("Failed creating pixel shader!");
         Release();
         return false;
     }
@@ -73,7 +73,7 @@ bool MaterialGPU::LoadFromMaterialCPU(ID3D11Device *pDevice, ID3D11DeviceContext
     // Create input layout.
     if (!ResultNotFailed(pDevice->CreateInputLayout(Vertex::InputDesc, 4, VS->GetBufferPointer(), VS->GetBufferSize(), &m_pInputLayout)))
     {
-        DbgERROR("Filed creating input layout!");
+        DbgERROR("Failed creating input layout!");
         Release();
         return false;
     }

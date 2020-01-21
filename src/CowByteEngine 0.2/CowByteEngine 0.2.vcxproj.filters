@@ -157,6 +157,8 @@
     <ClInclude Include="SceneGraph\Light.h" />
     <ClInclude Include="Render\GeometryGPU\LightManager.h" />
     <ClInclude Include="Render\GeometryGPU\ConstantBufferGPU.h" />
+    <ClInclude Include="Render\DrawCall\DrawCall.h" />
+    <ClInclude Include="Render\DrawCall\DrawCallGameObject.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Math\Vec3.cpp">
@@ -247,6 +249,7 @@
     <ClCompile Include="Render\GeometryCPU\TextureCPU.cpp" />
     <ClCompile Include="SceneGraph\Light.cpp" />
     <ClCompile Include="Render\GeometryGPU\LightManager.cpp" />
+    <ClCompile Include="Render\DrawCall\DrawCallGameObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\assets\meshes\cube_pos.bufa">
